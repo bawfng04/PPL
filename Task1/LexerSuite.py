@@ -14,7 +14,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from TestUtils import TestLexer
 
 class LexerSuite(unittest.TestCase):
-    
+
 #1. Mô tả chuỗi có độ dài lẻ
     def test_1(self):
         """test """
@@ -32,7 +32,7 @@ class LexerSuite(unittest.TestCase):
         """test """
         self.assertTrue(TestLexer.test("a","a,<EOF>",105))
 
-        
+
 #2. Mô tả số thực trong C++.
 
     # def test_1(self):
@@ -96,35 +96,35 @@ class LexerSuite(unittest.TestCase):
     # def test_1(self):
     #     """Test chuỗi có 3 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("aaa", "aaa,<EOF>", 101))
-    
+
     # def test_2(self):
     #     """Test chuỗi có 1 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("a", "a,<EOF>", 102))
-    
+
     # def test_3(self):
     #     """Test chuỗi có 4 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("aaaa", "aaaa,<EOF>", 103))
-    
+
     # def test_4(self):
     #     """Test chuỗi không chứa chữ 'a'"""
     #     self.assertTrue(TestLexer.test("bcdef", "bcdef,<EOF>", 104))
-    
+
     # def test_5(self):
     #     """Test chuỗi có 5 chữ 'a' (lỗi)"""
     #     self.assertTrue(TestLexer.test("aaaaa", "Error Token aaaaa", 105))
-    
+
     # def test_6(self):
     #     """Test chuỗi có nhiều ký tự khác nhau nhưng không quá 4 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("abca", "abca,<EOF>", 106))
-    
+
     # def test_7(self):
     #     """Test chuỗi có 0 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("bc", "bc,<EOF>", 107))
-    
+
     # def test_8(self):
     #     """Test chuỗi có chữ 'a' nhưng không vượt quá số lần quy định"""
     #     self.assertTrue(TestLexer.test("a b c a", "a b c a,<EOF>", 108))
-    
+
     # def test_9(self):
     #     """Test chuỗi có 5 chữ 'a' nhưng đã bị từ chối"""
     #     self.assertTrue(TestLexer.test("aaaaab", "Error Token aaaaab", 109))
@@ -134,27 +134,27 @@ class LexerSuite(unittest.TestCase):
     # def test_1(self):
     #     """Test chuỗi có ít nhất 4 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("aaxaa", "aaxaa,<EOF>", 101))
-    
+
     # def test_2(self):
     #     """Test chuỗi có đúng 4 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("aaaab", "aaaab,<EOF>", 102))
-    
+
     # def test_3(self):
     #     """Test chuỗi có 5 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("aaaaa", "aaaaa,<EOF>", 103))
-    
+
     # def test_4(self):
     #     """Test chuỗi có 6 chữ 'a'"""
     #     self.assertTrue(TestLexer.test("aaaaaa", "aaaaaa,<EOF>", 104))
-    
+
     # def test_5(self):
     #     """Test chuỗi có ít hơn 4 chữ 'a' (lỗi)"""
     #     self.assertTrue(TestLexer.test("aa", "Error Token aa", 105))
-    
+
     # def test_6(self):
     #     """Test chuỗi có 3 chữ 'a' (lỗi)"""
     #     self.assertTrue(TestLexer.test("aaa", "Error Token aaa", 106))
-    
+
     # def test_7(self):
     #     """Test chuỗi có ít hơn 4 chữ 'a' (lỗi)"""
     #     self.assertTrue(TestLexer.test("a b c", "Error Token a b c", 107))
