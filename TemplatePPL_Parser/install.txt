@@ -1,0 +1,40 @@
+# install
+root@c55db91fedde:/usr/src/PPL# apt-get install -y python3 python3-pip
+root@c55db91fedde:/usr/src/PPL# apt-get install -y default-jre default-jdk\
+
+# test
+root@c55db91fedde:/usr/src/PPL# python3 --version
+Python 3.12.3
+root@c55db91fedde:/usr/src/PPL# java --version
+openjdk 21.0.5 2024-10-15
+OpenJDK Runtime Environment (build 21.0.5+11-Ubuntu-1ubuntu124.04)
+OpenJDK 64-Bit Server VM (build 21.0.5+11-Ubuntu-1ubuntu124.04, mixed mode, sharing)
+
+# env
+oot@c55db91fedde:/usr/src/PPL# python3 -m venv myenv
+oot@c55db91fedde:/usr/src/PPL# source myenv/bin/activate
+
+## /usr/src/PPL XXX
+(myenv) root@c55db91fedde:/usr/src/PPL# pip install -r requirements.txt
+(myenv) root@c55db91fedde:/usr/src/PPL# python3 run.py gen
+
+(myenv) root@c55db91fedde:/usr/src/PPL# python3 run.py test CheckerSuite test_1
+Tests run  1
+Errors  []
+[]
+Test output
+ .
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK
+
+----------------------------------------------------------------------
+CheckerSuite - test_1 - Assignment- PPL - HK242 - VO TIEN 
+Vo Tien : https://www.facebook.com/Shiba.Vo.Tien
+Tests run: 1
+1
+.
+Pass full 10.
+----------------------------------------------------------------------
+(myenv) root@c55db91fedde:/usr/src/PPL# python3 run.py test CodeGenSuite test_1
