@@ -5,9 +5,8 @@ from lexererr import *
 }
 
 options {
-    language = Python3;
+	language = Python3;
 }
-
 //! -------------------------- Lexical structure ----------------------- Keyword and Operators and Separators
 INT: 'int';
 ADD: '+';
@@ -36,18 +35,27 @@ ERROR_CHAR: . {raise ErrorToken(self.text)};
 
 //!  -------------------------- end Lexical structure ------------------- //
 
-//! --------------------------  parser structure ----------------------- //
+// //! --------------------------  parser structure ----------------------- //
+
+// declared
+
 program: stm+ EOF;
 
-stm: declaration | assignment;
+stm: declarationStm | assignmentStm;
 
-declaration: INT var_decl_list SEM;
+declarationStm: INT var_decl_list SEM;
 
-assignment: var_list ASSIGNI expr_list SEM;
+var_decl_list: single_decl | multiple_decl;
 
-var_decl_list: var_list (ASSIGNI expr_list)?;
+single_decl: ID (ASSIGNI expression)?;
 
-var_list: ID (CM ID)*;
+multiple_decl: ID CM ID (CM ID)* (ASSIGNI expr_list)?;
+
+assignmentStm: single_assign | multiple_assign;
+
+single_assign: ID ASSIGNI expression SEM;
+
+multiple_assign: ID CM ID (CM ID)* ASSIGNI expr_list SEM;
 
 expr_list: expression (CM expression)*;
 
@@ -55,9 +63,8 @@ expression: term ((ADD | SUB) term)*;
 
 term: factor ((MUL | DIV) factor)*;
 
-/* Only allow a single exponent operator in factor */
 factor: primary (EXP primary)?;
 
-primary: INT_LIT | ID | LP expression RP;
+primary: ID | INT_LIT | LP expression RP;
 
-//! -------------------------- end  parser structure ----------------------- //
+// //! -------------------------- end  parser structure ----------------------- //

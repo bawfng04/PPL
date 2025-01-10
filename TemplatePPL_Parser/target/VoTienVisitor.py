@@ -19,13 +19,8 @@ class VoTienVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by VoTienParser#declaration.
-    def visitDeclaration(self, ctx:VoTienParser.DeclarationContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by VoTienParser#assignment.
-    def visitAssignment(self, ctx:VoTienParser.AssignmentContext):
+    # Visit a parse tree produced by VoTienParser#declarationStm.
+    def visitDeclarationStm(self, ctx:VoTienParser.DeclarationStmContext):
         return self.visitChildren(ctx)
 
 
@@ -34,8 +29,28 @@ class VoTienVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by VoTienParser#var_list.
-    def visitVar_list(self, ctx:VoTienParser.Var_listContext):
+    # Visit a parse tree produced by VoTienParser#single_decl.
+    def visitSingle_decl(self, ctx:VoTienParser.Single_declContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by VoTienParser#multiple_decl.
+    def visitMultiple_decl(self, ctx:VoTienParser.Multiple_declContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by VoTienParser#assignmentStm.
+    def visitAssignmentStm(self, ctx:VoTienParser.AssignmentStmContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by VoTienParser#single_assign.
+    def visitSingle_assign(self, ctx:VoTienParser.Single_assignContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by VoTienParser#multiple_assign.
+    def visitMultiple_assign(self, ctx:VoTienParser.Multiple_assignContext):
         return self.visitChildren(ctx)
 
 

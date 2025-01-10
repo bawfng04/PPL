@@ -12,35 +12,45 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\22")
-        buf.write("_\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
-        buf.write("\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\3\2\6\2\32\n\2")
-        buf.write("\r\2\16\2\33\3\2\3\2\3\3\3\3\5\3\"\n\3\3\4\3\4\3\4\3\4")
-        buf.write("\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\6\5\6\60\n\6\3\7\3\7\3")
-        buf.write("\7\7\7\65\n\7\f\7\16\78\13\7\3\b\3\b\3\b\7\b=\n\b\f\b")
-        buf.write("\16\b@\13\b\3\t\3\t\3\t\7\tE\n\t\f\t\16\tH\13\t\3\n\3")
-        buf.write("\n\3\n\7\nM\n\n\f\n\16\nP\13\n\3\13\3\13\3\13\5\13U\n")
-        buf.write("\13\3\f\3\f\3\f\3\f\3\f\3\f\5\f]\n\f\3\f\2\2\r\2\4\6\b")
-        buf.write("\n\f\16\20\22\24\26\2\4\3\2\4\5\3\2\6\7\2]\2\31\3\2\2")
-        buf.write("\2\4!\3\2\2\2\6#\3\2\2\2\b\'\3\2\2\2\n,\3\2\2\2\f\61\3")
-        buf.write("\2\2\2\169\3\2\2\2\20A\3\2\2\2\22I\3\2\2\2\24Q\3\2\2\2")
-        buf.write("\26\\\3\2\2\2\30\32\5\4\3\2\31\30\3\2\2\2\32\33\3\2\2")
-        buf.write("\2\33\31\3\2\2\2\33\34\3\2\2\2\34\35\3\2\2\2\35\36\7\2")
-        buf.write("\2\3\36\3\3\2\2\2\37\"\5\6\4\2 \"\5\b\5\2!\37\3\2\2\2")
-        buf.write("! \3\2\2\2\"\5\3\2\2\2#$\7\3\2\2$%\5\n\6\2%&\7\r\2\2&")
-        buf.write("\7\3\2\2\2\'(\5\f\7\2()\7\t\2\2)*\5\16\b\2*+\7\r\2\2+")
-        buf.write("\t\3\2\2\2,/\5\f\7\2-.\7\t\2\2.\60\5\16\b\2/-\3\2\2\2")
-        buf.write("/\60\3\2\2\2\60\13\3\2\2\2\61\66\7\16\2\2\62\63\7\f\2")
-        buf.write("\2\63\65\7\16\2\2\64\62\3\2\2\2\658\3\2\2\2\66\64\3\2")
-        buf.write("\2\2\66\67\3\2\2\2\67\r\3\2\2\28\66\3\2\2\29>\5\20\t\2")
-        buf.write(":;\7\f\2\2;=\5\20\t\2<:\3\2\2\2=@\3\2\2\2><\3\2\2\2>?")
-        buf.write("\3\2\2\2?\17\3\2\2\2@>\3\2\2\2AF\5\22\n\2BC\t\2\2\2CE")
-        buf.write("\5\22\n\2DB\3\2\2\2EH\3\2\2\2FD\3\2\2\2FG\3\2\2\2G\21")
-        buf.write("\3\2\2\2HF\3\2\2\2IN\5\24\13\2JK\t\3\2\2KM\5\24\13\2L")
-        buf.write("J\3\2\2\2MP\3\2\2\2NL\3\2\2\2NO\3\2\2\2O\23\3\2\2\2PN")
-        buf.write("\3\2\2\2QT\5\26\f\2RS\7\b\2\2SU\5\26\f\2TR\3\2\2\2TU\3")
-        buf.write("\2\2\2U\25\3\2\2\2V]\7\17\2\2W]\7\16\2\2XY\7\n\2\2YZ\5")
-        buf.write("\20\t\2Z[\7\13\2\2[]\3\2\2\2\\V\3\2\2\2\\W\3\2\2\2\\X")
-        buf.write("\3\2\2\2]\27\3\2\2\2\13\33!/\66>FNT\\")
+        buf.write("\u0081\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
+        buf.write("\t\16\4\17\t\17\3\2\6\2 \n\2\r\2\16\2!\3\2\3\2\3\3\3\3")
+        buf.write("\5\3(\n\3\3\4\3\4\3\4\3\4\3\5\3\5\5\5\60\n\5\3\6\3\6\3")
+        buf.write("\6\5\6\65\n\6\3\7\3\7\3\7\3\7\3\7\7\7<\n\7\f\7\16\7?\13")
+        buf.write("\7\3\7\3\7\5\7C\n\7\3\b\3\b\5\bG\n\b\3\t\3\t\3\t\3\t\3")
+        buf.write("\t\3\n\3\n\3\n\3\n\3\n\7\nS\n\n\f\n\16\nV\13\n\3\n\3\n")
+        buf.write("\3\n\3\n\3\13\3\13\3\13\7\13_\n\13\f\13\16\13b\13\13\3")
+        buf.write("\f\3\f\3\f\7\fg\n\f\f\f\16\fj\13\f\3\r\3\r\3\r\7\ro\n")
+        buf.write("\r\f\r\16\rr\13\r\3\16\3\16\3\16\5\16w\n\16\3\17\3\17")
+        buf.write("\3\17\3\17\3\17\3\17\5\17\177\n\17\3\17\2\2\20\2\4\6\b")
+        buf.write("\n\f\16\20\22\24\26\30\32\34\2\4\3\2\4\5\3\2\6\7\2\u0080")
+        buf.write("\2\37\3\2\2\2\4\'\3\2\2\2\6)\3\2\2\2\b/\3\2\2\2\n\61\3")
+        buf.write("\2\2\2\f\66\3\2\2\2\16F\3\2\2\2\20H\3\2\2\2\22M\3\2\2")
+        buf.write("\2\24[\3\2\2\2\26c\3\2\2\2\30k\3\2\2\2\32s\3\2\2\2\34")
+        buf.write("~\3\2\2\2\36 \5\4\3\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2")
+        buf.write("\2\2!\"\3\2\2\2\"#\3\2\2\2#$\7\2\2\3$\3\3\2\2\2%(\5\6")
+        buf.write("\4\2&(\5\16\b\2\'%\3\2\2\2\'&\3\2\2\2(\5\3\2\2\2)*\7\3")
+        buf.write("\2\2*+\5\b\5\2+,\7\r\2\2,\7\3\2\2\2-\60\5\n\6\2.\60\5")
+        buf.write("\f\7\2/-\3\2\2\2/.\3\2\2\2\60\t\3\2\2\2\61\64\7\16\2\2")
+        buf.write("\62\63\7\t\2\2\63\65\5\26\f\2\64\62\3\2\2\2\64\65\3\2")
+        buf.write("\2\2\65\13\3\2\2\2\66\67\7\16\2\2\678\7\f\2\28=\7\16\2")
+        buf.write("\29:\7\f\2\2:<\7\16\2\2;9\3\2\2\2<?\3\2\2\2=;\3\2\2\2")
+        buf.write("=>\3\2\2\2>B\3\2\2\2?=\3\2\2\2@A\7\t\2\2AC\5\24\13\2B")
+        buf.write("@\3\2\2\2BC\3\2\2\2C\r\3\2\2\2DG\5\20\t\2EG\5\22\n\2F")
+        buf.write("D\3\2\2\2FE\3\2\2\2G\17\3\2\2\2HI\7\16\2\2IJ\7\t\2\2J")
+        buf.write("K\5\26\f\2KL\7\r\2\2L\21\3\2\2\2MN\7\16\2\2NO\7\f\2\2")
+        buf.write("OT\7\16\2\2PQ\7\f\2\2QS\7\16\2\2RP\3\2\2\2SV\3\2\2\2T")
+        buf.write("R\3\2\2\2TU\3\2\2\2UW\3\2\2\2VT\3\2\2\2WX\7\t\2\2XY\5")
+        buf.write("\24\13\2YZ\7\r\2\2Z\23\3\2\2\2[`\5\26\f\2\\]\7\f\2\2]")
+        buf.write("_\5\26\f\2^\\\3\2\2\2_b\3\2\2\2`^\3\2\2\2`a\3\2\2\2a\25")
+        buf.write("\3\2\2\2b`\3\2\2\2ch\5\30\r\2de\t\2\2\2eg\5\30\r\2fd\3")
+        buf.write("\2\2\2gj\3\2\2\2hf\3\2\2\2hi\3\2\2\2i\27\3\2\2\2jh\3\2")
+        buf.write("\2\2kp\5\32\16\2lm\t\3\2\2mo\5\32\16\2nl\3\2\2\2or\3\2")
+        buf.write("\2\2pn\3\2\2\2pq\3\2\2\2q\31\3\2\2\2rp\3\2\2\2sv\5\34")
+        buf.write("\17\2tu\7\b\2\2uw\5\34\17\2vt\3\2\2\2vw\3\2\2\2w\33\3")
+        buf.write("\2\2\2x\177\7\16\2\2y\177\7\17\2\2z{\7\n\2\2{|\5\26\f")
+        buf.write("\2|}\7\13\2\2}\177\3\2\2\2~x\3\2\2\2~y\3\2\2\2~z\3\2\2")
+        buf.write("\2\177\35\3\2\2\2\17!\'/\64=BFT`hpv~")
         return buf.getvalue()
 
 
@@ -63,19 +73,23 @@ class VoTienParser ( Parser ):
 
     RULE_program = 0
     RULE_stm = 1
-    RULE_declaration = 2
-    RULE_assignment = 3
-    RULE_var_decl_list = 4
-    RULE_var_list = 5
-    RULE_expr_list = 6
-    RULE_expression = 7
-    RULE_term = 8
-    RULE_factor = 9
-    RULE_primary = 10
+    RULE_declarationStm = 2
+    RULE_var_decl_list = 3
+    RULE_single_decl = 4
+    RULE_multiple_decl = 5
+    RULE_assignmentStm = 6
+    RULE_single_assign = 7
+    RULE_multiple_assign = 8
+    RULE_expr_list = 9
+    RULE_expression = 10
+    RULE_term = 11
+    RULE_factor = 12
+    RULE_primary = 13
 
-    ruleNames =  [ "program", "stm", "declaration", "assignment", "var_decl_list", 
-                   "var_list", "expr_list", "expression", "term", "factor", 
-                   "primary" ]
+    ruleNames =  [ "program", "stm", "declarationStm", "var_decl_list", 
+                   "single_decl", "multiple_decl", "assignmentStm", "single_assign", 
+                   "multiple_assign", "expr_list", "expression", "term", 
+                   "factor", "primary" ]
 
     EOF = Token.EOF
     INT=1
@@ -140,19 +154,19 @@ class VoTienParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 23 
+            self.state = 29 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 22
+                self.state = 28
                 self.stm()
-                self.state = 25 
+                self.state = 31 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not (_la==VoTienParser.INT or _la==VoTienParser.ID):
                     break
 
-            self.state = 27
+            self.state = 33
             self.match(VoTienParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -170,12 +184,12 @@ class VoTienParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def declaration(self):
-            return self.getTypedRuleContext(VoTienParser.DeclarationContext,0)
+        def declarationStm(self):
+            return self.getTypedRuleContext(VoTienParser.DeclarationStmContext,0)
 
 
-        def assignment(self):
-            return self.getTypedRuleContext(VoTienParser.AssignmentContext,0)
+        def assignmentStm(self):
+            return self.getTypedRuleContext(VoTienParser.AssignmentStmContext,0)
 
 
         def getRuleIndex(self):
@@ -195,18 +209,18 @@ class VoTienParser ( Parser ):
         localctx = VoTienParser.StmContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_stm)
         try:
-            self.state = 31
+            self.state = 37
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [VoTienParser.INT]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 29
-                self.declaration()
+                self.state = 35
+                self.declarationStm()
                 pass
             elif token in [VoTienParser.ID]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 30
-                self.assignment()
+                self.state = 36
+                self.assignmentStm()
                 pass
             else:
                 raise NoViableAltException(self)
@@ -220,7 +234,7 @@ class VoTienParser ( Parser ):
         return localctx
 
 
-    class DeclarationContext(ParserRuleContext):
+    class DeclarationStmContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -238,84 +252,28 @@ class VoTienParser ( Parser ):
             return self.getToken(VoTienParser.SEM, 0)
 
         def getRuleIndex(self):
-            return VoTienParser.RULE_declaration
+            return VoTienParser.RULE_declarationStm
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDeclaration" ):
-                return visitor.visitDeclaration(self)
+            if hasattr( visitor, "visitDeclarationStm" ):
+                return visitor.visitDeclarationStm(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def declaration(self):
+    def declarationStm(self):
 
-        localctx = VoTienParser.DeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 4, self.RULE_declaration)
+        localctx = VoTienParser.DeclarationStmContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 4, self.RULE_declarationStm)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 33
-            self.match(VoTienParser.INT)
-            self.state = 34
-            self.var_decl_list()
-            self.state = 35
-            self.match(VoTienParser.SEM)
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class AssignmentContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def var_list(self):
-            return self.getTypedRuleContext(VoTienParser.Var_listContext,0)
-
-
-        def ASSIGNI(self):
-            return self.getToken(VoTienParser.ASSIGNI, 0)
-
-        def expr_list(self):
-            return self.getTypedRuleContext(VoTienParser.Expr_listContext,0)
-
-
-        def SEM(self):
-            return self.getToken(VoTienParser.SEM, 0)
-
-        def getRuleIndex(self):
-            return VoTienParser.RULE_assignment
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAssignment" ):
-                return visitor.visitAssignment(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def assignment(self):
-
-        localctx = VoTienParser.AssignmentContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_assignment)
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 37
-            self.var_list()
-            self.state = 38
-            self.match(VoTienParser.ASSIGNI)
             self.state = 39
-            self.expr_list()
+            self.match(VoTienParser.INT)
             self.state = 40
+            self.var_decl_list()
+            self.state = 41
             self.match(VoTienParser.SEM)
         except RecognitionException as re:
             localctx.exception = re
@@ -333,15 +291,12 @@ class VoTienParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def var_list(self):
-            return self.getTypedRuleContext(VoTienParser.Var_listContext,0)
+        def single_decl(self):
+            return self.getTypedRuleContext(VoTienParser.Single_declContext,0)
 
 
-        def ASSIGNI(self):
-            return self.getToken(VoTienParser.ASSIGNI, 0)
-
-        def expr_list(self):
-            return self.getTypedRuleContext(VoTienParser.Expr_listContext,0)
+        def multiple_decl(self):
+            return self.getTypedRuleContext(VoTienParser.Multiple_declContext,0)
 
 
         def getRuleIndex(self):
@@ -359,20 +314,22 @@ class VoTienParser ( Parser ):
     def var_decl_list(self):
 
         localctx = VoTienParser.Var_decl_listContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_var_decl_list)
-        self._la = 0 # Token type
+        self.enterRule(localctx, 6, self.RULE_var_decl_list)
         try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 42
-            self.var_list()
             self.state = 45
             self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==VoTienParser.ASSIGNI:
+            la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
+            if la_ == 1:
+                self.enterOuterAlt(localctx, 1)
                 self.state = 43
-                self.match(VoTienParser.ASSIGNI)
+                self.single_decl()
+                pass
+
+            elif la_ == 2:
+                self.enterOuterAlt(localctx, 2)
                 self.state = 44
-                self.expr_list()
+                self.multiple_decl()
+                pass
 
 
         except RecognitionException as re:
@@ -384,7 +341,64 @@ class VoTienParser ( Parser ):
         return localctx
 
 
-    class Var_listContext(ParserRuleContext):
+    class Single_declContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def ID(self):
+            return self.getToken(VoTienParser.ID, 0)
+
+        def ASSIGNI(self):
+            return self.getToken(VoTienParser.ASSIGNI, 0)
+
+        def expression(self):
+            return self.getTypedRuleContext(VoTienParser.ExpressionContext,0)
+
+
+        def getRuleIndex(self):
+            return VoTienParser.RULE_single_decl
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSingle_decl" ):
+                return visitor.visitSingle_decl(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def single_decl(self):
+
+        localctx = VoTienParser.Single_declContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 8, self.RULE_single_decl)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 47
+            self.match(VoTienParser.ID)
+            self.state = 50
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==VoTienParser.ASSIGNI:
+                self.state = 48
+                self.match(VoTienParser.ASSIGNI)
+                self.state = 49
+                self.expression()
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Multiple_declContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -403,39 +417,253 @@ class VoTienParser ( Parser ):
             else:
                 return self.getToken(VoTienParser.CM, i)
 
+        def ASSIGNI(self):
+            return self.getToken(VoTienParser.ASSIGNI, 0)
+
+        def expr_list(self):
+            return self.getTypedRuleContext(VoTienParser.Expr_listContext,0)
+
+
         def getRuleIndex(self):
-            return VoTienParser.RULE_var_list
+            return VoTienParser.RULE_multiple_decl
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitVar_list" ):
-                return visitor.visitVar_list(self)
+            if hasattr( visitor, "visitMultiple_decl" ):
+                return visitor.visitMultiple_decl(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def var_list(self):
+    def multiple_decl(self):
 
-        localctx = VoTienParser.Var_listContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_var_list)
+        localctx = VoTienParser.Multiple_declContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 10, self.RULE_multiple_decl)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 47
-            self.match(VoTienParser.ID)
             self.state = 52
+            self.match(VoTienParser.ID)
+            self.state = 53
+            self.match(VoTienParser.CM)
+            self.state = 54
+            self.match(VoTienParser.ID)
+            self.state = 59
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==VoTienParser.CM:
-                self.state = 48
+                self.state = 55
                 self.match(VoTienParser.CM)
-                self.state = 49
+                self.state = 56
                 self.match(VoTienParser.ID)
-                self.state = 54
+                self.state = 61
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
+            self.state = 64
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==VoTienParser.ASSIGNI:
+                self.state = 62
+                self.match(VoTienParser.ASSIGNI)
+                self.state = 63
+                self.expr_list()
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class AssignmentStmContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def single_assign(self):
+            return self.getTypedRuleContext(VoTienParser.Single_assignContext,0)
+
+
+        def multiple_assign(self):
+            return self.getTypedRuleContext(VoTienParser.Multiple_assignContext,0)
+
+
+        def getRuleIndex(self):
+            return VoTienParser.RULE_assignmentStm
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAssignmentStm" ):
+                return visitor.visitAssignmentStm(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def assignmentStm(self):
+
+        localctx = VoTienParser.AssignmentStmContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 12, self.RULE_assignmentStm)
+        try:
+            self.state = 68
+            self._errHandler.sync(self)
+            la_ = self._interp.adaptivePredict(self._input,6,self._ctx)
+            if la_ == 1:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 66
+                self.single_assign()
+                pass
+
+            elif la_ == 2:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 67
+                self.multiple_assign()
+                pass
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Single_assignContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def ID(self):
+            return self.getToken(VoTienParser.ID, 0)
+
+        def ASSIGNI(self):
+            return self.getToken(VoTienParser.ASSIGNI, 0)
+
+        def expression(self):
+            return self.getTypedRuleContext(VoTienParser.ExpressionContext,0)
+
+
+        def SEM(self):
+            return self.getToken(VoTienParser.SEM, 0)
+
+        def getRuleIndex(self):
+            return VoTienParser.RULE_single_assign
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSingle_assign" ):
+                return visitor.visitSingle_assign(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def single_assign(self):
+
+        localctx = VoTienParser.Single_assignContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 14, self.RULE_single_assign)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 70
+            self.match(VoTienParser.ID)
+            self.state = 71
+            self.match(VoTienParser.ASSIGNI)
+            self.state = 72
+            self.expression()
+            self.state = 73
+            self.match(VoTienParser.SEM)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Multiple_assignContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def ID(self, i:int=None):
+            if i is None:
+                return self.getTokens(VoTienParser.ID)
+            else:
+                return self.getToken(VoTienParser.ID, i)
+
+        def CM(self, i:int=None):
+            if i is None:
+                return self.getTokens(VoTienParser.CM)
+            else:
+                return self.getToken(VoTienParser.CM, i)
+
+        def ASSIGNI(self):
+            return self.getToken(VoTienParser.ASSIGNI, 0)
+
+        def expr_list(self):
+            return self.getTypedRuleContext(VoTienParser.Expr_listContext,0)
+
+
+        def SEM(self):
+            return self.getToken(VoTienParser.SEM, 0)
+
+        def getRuleIndex(self):
+            return VoTienParser.RULE_multiple_assign
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMultiple_assign" ):
+                return visitor.visitMultiple_assign(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def multiple_assign(self):
+
+        localctx = VoTienParser.Multiple_assignContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 16, self.RULE_multiple_assign)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 75
+            self.match(VoTienParser.ID)
+            self.state = 76
+            self.match(VoTienParser.CM)
+            self.state = 77
+            self.match(VoTienParser.ID)
+            self.state = 82
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            while _la==VoTienParser.CM:
+                self.state = 78
+                self.match(VoTienParser.CM)
+                self.state = 79
+                self.match(VoTienParser.ID)
+                self.state = 84
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+
+            self.state = 85
+            self.match(VoTienParser.ASSIGNI)
+            self.state = 86
+            self.expr_list()
+            self.state = 87
+            self.match(VoTienParser.SEM)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -480,21 +708,21 @@ class VoTienParser ( Parser ):
     def expr_list(self):
 
         localctx = VoTienParser.Expr_listContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_expr_list)
+        self.enterRule(localctx, 18, self.RULE_expr_list)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 55
+            self.state = 89
             self.expression()
-            self.state = 60
+            self.state = 94
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==VoTienParser.CM:
-                self.state = 56
+                self.state = 90
                 self.match(VoTienParser.CM)
-                self.state = 57
+                self.state = 91
                 self.expression()
-                self.state = 62
+                self.state = 96
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -548,26 +776,26 @@ class VoTienParser ( Parser ):
     def expression(self):
 
         localctx = VoTienParser.ExpressionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_expression)
+        self.enterRule(localctx, 20, self.RULE_expression)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 63
+            self.state = 97
             self.term()
-            self.state = 68
+            self.state = 102
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==VoTienParser.ADD or _la==VoTienParser.SUB:
-                self.state = 64
+                self.state = 98
                 _la = self._input.LA(1)
                 if not(_la==VoTienParser.ADD or _la==VoTienParser.SUB):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 65
+                self.state = 99
                 self.term()
-                self.state = 70
+                self.state = 104
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -621,26 +849,26 @@ class VoTienParser ( Parser ):
     def term(self):
 
         localctx = VoTienParser.TermContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_term)
+        self.enterRule(localctx, 22, self.RULE_term)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 71
+            self.state = 105
             self.factor()
-            self.state = 76
+            self.state = 110
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==VoTienParser.MUL or _la==VoTienParser.DIV:
-                self.state = 72
+                self.state = 106
                 _la = self._input.LA(1)
                 if not(_la==VoTienParser.MUL or _la==VoTienParser.DIV):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 73
+                self.state = 107
                 self.factor()
-                self.state = 78
+                self.state = 112
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -685,19 +913,19 @@ class VoTienParser ( Parser ):
     def factor(self):
 
         localctx = VoTienParser.FactorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_factor)
+        self.enterRule(localctx, 24, self.RULE_factor)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 79
+            self.state = 113
             self.primary()
-            self.state = 82
+            self.state = 116
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==VoTienParser.EXP:
-                self.state = 80
+                self.state = 114
                 self.match(VoTienParser.EXP)
-                self.state = 81
+                self.state = 115
                 self.primary()
 
 
@@ -717,11 +945,11 @@ class VoTienParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def INT_LIT(self):
-            return self.getToken(VoTienParser.INT_LIT, 0)
-
         def ID(self):
             return self.getToken(VoTienParser.ID, 0)
+
+        def INT_LIT(self):
+            return self.getToken(VoTienParser.INT_LIT, 0)
 
         def LP(self):
             return self.getToken(VoTienParser.LP, 0)
@@ -748,28 +976,28 @@ class VoTienParser ( Parser ):
     def primary(self):
 
         localctx = VoTienParser.PrimaryContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 20, self.RULE_primary)
+        self.enterRule(localctx, 26, self.RULE_primary)
         try:
-            self.state = 90
+            self.state = 124
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [VoTienParser.INT_LIT]:
+            if token in [VoTienParser.ID]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 84
-                self.match(VoTienParser.INT_LIT)
-                pass
-            elif token in [VoTienParser.ID]:
-                self.enterOuterAlt(localctx, 2)
-                self.state = 85
+                self.state = 118
                 self.match(VoTienParser.ID)
+                pass
+            elif token in [VoTienParser.INT_LIT]:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 119
+                self.match(VoTienParser.INT_LIT)
                 pass
             elif token in [VoTienParser.LP]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 86
+                self.state = 120
                 self.match(VoTienParser.LP)
-                self.state = 87
+                self.state = 121
                 self.expression()
-                self.state = 88
+                self.state = 122
                 self.match(VoTienParser.RP)
                 pass
             else:
