@@ -41,21 +41,21 @@ ERROR_CHAR: . {raise ErrorToken(self.text)};
 
 program: stm+ EOF;
 
-stm: declarationStm | assignmentStm;
+stm: declarationStm | assignmentStm;						//một câu lệnh có thể là khai báo hoặc gán
 
 declarationStm: INT var_decl_list SEM;
 
 var_decl_list: single_decl | multiple_decl;
 
-single_decl: ID (ASSIGNI expression)?;
+single_decl: ID (ASSIGNI expression)?; 						//a; 	a = 10;
 
-multiple_decl: ID CM ID (CM ID)* (ASSIGNI expr_list)?;
+multiple_decl: ID CM ID (CM ID)* (ASSIGNI expr_list)?; 		//	 a, b, c; 	a, b, c = 1, 2, 3;
 
 assignmentStm: single_assign | multiple_assign;
 
-single_assign: ID ASSIGNI expression SEM;
+single_assign: ID ASSIGNI expression SEM; 					//a = 10;
 
-multiple_assign: ID CM ID (CM ID)* ASSIGNI expr_list SEM;
+multiple_assign: ID CM ID (CM ID)* ASSIGNI expr_list SEM; 	// a, b, c = 10, 20, 30;
 
 expr_list: expression (CM expression)*;
 
@@ -65,6 +65,6 @@ term: factor ((MUL | DIV) factor)*;
 
 factor: primary (EXP primary)?;
 
-primary: ID | INT_LIT | LP expression RP;
+primary: ID | INT_LIT | LP expression RP; 					//x;		10;		(x+5);
 
 // //! -------------------------- end  parser structure ----------------------- //
