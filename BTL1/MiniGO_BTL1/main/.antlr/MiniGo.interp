@@ -54,8 +54,12 @@ null
 null
 null
 null
-'U'
-'I'
+null
+null
+null
+null
+null
+null
 
 token symbolic names:
 null
@@ -111,14 +115,18 @@ COMMA
 SEMI
 ID
 INT_LIT
+FLOAT_LIT
+STRING_LIT
 WS
-ERROR_CHAR
+LINE_COMMENT
+BLOCK_COMMENT
 UNCLOSE_STRING
 ILLEGAL_ESCAPE
+ERROR_CHAR
 
 rule names:
 program
 
 
 atn:
-[4, 1, 56, 10, 2, 0, 7, 0, 1, 0, 4, 0, 4, 8, 0, 11, 0, 12, 0, 5, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 9, 0, 3, 1, 0, 0, 0, 2, 4, 5, 1, 0, 0, 3, 2, 1, 0, 0, 0, 4, 5, 1, 0, 0, 0, 5, 3, 1, 0, 0, 0, 5, 6, 1, 0, 0, 0, 6, 7, 1, 0, 0, 0, 7, 8, 5, 0, 0, 1, 8, 1, 1, 0, 0, 0, 1, 5]
+[4, 1, 60, 10, 2, 0, 7, 0, 1, 0, 4, 0, 4, 8, 0, 11, 0, 12, 0, 5, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 9, 0, 3, 1, 0, 0, 0, 2, 4, 5, 1, 0, 0, 3, 2, 1, 0, 0, 0, 4, 5, 1, 0, 0, 0, 5, 3, 1, 0, 0, 0, 5, 6, 1, 0, 0, 0, 6, 7, 1, 0, 0, 0, 7, 8, 5, 0, 0, 1, 8, 1, 1, 0, 0, 0, 1, 5]

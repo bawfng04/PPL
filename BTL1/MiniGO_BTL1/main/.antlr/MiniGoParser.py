@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,56,10,2,0,7,0,1,0,4,0,4,8,0,11,0,12,0,5,1,0,1,0,1,0,0,0,1,0,
+        4,1,60,10,2,0,7,0,1,0,4,0,4,8,0,11,0,12,0,5,1,0,1,0,1,0,0,0,1,0,
         0,0,9,0,3,1,0,0,0,2,4,5,1,0,0,3,2,1,0,0,0,4,5,1,0,0,0,5,3,1,0,0,
         0,5,6,1,0,0,0,6,7,1,0,0,0,7,8,5,0,0,1,8,1,1,0,0,0,1,5
     ]
@@ -33,8 +33,7 @@ class MiniGoParser ( Parser ):
                      "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'&&'", 
                      "'||'", "'!'", "'='", "'+='", "'-='", "'*='", "'/='", 
                      "'%='", "'.'", "'('", "')'", "'{'", "'}'", "'['", "']'", 
-                     "','", "';'", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "'U'", "'I'" ]
+                     "','", "';'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "IF", "ELSE", "FOR", "RETURN", 
                       "FUNC", "TYPE", "STRUCT", "INTERFACE", "STRING", "INT", 
@@ -45,7 +44,8 @@ class MiniGoParser ( Parser ):
                       "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", 
                       "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "LP", "RP", "LB", 
                       "RB", "LSB", "RSB", "COMMA", "SEMI", "ID", "INT_LIT", 
-                      "WS", "ERROR_CHAR", "UNCLOSE_STRING", "ILLEGAL_ESCAPE" ]
+                      "FLOAT_LIT", "STRING_LIT", "WS", "LINE_COMMENT", "BLOCK_COMMENT", 
+                      "UNCLOSE_STRING", "ILLEGAL_ESCAPE", "ERROR_CHAR" ]
 
     RULE_program = 0
 
@@ -104,10 +104,14 @@ class MiniGoParser ( Parser ):
     SEMI=50
     ID=51
     INT_LIT=52
-    WS=53
-    ERROR_CHAR=54
-    UNCLOSE_STRING=55
-    ILLEGAL_ESCAPE=56
+    FLOAT_LIT=53
+    STRING_LIT=54
+    WS=55
+    LINE_COMMENT=56
+    BLOCK_COMMENT=57
+    UNCLOSE_STRING=58
+    ILLEGAL_ESCAPE=59
+    ERROR_CHAR=60
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)

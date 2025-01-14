@@ -1,1 +1,1 @@
-ErrorToken "
+VOTIEN \r,<EOF>
