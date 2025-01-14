@@ -101,7 +101,7 @@ INT_LIT:
 
 FLOAT_LIT: [0-9]+ DECIMAL_PART EXPONENT? | DECIMAL_PART EXPONENT? | [0-9]+ EXPONENT;
 
-fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"'; // Remove 'f'
+fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 
 STRING_LIT:
