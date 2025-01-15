@@ -26,9 +26,6 @@ options{
 
 program: 'votien'+ EOF;
 
-// Identifiers
-ID: [a-zA-Z_][a-zA-Z_0-9]*;
-
 // Keywords
 IF: 'if';
 ELSE: 'else';
@@ -83,6 +80,9 @@ LSB: '[';
 RSB: ']';
 COMMA: ',';
 SEMI: ';';
+
+// Identifiers
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 // Literals
 fragment DIGIT: [0-9];

@@ -25,25 +25,25 @@ class MiniGoParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'votien'", "<INVALID>", "'if'", "'else'", 
-                     "'for'", "'return'", "'func'", "'type'", "'struct'", 
-                     "'interface'", "'string'", "'int'", "'float'", "'boolean'", 
-                     "'const'", "'var'", "'continue'", "'break'", "'range'", 
-                     "'nil'", "'true'", "'false'", "'+'", "'-'", "'*'", 
-                     "'/'", "'%'", "'=='", "'!='", "'<'", "'<='", "'>'", 
-                     "'>='", "'&&'", "'||'", "'!'", "'='", "'+='", "'-='", 
-                     "'*='", "'/='", "'%='", "'.'", "'('", "')'", "'{'", 
-                     "'}'", "'['", "']'", "','", "';'" ]
+    literalNames = [ "<INVALID>", "'votien'", "'if'", "'else'", "'for'", 
+                     "'return'", "'func'", "'type'", "'struct'", "'interface'", 
+                     "'string'", "'int'", "'float'", "'boolean'", "'const'", 
+                     "'var'", "'continue'", "'break'", "'range'", "'nil'", 
+                     "'true'", "'false'", "'+'", "'-'", "'*'", "'/'", "'%'", 
+                     "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'&&'", 
+                     "'||'", "'!'", "'='", "'+='", "'-='", "'*='", "'/='", 
+                     "'%='", "'.'", "'('", "')'", "'{'", "'}'", "'['", "']'", 
+                     "','", "';'" ]
 
-    symbolicNames = [ "<INVALID>", "<INVALID>", "ID", "IF", "ELSE", "FOR", 
-                      "RETURN", "FUNC", "TYPE", "STRUCT", "INTERFACE", "STRING", 
-                      "INT", "FLOAT", "BOOLEAN", "CONST", "VAR", "CONTINUE", 
-                      "BREAK", "RANGE", "NIL", "TRUE", "FALSE", "ADD", "SUB", 
-                      "MUL", "DIV", "MOD", "EQUAL", "NOT_EQUAL", "LESS", 
-                      "LESS_OR_EQUAL", "GREATER", "GREATER_OR_EQUAL", "AND", 
-                      "OR", "NOT", "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", 
-                      "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "LP", 
-                      "RP", "LB", "RB", "LSB", "RSB", "COMMA", "SEMI", "INT_LIT", 
+    symbolicNames = [ "<INVALID>", "<INVALID>", "IF", "ELSE", "FOR", "RETURN", 
+                      "FUNC", "TYPE", "STRUCT", "INTERFACE", "STRING", "INT", 
+                      "FLOAT", "BOOLEAN", "CONST", "VAR", "CONTINUE", "BREAK", 
+                      "RANGE", "NIL", "TRUE", "FALSE", "ADD", "SUB", "MUL", 
+                      "DIV", "MOD", "EQUAL", "NOT_EQUAL", "LESS", "LESS_OR_EQUAL", 
+                      "GREATER", "GREATER_OR_EQUAL", "AND", "OR", "NOT", 
+                      "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", 
+                      "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "LP", "RP", "LB", 
+                      "RB", "LSB", "RSB", "COMMA", "SEMI", "ID", "INT_LIT", 
                       "FLOAT_LIT", "STRING_LIT", "WS", "LINE_COMMENT", "BLOCK_COMMENT", 
                       "UNCLOSE_STRING", "ILLEGAL_ESCAPE", "ERROR_CHAR" ]
 
@@ -53,56 +53,56 @@ class MiniGoParser ( Parser ):
 
     EOF = Token.EOF
     T__0=1
-    ID=2
-    IF=3
-    ELSE=4
-    FOR=5
-    RETURN=6
-    FUNC=7
-    TYPE=8
-    STRUCT=9
-    INTERFACE=10
-    STRING=11
-    INT=12
-    FLOAT=13
-    BOOLEAN=14
-    CONST=15
-    VAR=16
-    CONTINUE=17
-    BREAK=18
-    RANGE=19
-    NIL=20
-    TRUE=21
-    FALSE=22
-    ADD=23
-    SUB=24
-    MUL=25
-    DIV=26
-    MOD=27
-    EQUAL=28
-    NOT_EQUAL=29
-    LESS=30
-    LESS_OR_EQUAL=31
-    GREATER=32
-    GREATER_OR_EQUAL=33
-    AND=34
-    OR=35
-    NOT=36
-    ASSIGN=37
-    ADD_ASSIGN=38
-    SUB_ASSIGN=39
-    MUL_ASSIGN=40
-    DIV_ASSIGN=41
-    MOD_ASSIGN=42
-    DOT=43
-    LP=44
-    RP=45
-    LB=46
-    RB=47
-    LSB=48
-    RSB=49
-    COMMA=50
-    SEMI=51
+    IF=2
+    ELSE=3
+    FOR=4
+    RETURN=5
+    FUNC=6
+    TYPE=7
+    STRUCT=8
+    INTERFACE=9
+    STRING=10
+    INT=11
+    FLOAT=12
+    BOOLEAN=13
+    CONST=14
+    VAR=15
+    CONTINUE=16
+    BREAK=17
+    RANGE=18
+    NIL=19
+    TRUE=20
+    FALSE=21
+    ADD=22
+    SUB=23
+    MUL=24
+    DIV=25
+    MOD=26
+    EQUAL=27
+    NOT_EQUAL=28
+    LESS=29
+    LESS_OR_EQUAL=30
+    GREATER=31
+    GREATER_OR_EQUAL=32
+    AND=33
+    OR=34
+    NOT=35
+    ASSIGN=36
+    ADD_ASSIGN=37
+    SUB_ASSIGN=38
+    MUL_ASSIGN=39
+    DIV_ASSIGN=40
+    MOD_ASSIGN=41
+    DOT=42
+    LP=43
+    RP=44
+    LB=45
+    RB=46
+    LSB=47
+    RSB=48
+    COMMA=49
+    SEMI=50
+    ID=51
     INT_LIT=52
     FLOAT_LIT=53
     STRING_LIT=54
