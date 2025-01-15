@@ -1,1 +1,1 @@
-Error on line 1 col 19: ID
+Error on line 1 col 16: 1.

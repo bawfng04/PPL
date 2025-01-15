@@ -22,34 +22,46 @@ options{
 }
 // ! ---------------- PASER DEADLINE PASS 13 TEST CASE 23:59 16/1 ----------------------- */
 program: ((CONST ID ASSIGN expression) | NEWLINE)+ EOF;
-//TODO Literal 6.6 pdf
-literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | array_literal | struct_literal;
-// TODO 5.2 Expressions 6 pdf
-list_expression: expression COMMA list_expression | expression;
+//TODO Literal 6.6 pdf literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | array_literal | struct_literal; TODO 5.2 Expressions 6 pdf
+// Expressions by precedence
 expression: expression OR expression1 | expression1;
-
 expression1: expression1 AND expression2 | expression2;
-
 expression2: expression2 (EQUAL | NOT_EQUAL) expression3 | expression3;
-
 expression3:
 	expression3 (LESS | LESS_OR_EQUAL | GREATER | GREATER_OR_EQUAL) expression4
 	| expression4;
-
 expression4: expression4 (ADD | SUB) expression5 | expression5;
-
 expression5: expression5 (MUL | DIV | MOD) expression6 | expression6;
+expression6: NOT expression6 | SUB expression6 | expression7; // Unary operators
+expression7: operand (element_access | field_access | call_expr)*;
 
-// Unary (NOT, -) ...
-expression6: NOT expression6 | SUB expression6 | expression7;
+// Operands
+operand: literal | ID | LP expression RP;
 
-expression7: literal | ID | LP expression RP;
+// Element access, field access, function calls
+element_access: LSB expression RSB;
+field_access: DOT ID;
+call_expr: LP list_expression? RP;
 
-array_literal: LSB list_expression RSB;
+// Literals
+literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | NIL | array_literal | struct_literal;
 
-struct_literal: LB (ID ASSIGN expression (COMMA ID ASSIGN expression)*)? RB;
+// Array literal with type
+array_literal: array_type LB list_expression? RB;
+array_type: LSB INT_LIT RSB (LSB INT_LIT RSB)* type_name;
+type_name: INT | FLOAT | STRING | BOOLEAN | ID;
 
+// Struct literal
+struct_literal: ID LB (field_list)? RB;
+field_list: field_init (COMMA field_init)*;
+field_init: ID COLON expression;
+
+// List of expressions
+list_expression: expression (COMMA expression)*;
+
+//thêm vào cho btl2
 NEWLINE: '\r'? '\n' -> skip;
+COLON: ':';
 
 //! ---------------- PARSER ----------------------- */ ! ---------------- LEXER DEADLINE PASS 13 TEST CASE 23:59 16/1 ----------------------- */ TODO
 // LEXER Keywords
