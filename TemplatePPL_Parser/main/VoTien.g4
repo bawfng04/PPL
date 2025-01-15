@@ -27,8 +27,8 @@ ID: [a-zA-Z_][a-zA-Z0-9_]*;
 INT_LIT: [0-9]+;
 
 // SKIP
-COMMENTS: '##' ~[\n]* -> skip; // Comments
-WS: [ \t\r\f\b\n]+ -> skip; // skip spaces, tabs
+COMMENTS: '##' ~[\n]* -> skip;	// Comments
+WS: [ \t\r\f\b\n]+ -> skip;		// skip spaces, tabs
 
 // ERROR
 ERROR_CHAR: . {raise ErrorToken(self.text)};
@@ -41,21 +41,23 @@ ERROR_CHAR: . {raise ErrorToken(self.text)};
 
 program: stm+ EOF;
 
-stm: declarationStm | assignmentStm;						//một câu lệnh có thể là khai báo hoặc gán
+stm: declarationStm | assignmentStm; //một câu lệnh có thể là khai báo hoặc gán
 
 declarationStm: INT var_decl_list SEM;
 
 var_decl_list: single_decl | multiple_decl;
 
-single_decl: ID (ASSIGNI expression)?; 						//a; 	a = 10;
+single_decl: ID (ASSIGNI expression)?; //a; 	a = 10;
 
-multiple_decl: ID CM ID (CM ID)* (ASSIGNI expr_list)?; 		//	 a, b, c; 	a, b, c = 1, 2, 3;
+multiple_decl: ID CM ID (CM ID)* (ASSIGNI expr_list)?; //	 a, b, c; 	a, b, c = 1, 2, 3;
 
-assignmentStm: single_assign | multiple_assign;
+assignmentStm:
+	single_assign
+	| multiple_assign; //một câu gán có thể là gán một biến hoặc nhiều biến
 
-single_assign: ID ASSIGNI expression SEM; 					//a = 10;
+single_assign: ID ASSIGNI expression SEM; //a = 10;
 
-multiple_assign: ID CM ID (CM ID)* ASSIGNI expr_list SEM; 	// a, b, c = 10, 20, 30;
+multiple_assign: ID CM ID (CM ID)* ASSIGNI expr_list SEM; // a, b, c = 10, 20, 30;
 
 expr_list: expression (CM expression)*;
 
@@ -65,6 +67,6 @@ term: factor ((MUL | DIV) factor)*;
 
 factor: primary (EXP primary)?;
 
-primary: ID | INT_LIT | LP expression RP; 					//x;		10;		(x+5);
+primary: ID | INT_LIT | LP expression RP; //x;		10;		(x+5);
 
 // //! -------------------------- end  parser structure ----------------------- //
