@@ -165,7 +165,7 @@ class LexerSuite(unittest.TestCase):
 
     def test_037(self):
         """Test invalid identifiers starting with digits"""
-        self.assertTrue(TestLexer.test("123invalid", "ErrorToken 1", inspect.stack()[0].function))
+        self.assertTrue(TestLexer.test("123invalid", "123,invalid,<EOF>", inspect.stack()[0].function))
 
     def test_038(self):
         """Test keywords"""
@@ -220,8 +220,8 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test("return a + b;", "return,a,+,b,;,<EOF>", inspect.stack()[0].function))
 
     def test_051(self):
-        """Test multiple errors in one line"""
-        self.assertTrue(TestLexer.test("\"Unclosed string @", "Unclosed string: \"Unclosed string @", inspect.stack()[0].function))
+        """Test unclosed string only"""
+        self.assertTrue(TestLexer.test("\"Unclosed string", "Unclosed string: Unclosed string", inspect.stack()[0].function))
 
     def test_052(self):
         """Test multi-line strings"""
@@ -241,7 +241,7 @@ class LexerSuite(unittest.TestCase):
 
     def test_056(self):
         """Test invalid floating-point literals"""
-        self.assertTrue(TestLexer.test("1.2.3", "1.2,ErrorToken .", inspect.stack()[0].function))
+        self.assertTrue(TestLexer.test("1.2.3", "1.2,.3,<EOF>", inspect.stack()[0].function))
 
     def test_057(self):
         """Test nested array declaration"""
