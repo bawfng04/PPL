@@ -26,9 +26,6 @@ options{
 
 program: 'votien'+ EOF;
 
-// Identifiers
-ID: [a-zA-Z_][a-zA-Z_0-9]*;
-
 // Keywords
 IF: 'if';
 ELSE: 'else';
@@ -84,6 +81,9 @@ RSB: ']';
 COMMA: ',';
 SEMI: ';';
 
+// Identifiers
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
+
 // Literals
 fragment DIGIT: [0-9];
 fragment OCTAL_DIGIT: [0-7];
@@ -104,9 +104,10 @@ FLOAT_LIT: [0-9]+ DECIMAL_PART EXPONENT? | DECIMAL_PART EXPONENT? | [0-9]+ EXPON
 fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 
-STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
-
-// STRING_LIT: '"' (~[\n\\"] | '\\' [bfrnt'\\] | '\'"')* '"' {self.text = self.text[1:-1]};
+STRING_LIT:
+	'"' STR_CHAR* '"' {
+    self.text = self.text[1:-1]
+};
 
 // Comments
 WS: [ \t\r\n\f]+ -> skip;
@@ -116,12 +117,12 @@ BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 // Error handling
 UNCLOSE_STRING:
 	'"' STR_CHAR* ([\r\n] | EOF) {
-        if self.text[-1] in ['\r','\n']:
-            self.text = self.text[1:-1]
-        else:
-            self.text = self.text[1:]
-        raise UncloseString(self.text)
-    };
+    if self.text[-1] in ['\r','\n']:
+        self.text = self.text[1:-1]
+    else:
+        self.text = self.text[1:]
+    raise UncloseString(self.text)
+};
 
 ILLEGAL_ESCAPE:
 	'"' (STR_CHAR* '\\' ~[brnt'"\\] STR_CHAR*) {

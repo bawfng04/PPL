@@ -1,6 +1,7 @@
 token literal names:
 null
 'votien'
+null
 'if'
 'else'
 'for'
@@ -59,11 +60,11 @@ null
 null
 null
 null
-null
 
 token symbolic names:
 null
 null
+ID
 IF
 ELSE
 FOR
@@ -113,7 +114,6 @@ LSB
 RSB
 COMMA
 SEMI
-ID
 INT_LIT
 FLOAT_LIT
 STRING_LIT
