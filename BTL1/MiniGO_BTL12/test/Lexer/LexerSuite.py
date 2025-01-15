@@ -110,4 +110,156 @@ class LexerSuite(unittest.TestCase):
         """Test error character"""
         self.assertTrue(TestLexer.test("@", "ErrorToken @", inspect.stack()[0].function))
 
+    def test_024(self):
+        """Test valid integer literals"""
+        self.assertTrue(TestLexer.test("123456789", "123456789,<EOF>", inspect.stack()[0].function))
+
+        #hex -> convert qua int
+    def test_025(self):
+        """Test valid hexadecimal literals"""
+        self.assertTrue(TestLexer.test("0x1A3F", "6719,<EOF>", inspect.stack()[0].function))
+
+    def test_026(self):
+        """Test valid binary literals"""
+        self.assertTrue(TestLexer.test("0b1101", "13,<EOF>", inspect.stack()[0].function))
+
+    def test_027(self):
+        """Test valid octal literals"""
+        self.assertTrue(TestLexer.test("0o755", "493,<EOF>", inspect.stack()[0].function))
+
+    def test_028(self):
+        """Test valid floating-point literals"""
+        self.assertTrue(TestLexer.test("123.456e-10", "123.456e-10,<EOF>", inspect.stack()[0].function))
+
+    def test_029(self):
+        """Test string literals with escape sequences"""
+        self.assertTrue(TestLexer.test('"Hello\\nWorld"', "Hello\\nWorld,<EOF>", inspect.stack()[0].function))
+
+    def test_030(self):
+        """Test string literals with valid escapes"""
+        self.assertTrue(TestLexer.test('"MiniGo\\tLanguage"', "MiniGo\\tLanguage,<EOF>", inspect.stack()[0].function))
+
+    def test_031(self):
+        """Test unclosed string literals"""
+        self.assertTrue(TestLexer.test('"Unclosed string', "Unclosed string: Unclosed string", inspect.stack()[0].function))
+
+    def test_032(self):
+        """Test illegal escape in string"""
+        self.assertTrue(TestLexer.test('"Illegal\\xEscape"', "Illegal escape in string: Illegal\\x", inspect.stack()[0].function))
+
+    def test_033(self):
+        """Test single-line comments"""
+        self.assertTrue(TestLexer.test("// This is a comment\n", "<EOF>", inspect.stack()[0].function))
+
+    def test_034(self):
+        """Test multi-line comments"""
+        self.assertTrue(TestLexer.test("/* Comment spanning \n multiple lines */", "<EOF>", inspect.stack()[0].function))
+
+    def test_035(self):
+        """Test nested multi-line comments"""
+        self.assertTrue(TestLexer.test("/* Outer /* Inner */ Outer */", "<EOF>", inspect.stack()[0].function))
+
+    def test_036(self):
+        """Test valid identifiers"""
+        self.assertTrue(TestLexer.test("_validIdentifier123", "_validIdentifier123,<EOF>", inspect.stack()[0].function))
+
+    def test_037(self):
+        """Test invalid identifiers starting with digits"""
+        self.assertTrue(TestLexer.test("123invalid", "ErrorToken 1", inspect.stack()[0].function))
+
+    def test_038(self):
+        """Test keywords"""
+        self.assertTrue(TestLexer.test("func", "func,<EOF>", inspect.stack()[0].function))
+
+    def test_039(self):
+        """Test all operators"""
+        self.assertTrue(TestLexer.test("+-*/%&&||!", "+,-,*,/,%,&&,||,!,<EOF>", inspect.stack()[0].function))
+
+    def test_040(self):
+        """Test all relational operators"""
+        self.assertTrue(TestLexer.test("==!=<><=>=", "==,!=,<,>,<=,>=,<EOF>", inspect.stack()[0].function))
+
+    def test_041(self):
+        """Test separators"""
+        self.assertTrue(TestLexer.test("(){},;", "(,),{,},,,;,<EOF>", inspect.stack()[0].function))
+
+    def test_042(self):
+        """Test array declaration"""
+        self.assertTrue(TestLexer.test("[5]int", "[,5,],int,<EOF>", inspect.stack()[0].function))
+
+    def test_043(self):
+        """Test struct declaration"""
+        self.assertTrue(TestLexer.test("type Person struct { name string; age int; }", "type,Person,struct,{,name,string,;,age,int,;,},<EOF>", inspect.stack()[0].function))
+
+    def test_044(self):
+        """Test function declaration"""
+        self.assertTrue(TestLexer.test("func add(a int, b int) int { return a + b; }", "func,add,(,a,int,,,b,int,),int,{,return,a,+,b,;,},<EOF>", inspect.stack()[0].function))
+
+    def test_045(self):
+        """Test boolean literals"""
+        self.assertTrue(TestLexer.test("true false", "true,false,<EOF>", inspect.stack()[0].function))
+
+    def test_046(self):
+        """Test nil literal"""
+        self.assertTrue(TestLexer.test("nil", "nil,<EOF>", inspect.stack()[0].function))
+
+    def test_047(self):
+        """Test array indexing"""
+        self.assertTrue(TestLexer.test("arr[10]", "arr,[,10,],<EOF>", inspect.stack()[0].function))
+
+    def test_048(self):
+        """Test dot operator with struct"""
+        self.assertTrue(TestLexer.test("person.name", "person,.,name,<EOF>", inspect.stack()[0].function))
+
+    def test_049(self):
+        """Test call statement"""
+        self.assertTrue(TestLexer.test("foo(10, 20);", "foo,(,10,,,20,),;,<EOF>", inspect.stack()[0].function))
+
+    def test_050(self):
+        """Test return statement"""
+        self.assertTrue(TestLexer.test("return a + b;", "return,a,+,b,;,<EOF>", inspect.stack()[0].function))
+
+    def test_051(self):
+        """Test multiple errors in one line"""
+        self.assertTrue(TestLexer.test("\"Unclosed string @", "Unclosed string: \"Unclosed string @", inspect.stack()[0].function))
+
+    def test_052(self):
+        """Test multi-line strings"""
+        self.assertTrue(TestLexer.test('"This is a multi-line\\nstring."', "This is a multi-line\\nstring.,<EOF>", inspect.stack()[0].function))
+
+    def test_053(self):
+        """Test invalid characters"""
+        self.assertTrue(TestLexer.test("@#$%", "ErrorToken @", inspect.stack()[0].function))
+
+    def test_054(self):
+        """Test mixed valid and invalid tokens"""
+        self.assertTrue(TestLexer.test("var x = 10; @", "var,x,=,10,;,ErrorToken @", inspect.stack()[0].function))
+
+    def test_055(self):
+        """Test empty program"""
+        self.assertTrue(TestLexer.test("", "<EOF>", inspect.stack()[0].function))
+
+    def test_056(self):
+        """Test invalid floating-point literals"""
+        self.assertTrue(TestLexer.test("1.2.3", "1.2,ErrorToken .", inspect.stack()[0].function))
+
+    def test_057(self):
+        """Test nested array declaration"""
+        self.assertTrue(TestLexer.test("[3][5]int", "[,3,],[,5,],int,<EOF>", inspect.stack()[0].function))
+
+    def test_058(self):
+        """Test float with exponent"""
+        self.assertTrue(TestLexer.test("2e10", "2e10,<EOF>", inspect.stack()[0].function))
+
+    def test_059(self):
+        """Test keyword within identifier"""
+        self.assertTrue(TestLexer.test("forLoop", "forLoop,<EOF>", inspect.stack()[0].function))
+
+    def test_060(self):
+        """Test missing closing bracket"""
+        self.assertTrue(TestLexer.test("[3][5]int{1, 2, 3", "[,3,],[,5,],int,{,1,,,2,,,3,<EOF>", inspect.stack()[0].function))
+
+
+
+
     #!!! 87 test yêu cầu code chấm sau

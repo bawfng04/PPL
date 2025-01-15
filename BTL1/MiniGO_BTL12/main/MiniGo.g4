@@ -87,17 +87,20 @@ ID: [a-zA-Z_][a-zA-Z_0-9]*;
 // Literals
 fragment DIGIT: [0-9];
 fragment OCTAL_DIGIT: [0-7];
+fragment OCTAL: ('0o' | '0O') [0-7]+;
 fragment HEX_DIGIT: [0-9a-fA-F];
-fragment DECIMAL: '0' | [1-9][0-9]*;
-fragment OCTAL: '0' [0-7]+;
 fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
-fragment EXPONENT: [eE][+-]? [0-9]+;
+fragment DECIMAL: '0' | [1-9][0-9]*;
 fragment DECIMAL_PART: '.' [0-9]*;
+fragment BINARY_DIGIT: [01];
+fragment BINARY: ('0b' | '0B') [0-1]+;
+fragment EXPONENT: [eE][+-]? [0-9]+;
 
 INT_LIT:
 	DECIMAL
 	| HEX {self.text = str(int(self.text,16))}
-	| OCTAL {self.text = str(int(self.text,8))};
+	| OCTAL {self.text = str(int(self.text,8))}
+	| BINARY {self.text = str(int(self.text,2))};
 
 FLOAT_LIT: [0-9]+ DECIMAL_PART EXPONENT? | DECIMAL_PART EXPONENT? | [0-9]+ EXPONENT;
 
