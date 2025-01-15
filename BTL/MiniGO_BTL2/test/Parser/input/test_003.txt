@@ -1,1 +1,0 @@
-const Votien = [5][0]string{1, "string"}

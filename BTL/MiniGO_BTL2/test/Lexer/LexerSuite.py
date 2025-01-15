@@ -74,3 +74,7 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test("""
             const a = 2;
 ""","\n,const,a,=,2,;,\n,<EOF>", inspect.stack()[0].function))
+
+# def test_014(self):
+#         """ILLEGAL_ESCAPE"""
+#         self.assertTrue(TestLexer.test("const a = 2;", "const,a,=,2,;,<EOF>", inspect.stack()[0].function))

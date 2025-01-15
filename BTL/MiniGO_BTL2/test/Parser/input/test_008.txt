@@ -1,1 +1,0 @@
-const Votien = ca.foo(132) + b.c[2]
