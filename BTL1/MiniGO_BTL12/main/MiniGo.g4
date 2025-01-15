@@ -116,18 +116,19 @@ BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 // Error handling
 UNCLOSE_STRING:
 	'"' STR_CHAR* ([\r\n] | EOF) {
-        if self.text[-1] in ['\r','\n']:
+        if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng
             self.text = self.text[1:-1]
-        else:
+        else: #nếu kết thúc bằng EOF thì lấy từ đầu chuỗi đến hết
             self.text = self.text[1:]
         raise UncloseString(self.text)
     };
 
 ILLEGAL_ESCAPE:
-	'"' (STR_CHAR* '\\' ~[brnt'"\\] STR_CHAR*) {
+	'"' (STR_CHAR* '\\' ~[brnt'"\\] STR_CHAR*) {  #nếu có kí tự escape không hợp lệ (không phải \b, \r, \n, \t, \', \", \\)
     illegal_str = str(self.text)
-    i = illegal_str.find('\\')
-    while i != -1 and illegal_str[i+1] in 'brnt\'"\\':
+    i = illegal_str.find('\\') #tìm vị trí xuất hiện đầu tiên của kí tự escape
+
+    while i != -1 and illegal_str[i+1] in 'brnt\'"\\': #hợp lệ thì tìm tiếp
         i = illegal_str.find('\\', i+2)
     raise IllegalEscape(illegal_str[1:i+2])
 };

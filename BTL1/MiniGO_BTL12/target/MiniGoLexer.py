@@ -401,9 +401,9 @@ class MiniGoLexer(Lexer):
     def UNCLOSE_STRING_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 3:
 
-                    if self.text[-1] in ['\r','\n']:
+                    if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng
                         self.text = self.text[1:-1]
-                    else:
+                    else: #nếu kết thúc bằng EOF thì lấy từ đầu chuỗi đến hết
                         self.text = self.text[1:]
                     raise UncloseString(self.text)
                 
@@ -411,10 +411,11 @@ class MiniGoLexer(Lexer):
 
     def ILLEGAL_ESCAPE_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 4:
-
+              #nếu có kí tự escape không hợp lệ (không phải \b, \r, \n, \t, \', \", \\)
                 illegal_str = str(self.text)
-                i = illegal_str.find('\\')
-                while i != -1 and illegal_str[i+1] in 'brnt\'"\\':
+                i = illegal_str.find('\\') #tìm vị trí xuất hiện đầu tiên của kí tự escape
+
+                while i != -1 and illegal_str[i+1] in 'brnt\'"\\': #hợp lệ thì tìm tiếp
                     i = illegal_str.find('\\', i+2)
                 raise IllegalEscape(illegal_str[1:i+2])
 

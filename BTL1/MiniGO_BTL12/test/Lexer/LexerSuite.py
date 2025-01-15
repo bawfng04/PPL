@@ -68,4 +68,46 @@ class LexerSuite(unittest.TestCase):
         """ILLEGAL_ESCAPE"""
         self.assertTrue(TestLexer.test(""" "VOTIEN\\f" ""","Illegal escape in string: VOTIEN\\f", inspect.stack()[0].function))
 
+
+    #testcases của Bằng
+    def test_014(self):
+        """Test keyword 'if'"""
+        self.assertTrue(TestLexer.test("if", "if,<EOF>", inspect.stack()[0].function))
+
+    def test_015(self):
+        """Test operator '+'"""
+        self.assertTrue(TestLexer.test("+", "+,<EOF>", inspect.stack()[0].function))
+
+    def test_016(self):
+        """Test integer literal"""
+        self.assertTrue(TestLexer.test("123", "123,<EOF>", inspect.stack()[0].function))
+
+    def test_017(self):
+        """Test string literal"""
+        self.assertTrue(TestLexer.test('"hello"', "hello,<EOF>", inspect.stack()[0].function))
+
+    def test_018(self):
+        """Test unclosed string"""
+        self.assertTrue(TestLexer.test('"hello', "Unclosed string: hello", inspect.stack()[0].function))
+
+    def test_019(self):
+        """Test illegal escape"""
+        self.assertTrue(TestLexer.test('"hello\\x"', "Illegal escape in string: hello\\x", inspect.stack()[0].function))
+
+    def test_020(self):
+        """Test line comment"""
+        self.assertTrue(TestLexer.test("// this is a comment\n", "<EOF>", inspect.stack()[0].function))
+
+    def test_021(self):
+        """Test block comment"""
+        self.assertTrue(TestLexer.test("/* this is a comment */", "<EOF>", inspect.stack()[0].function))
+
+    def test_022(self):
+        """Test identifier"""
+        self.assertTrue(TestLexer.test("_identifier", "_identifier,<EOF>", inspect.stack()[0].function))
+
+    def test_023(self):
+        """Test error character"""
+        self.assertTrue(TestLexer.test("@", "ErrorToken @", inspect.stack()[0].function))
+
     #!!! 87 test yêu cầu code chấm sau
