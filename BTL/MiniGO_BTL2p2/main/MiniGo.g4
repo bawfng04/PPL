@@ -24,7 +24,6 @@ options{
 	language = Python3;
 }
 
-
 //========================================================== PARSER ==========================================================
 program: NEWLINE* declared (declared | NEWLINE)* EOF;
 
@@ -90,15 +89,23 @@ interface_type: (ID LP params_list? RP (type_name)? SEMI?)*;
 declared_statement: variables_declared | constants_declared;
 
 assign_statement: assign_lhs assign_op expression SEMI?;
-assign_lhs: ID | ID element_access | ID field_access;
-assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN;
+assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
+assign_lhs: ID (field_access | element_access)*;
 
-if_statement: IF LP expression RP block_stmt (ELSE block_stmt)?;
+if_statement: IF LP expression RP block_stmt (ELSE if_statement | ELSE block_stmt)?;
 
 for_statement:
-	FOR LP? (for_init SEMI)? expression? (SEMI for_update)? RP? block_stmt
-	| FOR ID COMMA ID RANGE expression block_stmt;
-for_init: ID ASSIGN expression | VAR ID (type_name)? ASSIGN expression;
+	FOR (
+		ID COMMA ID SHORT_ASSIGN RANGE expression block_stmt
+		| for_init SEMI expression SEMI for_update block_stmt
+		| expression block_stmt
+	);
+
+for_init:
+	ID SHORT_ASSIGN expression
+	| ID assign_op expression
+	| VAR ID (type_name)? ASSIGN expression;
+
 for_update: ID assign_op expression;
 
 break_statement: BREAK SEMI?;
@@ -198,6 +205,7 @@ DIV_ASSIGN: '/=';
 MOD_ASSIGN: '%=';
 DOT: '.';
 COLON: ':';
+SHORT_ASSIGN: ':=';
 
 // Separators
 

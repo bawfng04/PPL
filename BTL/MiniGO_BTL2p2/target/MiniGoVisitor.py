@@ -114,13 +114,13 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#assign_lhs.
-    def visitAssign_lhs(self, ctx:MiniGoParser.Assign_lhsContext):
+    # Visit a parse tree produced by MiniGoParser#assign_op.
+    def visitAssign_op(self, ctx:MiniGoParser.Assign_opContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#assign_op.
-    def visitAssign_op(self, ctx:MiniGoParser.Assign_opContext):
+    # Visit a parse tree produced by MiniGoParser#assign_lhs.
+    def visitAssign_lhs(self, ctx:MiniGoParser.Assign_lhsContext):
         return self.visitChildren(ctx)
 
 
