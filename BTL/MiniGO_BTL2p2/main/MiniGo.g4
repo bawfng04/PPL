@@ -27,6 +27,7 @@ options{
 
 //========================================================== PARSER ==========================================================
 program: NEWLINE* declared (declared | NEWLINE)* EOF;
+
 declared:
 	variables_declared
 	| constants_declared
@@ -35,19 +36,16 @@ declared:
 	| struct_declared
 	| interface_declared;
 
-//TODO Statement 5 and 4 pdf
-list_statement: statement list_statement | statement;
+list_statement: (statement NEWLINE*)* | statement;
 statement:
-	(
-		declared_statement
-		| assign_statement
-		| if_statement
-		| for_statement
-		| break_statement
-		| continue_statement
-		| call_statement
-		| return_statement
-	);
+	declared_statement
+	| assign_statement
+	| if_statement
+	| for_statement
+	| break_statement
+	| continue_statement
+	| call_statement
+	| return_statement;
 
 // Variable and constant declarations
 
@@ -80,6 +78,7 @@ param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 // Struct declaration
 
 struct_declared: TYPE ID STRUCT LB struct_type RB SEMI?;
+
 struct_type: (ID type_name SEMI?)*;
 
 // Interface declaration
@@ -140,7 +139,7 @@ literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | NIL | array_literal |
 
 array_literal: array_type LB list_expression? RB;
 array_type: LSB INT_LIT RSB (LSB INT_LIT RSB)* type_name;
-type_name: INT | FLOAT | STRING | BOOLEAN | ID;
+type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 
 // Struct literal
 
