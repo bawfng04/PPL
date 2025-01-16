@@ -34,6 +34,11 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#var_decl_list.
+    def visitVar_decl_list(self, ctx:MiniGoParser.Var_decl_listContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#var_decl.
     def visitVar_decl(self, ctx:MiniGoParser.Var_declContext):
         return self.visitChildren(ctx)
@@ -41,6 +46,11 @@ class MiniGoVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniGoParser#constants_declared.
     def visitConstants_declared(self, ctx:MiniGoParser.Constants_declaredContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#const_decl_list.
+    def visitConst_decl_list(self, ctx:MiniGoParser.Const_decl_listContext):
         return self.visitChildren(ctx)
 
 
@@ -56,6 +66,11 @@ class MiniGoVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniGoParser#method_declared.
     def visitMethod_declared(self, ctx:MiniGoParser.Method_declaredContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#receiver.
+    def visitReceiver(self, ctx:MiniGoParser.ReceiverContext):
         return self.visitChildren(ctx)
 
 

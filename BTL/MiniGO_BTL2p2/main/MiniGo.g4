@@ -50,21 +50,39 @@ statement:
 	);
 
 // Variable and constant declarations
-variables_declared: VAR var_decl SEMI?;
-var_decl: ID type_name (ASSIGN expression)? | ID COMMA ID (COMMA ID)* type_name (ASSIGN expr_list)?;
 
-constants_declared: CONST const_decl SEMI?;
+//khai báo biến - var + tên biến + type (optional) + giá trị (optional) + ";"
+variables_declared: VAR var_decl_list SEMI;
+
+var_decl_list: var_decl (COMMA var_decl)*;
+
+var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
+
+//khai báo hằng - const + tên hằng + giá trị + ";"
+
+constants_declared: CONST const_decl_list SEMI;
+
+const_decl_list: const_decl (COMMA const_decl)*;
+
 const_decl: ID ASSIGN expression;
 
-// Function and method declarations
+// khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt
 function_declared: FUNC ID LP params_list? RP (type_name)? block_stmt;
-method_declared: FUNC LP ID type_name RP ID LP params_list? RP (type_name)? block_stmt;
+
+method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
+
+receiver: ID type_name;
+
 params_list: param (COMMA param)*;
+
 param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 
-// Struct and interface declarations
+// Struct declaration
+
 struct_declared: TYPE ID STRUCT LB struct_type RB SEMI?;
 struct_type: (ID type_name SEMI?)*;
+
+// Interface declaration
 
 interface_declared: TYPE ID INTERFACE LB interface_type RB SEMI?;
 interface_type: (ID LP params_list? RP (type_name)? SEMI?)*;
