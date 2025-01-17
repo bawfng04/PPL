@@ -351,8 +351,10 @@ class ParserSuite(unittest.TestCase):
     def test_045(self):
         """modify struct field"""
         self.assertTrue(TestParser.test("""
-            var p = Person{name: "Alice", age: 30};
-            p.age = 31;
+            func main() {
+                var p = Person{name: "Alice", age: 30};
+                p.age = 31;
+            }
         ""","successful", inspect.stack()[0].function))
 
     def test_046(self):

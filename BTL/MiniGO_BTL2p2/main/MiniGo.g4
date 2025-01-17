@@ -89,7 +89,9 @@ interface_type: (ID LP params_list? RP (type_name)? SEMI?)*;
 declared_statement: variables_declared | constants_declared;
 
 assign_statement: assign_lhs assign_op expression SEMI?;
+
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
+
 assign_lhs: ID (field_access | element_access)*;
 
 if_statement: IF LP expression RP block_stmt (ELSE if_statement | ELSE block_stmt)?;
