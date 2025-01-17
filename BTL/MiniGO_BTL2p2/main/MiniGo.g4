@@ -125,7 +125,7 @@ expression3:
 	| expression4;
 expression4: expression4 (ADD | SUB) expression5 | expression5;
 expression5: expression5 (MUL | DIV | MOD) expression6 | expression6;
-expression6: NOT expression6 | SUB expression6 | expression7; // Unary operators
+expression6: NOT expression6 | SUB expression6 | expression7;
 expression7: operand (element_access | field_access | call_expr)*;
 
 // Operands
