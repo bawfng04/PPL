@@ -96,15 +96,15 @@ if_statement: IF LP expression RP block_stmt (ELSE if_statement | ELSE block_stm
 
 for_statement:
 	FOR (
-		ID COMMA ID SHORT_ASSIGN RANGE expression block_stmt
-		| for_init SEMI expression SEMI for_update block_stmt
-		| expression block_stmt
+		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
+		| for_init SEMI expression SEMI for_update block_stmt								// Three-part form
+		| expression block_stmt																// Basic form
 	);
 
 for_init:
-	ID SHORT_ASSIGN expression
-	| ID assign_op expression
-	| VAR ID (type_name)? ASSIGN expression;
+	ID SHORT_ASSIGN expression				// Short declaration
+	| ID assign_op expression				// Assignment
+	| VAR ID type_name? ASSIGN expression;	// Variable declaration
 
 for_update: ID assign_op expression;
 
@@ -206,6 +206,7 @@ MOD_ASSIGN: '%=';
 DOT: '.';
 COLON: ':';
 SHORT_ASSIGN: ':=';
+UNDERSCORE: '_';
 
 // Separators
 

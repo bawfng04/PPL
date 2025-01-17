@@ -222,7 +222,7 @@ class ParserSuite(unittest.TestCase):
         """if statement"""
         self.assertTrue(TestParser.test("""
             func check(x int) {
-                if x > 0 {
+                if (x > 0) {
                     return true;
                 } else {
                     return false;
@@ -261,7 +261,7 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test("""
             func loop() {
                 for i < 10 {
-                    if i == 5 {
+                    if (i == 5) {
                         break;
                     }
                     i += 1;
@@ -274,7 +274,7 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test("""
             func loop() {
                 for i < 10 {
-                    if i == 5 {
+                    if (i == 5) {
                         continue;
                     }
                     i += 1;
@@ -303,8 +303,8 @@ class ParserSuite(unittest.TestCase):
         """nested if statement"""
         self.assertTrue(TestParser.test("""
             func check(x int) {
-                if x > 0 {
-                    if x < 10 {
+                if (x > 0) {
+                    if (x < 10) {
                         return true;
                     }
                 } else {
