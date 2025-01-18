@@ -102,12 +102,15 @@ fragment DECIMAL_PART: '.' [0-9]*;
 fragment BINARY_DIGIT: [01];
 fragment BINARY: ('0b' | '0B') [0-1]+;
 fragment EXPONENT: [eE][+-]? [0-9]+;
+
 INT_LIT:
 	DECIMAL
-	| HEX {self.text = str(int(self.text,16))}
-	| OCTAL {self.text = str(int(self.text,8))}
-	| BINARY {self.text = str(int(self.text,2))};
-FLOAT_LIT: [0-9]+ DECIMAL_PART EXPONENT? | DECIMAL_PART EXPONENT? | [0-9]+ EXPONENT;
+	| HEX { self.text = str(int(self.text,16)) }
+	| OCTAL { self.text = str(int(self.text,8)) }
+	| BINARY { self.text = str(int(self.text,2)) };
+
+FLOAT_LIT: DECIMAL DECIMAL_PART EXPONENT? | DECIMAL? DECIMAL_PART EXPONENT? | DECIMAL EXPONENT;
+
 fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
