@@ -96,6 +96,10 @@ class LexerSuite(unittest.TestCase):
             const a = 2;
 ""","\n,const,a,=,2,;,\n,<EOF>", inspect.stack()[0].function))
 
+    def test_020(self):
+        """skip"""
+        self.assertTrue(TestLexer.test("\t\f\r ", "<EOF>", inspect.stack()[0].function))
+
     #!!! 87 test yêu cầu code chấm sau
         #testcases của Bằng
     # def test_014(self):

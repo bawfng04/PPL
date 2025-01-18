@@ -118,13 +118,21 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 // Newline + comments
 
-WS: [ \t\f]+ -> skip;
+WS: [ \t\r\f]+ -> skip;
 
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
 NEWLINE: '\r'? '\n' {self.text = "\n"};
+
+// WS: [ \t\r\n\f]+ -> skip;
+
+// NEWLINE: '\r'? '\n' -> skip;
+
+// LINE_COMMENT: '//' ~[\r\n]* -> skip;
+
+// BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
 // Error handling
 UNCLOSE_STRING:
