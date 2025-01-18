@@ -112,7 +112,7 @@ FLOAT_LIT:
 	| DECIMAL_PART [0-9]+ EXPONENT?
 	| FLOAT_DECIMAL DECIMAL_PART;
 
-fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"';
+fragment ESC_CHAR: 'r' | 'n' | 't' | '"' | '\\';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
@@ -145,12 +145,12 @@ UNCLOSE_STRING:
     };
 
 ILLEGAL_ESCAPE:
-	'"' (STR_CHAR* '\\' ~[brnt'"\\] STR_CHAR*) {  #nếu có kí tự escape không hợp lệ (không phải \b, \r, \n, \t, \', \", \\)
-    illegal_str = str(self.text)
-    i = illegal_str.find('\\') #tìm vị trí xuất hiện đầu tiên của kí tự escape
-    while i != -1 and illegal_str[i+1] in 'brnt\'"\\': #hợp lệ thì tìm tiếp
-        i = illegal_str.find('\\', i+2)
-    raise IllegalEscape(illegal_str[1:i+2])
-};
+	'"' (STR_CHAR* '\\' ~[rnt"\\] STR_CHAR*) '"'? {
+        illegal_str = str(self.text)
+        i = illegal_str.find('\\')
+        while i != -1 and illegal_str[i+1] in 'rnt"\\':
+            i = illegal_str.find('\\', i+2)
+        raise IllegalEscape(illegal_str[1:i+2])
+    };
 
 ERROR_CHAR: . {raise ErrorToken(self.text)};

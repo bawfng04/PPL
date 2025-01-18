@@ -100,6 +100,10 @@ class LexerSuite(unittest.TestCase):
         """skip"""
         self.assertTrue(TestLexer.test("\t\f\r ", "<EOF>", inspect.stack()[0].function))
 
+    def test_21(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test(""" "\\b" """, "Illegal escape in string: \\b", inspect.stack()[0].function))
+
     #!!! 87 test yêu cầu code chấm sau
         #testcases của Bằng
     # def test_014(self):
