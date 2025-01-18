@@ -50,7 +50,7 @@ class LexerSuite(unittest.TestCase):
 
     def test_009(self):
         """COMEMENTS"""
-        self.assertTrue(TestLexer.test("// VOTIEN\n","<EOF>", inspect.stack()[0].function))
+        self.assertTrue(TestLexer.test("// VOTIEN","<EOF>", inspect.stack()[0].function))
 
     def test_010(self):
         """COMEMENTS"""
@@ -89,6 +89,12 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test("""
         /* a * */
  """, "\n,\n,<EOF>", inspect.stack()[0].function))
+
+    def test_019(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test("""
+            const a = 2;
+""","\n,const,a,=,2,;,\n,<EOF>", inspect.stack()[0].function))
 
     #!!! 87 test yêu cầu code chấm sau
         #testcases của Bằng

@@ -122,7 +122,7 @@ WS: [ \t\f]+ -> skip;
 
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
-LINE_COMMENT: '//' ~[\r\n]* '\r'? '\n' -> skip;
+LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
 NEWLINE: '\r'? '\n' {self.text = "\n"};
 
