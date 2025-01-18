@@ -116,18 +116,17 @@ fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
-// Whitespace
+// Newline + comments
 
-WS: [ \t\r\n\f]+ -> skip;
-NEWLINE: '\r'? '\n' -> skip;
+WS: [ \t\f]+ -> skip;
 
-// Comments
-
-LINE_COMMENT: '//' ~[\r\n]* -> skip;
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
-// Error handling
+LINE_COMMENT: '//' ~[\r\n]* '\r'? '\n' -> skip;
 
+NEWLINE: '\r'? '\n' {self.text = "\n"};
+
+// Error handling
 UNCLOSE_STRING:
 	'"' STR_CHAR* ([\r\n] | EOF) {
         if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng

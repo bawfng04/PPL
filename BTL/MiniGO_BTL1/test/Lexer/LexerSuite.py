@@ -85,10 +85,10 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test(".e+2", ".,e,+,2,<EOF>", inspect.stack()[0].function))
 
     def test_018(self):
-            """Keywords"""
-            self.assertTrue(TestLexer.test("""
-            /* a * */
-    """, "\n,\n,<EOF>", inspect.stack()[0].function))
+        """Keywords"""
+        self.assertTrue(TestLexer.test("""
+        /* a * */
+ """, "\n,\n,<EOF>", inspect.stack()[0].function))
 
     #!!! 87 test yêu cầu code chấm sau
         #testcases của Bằng
