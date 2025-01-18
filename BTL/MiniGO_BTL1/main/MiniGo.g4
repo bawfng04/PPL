@@ -91,17 +91,14 @@ SEMI: ';';
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 // Literals
-
-fragment DIGIT: [0-9];
-fragment OCTAL_DIGIT: [0-7];
-fragment OCTAL: ('0o' | '0O') [0-7]+;
-fragment HEX_DIGIT: [0-9a-fA-F];
-fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
 fragment DECIMAL: '0' | [1-9][0-9]*;
-fragment DECIMAL_PART: '.' [0-9]*;
-fragment BINARY_DIGIT: [01];
+fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
+fragment OCTAL: ('0o' | '0O') [0-7]+;
 fragment BINARY: ('0b' | '0B') [0-1]+;
-fragment EXPONENT: [eE][+-]? [0-9]+;
+
+fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
+fragment DECIMAL_PART: '.' [0-9]*;
+fragment EXPONENT: [eE] [+-]? ('0' | [1-9][0-9]*);
 
 INT_LIT:
 	DECIMAL
@@ -109,7 +106,11 @@ INT_LIT:
 	| OCTAL { self.text = str(int(self.text,8)) }
 	| BINARY { self.text = str(int(self.text,2)) };
 
-FLOAT_LIT: DECIMAL DECIMAL_PART EXPONENT? | DECIMAL? DECIMAL_PART EXPONENT? | DECIMAL EXPONENT;
+FLOAT_LIT:
+	FLOAT_DECIMAL DECIMAL_PART EXPONENT?
+	| FLOAT_DECIMAL EXPONENT
+	| DECIMAL_PART EXPONENT?
+	| FLOAT_DECIMAL DECIMAL_PART;
 
 fragment ESC_CHAR: 'b' | 'r' | 'n' | 't' | '\'' | '\\' | '"';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
