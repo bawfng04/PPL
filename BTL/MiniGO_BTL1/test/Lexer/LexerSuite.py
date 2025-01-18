@@ -259,7 +259,13 @@ class LexerSuite(unittest.TestCase):
         """Test missing closing bracket"""
         self.assertTrue(TestLexer.test("[3][5]int{1, 2, 3", "[,3,],[,5,],int,{,1,,,2,,,3,<EOF>", inspect.stack()[0].function))
 
+    def test_061(self):
+        """INT_LIT"""
+        self.assertTrue(TestLexer.test("0452.", "0,452.,<EOF>", inspect.stack()[0].function))
 
+    def test_062(self):
+        """FLOAT_LIT"""
+        self.assertTrue(TestLexer.test("09.e-002", "0,9.e-0,0,2,<EOF>", inspect.stack()[0].function))
 
 
     #!!! 87 test yêu cầu code chấm sau

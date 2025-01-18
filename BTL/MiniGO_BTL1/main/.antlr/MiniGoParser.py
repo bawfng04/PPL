@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,60,10,2,0,7,0,1,0,4,0,4,8,0,11,0,12,0,5,1,0,1,0,1,0,0,0,1,0,
+        4,1,64,10,2,0,7,0,1,0,4,0,4,8,0,11,0,12,0,5,1,0,1,0,1,0,0,0,1,0,
         0,0,9,0,3,1,0,0,0,2,4,5,1,0,0,3,2,1,0,0,0,4,5,1,0,0,0,5,3,1,0,0,
         0,5,6,1,0,0,0,6,7,1,0,0,0,7,8,5,0,0,1,8,1,1,0,0,0,1,5
     ]
@@ -32,8 +32,8 @@ class MiniGoParser ( Parser ):
                      "'true'", "'false'", "'+'", "'-'", "'*'", "'/'", "'%'", 
                      "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'&&'", 
                      "'||'", "'!'", "'='", "'+='", "'-='", "'*='", "'/='", 
-                     "'%='", "'.'", "'('", "')'", "'{'", "'}'", "'['", "']'", 
-                     "','", "';'" ]
+                     "'%='", "'.'", "':'", "':='", "'_'", "'('", "')'", 
+                     "'{'", "'}'", "'['", "']'", "','", "';'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "IF", "ELSE", "FOR", "RETURN", 
                       "FUNC", "TYPE", "STRUCT", "INTERFACE", "STRING", "INT", 
@@ -42,9 +42,10 @@ class MiniGoParser ( Parser ):
                       "DIV", "MOD", "EQUAL", "NOT_EQUAL", "LESS", "LESS_OR_EQUAL", 
                       "GREATER", "GREATER_OR_EQUAL", "AND", "OR", "NOT", 
                       "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", 
-                      "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "LP", "RP", "LB", 
-                      "RB", "LSB", "RSB", "COMMA", "SEMI", "ID", "INT_LIT", 
-                      "FLOAT_LIT", "STRING_LIT", "WS", "LINE_COMMENT", "BLOCK_COMMENT", 
+                      "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "COLON", "SHORT_ASSIGN", 
+                      "UNDERSCORE", "LP", "RP", "LB", "RB", "LSB", "RSB", 
+                      "COMMA", "SEMI", "ID", "INT_LIT", "FLOAT_LIT", "STRING_LIT", 
+                      "WS", "NEWLINE", "LINE_COMMENT", "BLOCK_COMMENT", 
                       "UNCLOSE_STRING", "ILLEGAL_ESCAPE", "ERROR_CHAR" ]
 
     RULE_program = 0
@@ -94,24 +95,28 @@ class MiniGoParser ( Parser ):
     DIV_ASSIGN=40
     MOD_ASSIGN=41
     DOT=42
-    LP=43
-    RP=44
-    LB=45
-    RB=46
-    LSB=47
-    RSB=48
-    COMMA=49
-    SEMI=50
-    ID=51
-    INT_LIT=52
-    FLOAT_LIT=53
-    STRING_LIT=54
-    WS=55
-    LINE_COMMENT=56
-    BLOCK_COMMENT=57
-    UNCLOSE_STRING=58
-    ILLEGAL_ESCAPE=59
-    ERROR_CHAR=60
+    COLON=43
+    SHORT_ASSIGN=44
+    UNDERSCORE=45
+    LP=46
+    RP=47
+    LB=48
+    RB=49
+    LSB=50
+    RSB=51
+    COMMA=52
+    SEMI=53
+    ID=54
+    INT_LIT=55
+    FLOAT_LIT=56
+    STRING_LIT=57
+    WS=58
+    NEWLINE=59
+    LINE_COMMENT=60
+    BLOCK_COMMENT=61
+    UNCLOSE_STRING=62
+    ILLEGAL_ESCAPE=63
+    ERROR_CHAR=64
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
