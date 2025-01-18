@@ -120,11 +120,11 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 WS: [ \t\r\f]+ -> skip;
 
+NEWLINE: '\r'? '\n' {self.text = "\n"};
+
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
-
-NEWLINE: '\r'? '\n' {self.text = "\n"};
 
 // WS: [ \t\r\n\f]+ -> skip;
 
