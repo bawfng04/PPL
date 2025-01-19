@@ -225,7 +225,11 @@ class ParserSuite(unittest.TestCase):
             var c int; type Calculator struct{} type Calculator struct{} var c int;
 ""","Error on line 7 col 48: type", inspect.stack()[0].function))
 
+    def test_028(self):
+        """Declared"""
+        self.assertTrue(TestParser.test("""
 
+""","Error on line 3 col 0: <EOF>", inspect.stack()[0].function))
 
 
 #Testcase của Bằng

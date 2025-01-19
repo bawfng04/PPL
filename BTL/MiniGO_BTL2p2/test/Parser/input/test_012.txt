@@ -1,5 +1,0 @@
-
-            func VoTien(x int, y int) int {}
-            func VoTien1() [2][3] ID {}
-            func VoTien2() {}
-        

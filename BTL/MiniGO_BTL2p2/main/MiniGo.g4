@@ -25,7 +25,9 @@ options{
 }
 
 //========================================================== PARSER ==========================================================
-program: (NEWLINE | declared)* EOF;
+
+// program: (NEWLINE | declared)* EOF;
+program: NEWLINE* declared (NEWLINE* declared)* NEWLINE* EOF;
 
 declared:
 	(
