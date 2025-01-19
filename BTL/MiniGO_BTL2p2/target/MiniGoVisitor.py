@@ -64,13 +64,13 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#method_declared.
-    def visitMethod_declared(self, ctx:MiniGoParser.Method_declaredContext):
+    # Visit a parse tree produced by MiniGoParser#receiver.
+    def visitReceiver(self, ctx:MiniGoParser.ReceiverContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#receiver.
-    def visitReceiver(self, ctx:MiniGoParser.ReceiverContext):
+    # Visit a parse tree produced by MiniGoParser#method_declared.
+    def visitMethod_declared(self, ctx:MiniGoParser.Method_declaredContext):
         return self.visitChildren(ctx)
 
 

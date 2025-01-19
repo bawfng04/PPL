@@ -199,6 +199,13 @@ class ParserSuite(unittest.TestCase):
                 c Cal a int;
             }
 ""","Error on line 4 col 22: a", inspect.stack()[0].function))
+
+
+    def test_025(self):
+        """Declared"""
+        self.assertTrue(TestParser.test("""
+            func (c int) Add(x int) int {}
+""","Error on line 2 col 20: int", inspect.stack()[0].function))
 #Testcase của Bằng
 
     # def test_022(self):

@@ -68,10 +68,12 @@ const_decl: ID ASSIGN expression;
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt
 function_declared: FUNC ID LP params_list? RP (type_name)? block_stmt;
 
+//method
+receiver: ID (ID | STRUCT | INTERFACE);
+
 method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
 
-receiver: ID type_name;
-
+// Block statement
 params_list: param (COMMA param)*;
 
 param: (ID | ID COMMA ID (COMMA ID)*) type_name;
