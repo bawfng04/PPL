@@ -25,15 +25,17 @@ options{
 }
 
 //========================================================== PARSER ==========================================================
-program: NEWLINE* declared (declared | NEWLINE)* EOF;
+program: (NEWLINE | declared)* EOF;
 
 declared:
-	variables_declared
-	| constants_declared
-	| function_declared
-	| method_declared
-	| struct_declared
-	| interface_declared;
+	(
+		variables_declared
+		| constants_declared
+		| function_declared
+		| method_declared
+		| struct_declared
+		| interface_declared
+	) NEWLINE*;
 
 list_statement: (statement NEWLINE*)* | statement;
 statement:
@@ -76,15 +78,16 @@ param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 
 // Struct declaration
 
-struct_declared: TYPE ID STRUCT LB struct_type RB SEMI?;
+struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type RB SEMI?;
 
-struct_type: (ID type_name SEMI?)*;
+struct_type: (ID type_name SEMI NEWLINE*)*;
 
 // Interface declaration
 
-interface_declared: TYPE ID INTERFACE LB interface_type RB SEMI?;
-interface_type: (ID LP params_list? RP (type_name)? SEMI?)*;
+interface_declared: TYPE ID INTERFACE LB NEWLINE* interface_type RB SEMI?;
 
+// Update interface_type rule
+interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 // Statements
 declared_statement: variables_declared | constants_declared;
 
@@ -257,15 +260,20 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 // Newline + comments
 
-// WS: [ \t\r\f]+ -> skip;
-WS: [ \t\r\f\n]+ -> skip;
+// WS: [ \t\r\f]+ -> skip; //Lexer pass hết, Parser sẽ fail 14, 15, 16, 28, 29
 
-NEWLINE: '\r'? '\n' {self.text = "\n"};
+// WS: [ \t\r\f\n]+ -> skip; //Lexer sẽ fail 14, 31, 32, Parser pass hết
+
+WS: [ \t\r\f]+ -> skip;
+
+NEWLINE: '\n' | '\r\n' {self.text = "\n"};
+
+//nếu skip n -> fail lexer 14, 31, 32 nếu '\r'? '\n' {self.text = "\n"} -> fail parser 14, 15, 16, 28, 29
 
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
-/
+
 UNCLOSE_STRING: // Error handling
 	'"' STR_CHAR* ([\r\n] | EOF) {
         if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng
