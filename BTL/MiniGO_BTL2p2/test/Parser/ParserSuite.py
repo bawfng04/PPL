@@ -180,6 +180,16 @@ class ParserSuite(unittest.TestCase):
             var z VOTIEN = [2]int{};
         ""","Error on line 2 col 34: }", inspect.stack()[0].function))
 
+    def test_023(self):
+            """Declared"""
+            self.assertTrue(TestParser.test("""
+                type Calculator struct {
+
+                    value int;
+                    a [2]int; a [2]ID;
+                    c Calculator
+                }
+    ""","successful", inspect.stack()[0].function))
 
 #Testcase của Bằng
 

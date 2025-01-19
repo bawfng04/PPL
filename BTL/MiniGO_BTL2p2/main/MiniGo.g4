@@ -80,7 +80,7 @@ param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 
 struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type RB SEMI?;
 
-struct_type: (ID type_name SEMI NEWLINE*)*;
+struct_type: (ID type_name SEMI? NEWLINE*)*;
 
 // Interface declaration
 
@@ -88,6 +88,7 @@ interface_declared: TYPE ID INTERFACE LB NEWLINE* interface_type RB SEMI?;
 
 // Update interface_type rule
 interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
+
 // Statements
 declared_statement: variables_declared | constants_declared;
 
@@ -114,8 +115,11 @@ for_init:
 for_update: ID assign_op expression;
 
 break_statement: BREAK SEMI?;
+
 continue_statement: CONTINUE SEMI?;
+
 return_statement: RETURN expression? SEMI?;
+
 call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
 
 block_stmt: LB (statement | NEWLINE)* RB;
@@ -123,14 +127,20 @@ block_stmt: LB (statement | NEWLINE)* RB;
 expr_list: expression (COMMA expression)*;
 
 expression: expression OR expression1 | expression1;
+
 expression1: expression1 AND expression2 | expression2;
+
 expression2: expression2 (EQUAL | NOT_EQUAL) expression3 | expression3;
+
 expression3:
 	expression3 (LESS | LESS_OR_EQUAL | GREATER | GREATER_OR_EQUAL) expression4
 	| expression4;
 expression4: expression4 (ADD | SUB) expression5 | expression5;
+
 expression5: expression5 (MUL | DIV | MOD) expression6 | expression6;
+
 expression6: NOT expression6 | SUB expression6 | expression7;
+
 expression7: operand (element_access | field_access | call_expr)*;
 
 // Operands
@@ -140,7 +150,9 @@ operand: literal | ID | LP expression RP;
 // Element access, field access, function calls
 
 element_access: LSB expression RSB;
+
 field_access: DOT ID;
+
 call_expr: LP list_expression? RP;
 
 // Literals
@@ -149,6 +161,7 @@ literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | NIL | array_literal |
 
 // Array literal with type
 
+// ex: [2][3]int{{1,2,3},{4,5,6}};
 array_literal: array_type LB list_expression RB;
 
 // ex: [2][3]int;
@@ -159,7 +172,9 @@ type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 // Struct literal
 
 struct_literal: ID LB (field_list)? RB;
+
 field_list: field_init (COMMA field_init)*;
+
 field_init: ID COLON expression;
 
 // List of expressions
