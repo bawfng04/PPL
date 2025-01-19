@@ -86,7 +86,7 @@ param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 // Struct declaration
 
 //ex: type Point struct {x, y int}
-struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type NEWLINE* RB SEMI?;
+struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type NEWLINE* RB (SEMI | NEWLINE);
 
 // struct_type: (ID type_name SEMI? NEWLINE*)*;
 
