@@ -216,21 +216,33 @@ LSB: '[';
 RSB: ']';
 COMMA: ',';
 SEMI: ';';
+
 // Identifiers
+
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
+
 // Literals
+
 fragment DECIMAL: '0' | [1-9][0-9]*;
+
 fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
+
 fragment OCTAL: ('0o' | '0O') [0-7]+;
+
 fragment BINARY: ('0b' | '0B') [0-1]+;
+
 fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
+
 fragment DECIMAL_PART: '.' [0-9]*;
+
 fragment EXPONENT: [eE] [+-]? ('0' | [1-9][0-9]*);
+
 INT_LIT:
 	DECIMAL
 	| HEX { self.text = str(int(self.text,16)) }
 	| OCTAL { self.text = str(int(self.text,8)) }
 	| BINARY { self.text = str(int(self.text,2)) };
+
 FLOAT_LIT:
 	FLOAT_DECIMAL DECIMAL_PART EXPONENT?
 	| FLOAT_DECIMAL EXPONENT
@@ -242,18 +254,19 @@ fragment ESC_CHAR: 'r' | 'n' | 't' | '"' | '\\';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 
 STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
+
 // Newline + comments
-WS: [ \t\r\f]+ -> skip;
+
+// WS: [ \t\r\f]+ -> skip;
+WS: [ \t\r\f\n]+ -> skip;
 
 NEWLINE: '\r'? '\n' {self.text = "\n"};
 
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
-
-// Error handling
-
-UNCLOSE_STRING:
+/
+UNCLOSE_STRING: // Error handling
 	'"' STR_CHAR* ([\r\n] | EOF) {
         if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng
             self.text = self.text[1:-1]

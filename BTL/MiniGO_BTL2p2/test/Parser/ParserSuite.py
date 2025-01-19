@@ -82,8 +82,8 @@ class ParserSuite(unittest.TestCase):
         """declared struct"""
         self.assertTrue(TestParser.test("""
             type VoTien struct {
-                VoTien string ;
-                VoTien [1][3]VoTien ;
+                VoTien string;
+                VoTien [1][3]VoTien;
             }
             type VoTien struct {}
         ""","successful", inspect.stack()[0].function))
