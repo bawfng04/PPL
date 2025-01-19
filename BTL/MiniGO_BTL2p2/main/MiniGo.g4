@@ -149,8 +149,11 @@ literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | NIL | array_literal |
 
 // Array literal with type
 
-array_literal: array_type LB list_expression? RB;
+array_literal: array_type LB list_expression RB;
+
+// ex: [2][3]int;
 array_type: LSB INT_LIT RSB (LSB INT_LIT RSB)* type_name;
+
 type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 
 // Struct literal
