@@ -1,5 +1,0 @@
-
-            func (c Calculator) VoTien(x int) int {}
-            func (c Calculator) VoTien() ID {}
-            func (c Calculator) VoTien(x int, y [2]VoTien) {}
-        
