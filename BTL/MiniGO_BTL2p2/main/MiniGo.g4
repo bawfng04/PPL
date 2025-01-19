@@ -71,7 +71,12 @@ function_declared: FUNC ID LP params_list? RP (type_name)? block_stmt;
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
 
-method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
+// method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
+method_declared: FUNC LP receiver RP ID LP method_params? RP (type_name)? block_stmt;
+
+method_params: method_param (COMMA method_param)*;
+
+method_param: ID type_name;
 
 // Block statement
 params_list: param (COMMA param)*;
