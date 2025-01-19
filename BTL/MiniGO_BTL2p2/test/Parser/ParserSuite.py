@@ -191,6 +191,14 @@ class ParserSuite(unittest.TestCase):
                 }
     ""","successful", inspect.stack()[0].function))
 
+    def test_024(self):
+        """Declared"""
+        self.assertTrue(TestParser.test("""
+            type Calculator struct {
+                c Calculator
+                c Cal a int;
+            }
+""","Error on line 4 col 22: a", inspect.stack()[0].function))
 #Testcase của Bằng
 
     # def test_022(self):
