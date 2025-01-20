@@ -61,7 +61,7 @@ var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN
 
 //khai báo hằng - const + tên hằng + giá trị + ";"
 
-constants_declared: CONST const_decl_list SEMI?;
+constants_declared: CONST const_decl_list (SEMI | NEWLINE);
 
 const_decl_list: const_decl (COMMA const_decl)*;
 

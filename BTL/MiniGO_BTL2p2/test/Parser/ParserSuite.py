@@ -238,6 +238,12 @@ class ParserSuite(unittest.TestCase):
                                         const a = a[2].b
                                         var a = a[2].b; var a = "s";
                                     }""","successful", inspect.stack()[0].function))
+    def test_030(self):
+        """Declared"""
+        self.assertTrue(TestParser.test("""
+
+            const a = 2 func (c c) Add(x int) {}
+""","Error on line 3 col 24: func", inspect.stack()[0].function))
 
 #Testcase của Bằng
 
