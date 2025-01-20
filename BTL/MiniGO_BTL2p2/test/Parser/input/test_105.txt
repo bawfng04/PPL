@@ -1,0 +1,5 @@
+
+            func printArray(arr [5]int) {
+                for index, value := range arr {}
+            }
+        

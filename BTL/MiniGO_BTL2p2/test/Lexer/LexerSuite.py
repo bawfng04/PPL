@@ -250,6 +250,186 @@ class LexerSuite(unittest.TestCase):
         """ILLEGAL_ESCAPE"""
         self.assertTrue(TestLexer.test(""" "\\b" """, "Illegal escape in string: \\b", inspect.stack()[0].function))
 
-# def test_014(self):
-#         """ILLEGAL_ESCAPE"""
-#         self.assertTrue(TestLexer.test("const a = 2;", "const,a,=,2,;,<EOF>", inspect.stack()[0].function))
+    def test_057(self):
+            """ILLEGAL_ESCAPE"""
+            self.assertTrue(TestLexer.test("const a = 2;", "const,a,=,2,;,<EOF>", inspect.stack()[0].function))
+
+    def test_058(self):
+        """Operators"""
+        self.assertTrue(TestLexer.test("+","+,<EOF>", inspect.stack()[0].function))
+
+    def test_059(self):
+        """Separators"""
+        self.assertTrue(TestLexer.test("[]","[,],<EOF>", inspect.stack()[0].function))
+
+    def test_060(self):
+        """Identifiers"""
+        self.assertTrue(TestLexer.test("_VOTien","_VOTien,<EOF>", inspect.stack()[0].function))
+
+    def test_061(self):
+        """Literals INT"""
+        self.assertTrue(TestLexer.test("12","12,<EOF>", inspect.stack()[0].function))
+
+    def test_062(self):
+        """Literals INT 16*1 + 1 = 17"""
+        self.assertTrue(TestLexer.test("0x11","17,<EOF>", inspect.stack()[0].function))
+
+    def test_063(self):
+        """Literals FLOAT"""
+        self.assertTrue(TestLexer.test("12.e-8","12.e-8,<EOF>", inspect.stack()[0].function))
+
+    def test_064(self):
+        """Literals String"""
+        self.assertTrue(TestLexer.test(""" "VOTIEN \\r" ""","VOTIEN \\r,<EOF>", inspect.stack()[0].function))
+
+    def test_065(self):
+        """COMEMENTS"""
+        self.assertTrue(TestLexer.test("// VOTIEN","<EOF>", inspect.stack()[0].function))
+
+    def test_066(self):
+        """COMEMENTS"""
+        self.assertTrue(TestLexer.test("/* VO /* /*TIEN*/ */ SHIBA","SHIBA,<EOF>", inspect.stack()[0].function))
+
+    def test_067(self):
+        """ERROR_CHAR"""
+        self.assertTrue(TestLexer.test("^","ErrorToken ^", inspect.stack()[0].function))
+
+    def test_068(self):
+        """UNCLOSE_STRING"""
+        self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: VOTIEN", inspect.stack()[0].function))
+
+    def test_069(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test(""" "VOTIEN\\f" ""","Illegal escape in string: VOTIEN\\f", inspect.stack()[0].function))
+
+    def test_070(self):
+        """INT_LIT"""
+        self.assertTrue(TestLexer.test("0452.", "0,452.,<EOF>", inspect.stack()[0].function))
+
+    def test_071(self):
+        """FLOAT_LIT"""
+        self.assertTrue(TestLexer.test("09.e-002", "0,9.e-0,0,2,<EOF>", inspect.stack()[0].function))
+
+    def test_072(self):
+        """INT_LIT"""
+        self.assertTrue(TestLexer.test("0452.", "0,452.,<EOF>", inspect.stack()[0].function))
+
+    def test_073(self):
+        """FLOAT_LIT"""
+        self.assertTrue(TestLexer.test(".e+2", ".,e,+,2,<EOF>", inspect.stack()[0].function))
+
+    def test_074(self):
+        """Keywords"""
+        self.assertTrue(TestLexer.test("""
+        /* a * */
+ """, "\n,\n,<EOF>", inspect.stack()[0].function))
+
+    def test_075(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test("""
+            const a = 2;
+""","\n,const,a,=,2,;,\n,<EOF>", inspect.stack()[0].function))
+
+    def test_076(self):
+        """skip"""
+        self.assertTrue(TestLexer.test("\t\f\r ", "<EOF>", inspect.stack()[0].function))
+
+    def test_077(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test(""" "\\b" """, "Illegal escape in string: \\b", inspect.stack()[0].function))
+
+    def test_078(self):
+        """Keywords"""
+        self.assertTrue(TestLexer.test("if","if,<EOF>", inspect.stack()[0].function))
+
+    def test_079(self):
+        """Operators"""
+        self.assertTrue(TestLexer.test("+","+,<EOF>", inspect.stack()[0].function))
+
+    def test_080(self):
+        """Separators"""
+        self.assertTrue(TestLexer.test("[]","[,],<EOF>", inspect.stack()[0].function))
+
+    def test_081(self):
+        """Identifiers"""
+        self.assertTrue(TestLexer.test("_VOTien","_VOTien,<EOF>", inspect.stack()[0].function))
+
+    def test_082(self):
+        """Literals INT"""
+        self.assertTrue(TestLexer.test("12","12,<EOF>", inspect.stack()[0].function))
+
+    def test_083(self):
+        """Literals INT 16*1 + 1 = 17"""
+        self.assertTrue(TestLexer.test("0x11","17,<EOF>", inspect.stack()[0].function))
+
+    def test_084(self):
+        """Literals FLOAT"""
+        self.assertTrue(TestLexer.test("12.e-8","12.e-8,<EOF>", inspect.stack()[0].function))
+
+    def test_085(self):
+        """Literals String"""
+        self.assertTrue(TestLexer.test(""" "VOTIEN \\r" ""","VOTIEN \\r,<EOF>", inspect.stack()[0].function))
+
+    def test_086(self):
+        """COMEMENTS"""
+        self.assertTrue(TestLexer.test("// VOTIEN","<EOF>", inspect.stack()[0].function))
+
+    def test_087(self):
+        """COMEMENTS"""
+        self.assertTrue(TestLexer.test("/* VO /* /*TIEN*/ */ SHIBA","SHIBA,<EOF>", inspect.stack()[0].function))
+
+    def test_088(self):
+        """ERROR_CHAR"""
+        self.assertTrue(TestLexer.test("^","ErrorToken ^", inspect.stack()[0].function))
+
+    def test_089(self):
+        """UNCLOSE_STRING"""
+        self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: VOTIEN", inspect.stack()[0].function))
+
+    def test_090(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test(""" "VOTIEN\\f" ""","Illegal escape in string: VOTIEN\\f", inspect.stack()[0].function))
+
+    def test_091(self):
+        """INT_LIT"""
+        self.assertTrue(TestLexer.test("0452.", "0,452.,<EOF>", inspect.stack()[0].function))
+
+    def test_092(self):
+        """FLOAT_LIT"""
+        self.assertTrue(TestLexer.test("09.e-002", "0,9.e-0,0,2,<EOF>", inspect.stack()[0].function))
+
+    def test_093(self):
+        """INT_LIT"""
+        self.assertTrue(TestLexer.test("0452.", "0,452.,<EOF>", inspect.stack()[0].function))
+
+    def test_094(self):
+        """FLOAT_LIT"""
+        self.assertTrue(TestLexer.test(".e+2", ".,e,+,2,<EOF>", inspect.stack()[0].function))
+
+    def test_095(self):
+        """Keywords"""
+        self.assertTrue(TestLexer.test("""
+        /* a * */
+ """, "\n,\n,<EOF>", inspect.stack()[0].function))
+
+    def test_096(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test("""
+            const a = 2;
+""","\n,const,a,=,2,;,\n,<EOF>", inspect.stack()[0].function))
+
+    def test_097(self):
+        """skip"""
+        self.assertTrue(TestLexer.test("\t\f\r ", "<EOF>", inspect.stack()[0].function))
+
+    def test_098(self):
+        """ILLEGAL_ESCAPE"""
+        self.assertTrue(TestLexer.test(""" "\\b" """, "Illegal escape in string: \\b", inspect.stack()[0].function))
+
+    def test_099(self):
+        """Keywords"""
+        self.assertTrue(TestLexer.test("if","if,<EOF>", inspect.stack()[0].function))
+
+    def test_100(self):
+        """Operators"""
+        self.assertTrue(TestLexer.test("+","+,<EOF>", inspect.stack()[0].function))

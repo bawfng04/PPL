@@ -1,0 +1,8 @@
+
+            type Greeter interface {
+                greet() string;
+            }
+            func (g Greeter) sayHello() string {
+                return "Hello from " + g.greet();
+            }
+        
