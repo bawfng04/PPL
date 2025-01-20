@@ -255,7 +255,22 @@ class ParserSuite(unittest.TestCase):
                                         }
                                     }""","Error on line 5 col 48: )", inspect.stack()[0].function))
 
-
+    def test_032(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        if (x.foo().b[2])
+                                        {
+                                        } else if(1)
+                                        {
+                                        }else if(1)
+                                        {
+                                        }else if(2)
+                                        {
+                                        }else
+                                        {
+                                        }
+                                    }""","successful", inspect.stack()[0].function))
 
 
 

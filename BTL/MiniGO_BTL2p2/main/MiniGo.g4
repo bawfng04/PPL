@@ -139,7 +139,7 @@ return_statement: RETURN expression? SEMI?;
 
 call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
 
-block_stmt: LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
+block_stmt: NEWLINE? LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
 
 expr_list: expression (COMMA expression)*;
 

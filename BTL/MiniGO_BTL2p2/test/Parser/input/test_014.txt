@@ -1,0 +1,7 @@
+
+            type VoTien struct {
+                VoTien string;
+                VoTien [1][3]VoTien;
+            }
+            type VoTien struct {}
+        
