@@ -462,7 +462,7 @@ class MiniGoLexer(Lexer):
 
     def ERROR_CHAR_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 7:
-            raise ErrorToken(self.text[0])
+            raise ErrorToken(self.text)
      
 
 

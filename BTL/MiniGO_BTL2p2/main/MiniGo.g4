@@ -164,6 +164,7 @@ expression5: expression5 (MUL | DIV | MOD) expression6 | expression6;
 
 expression6: NOT expression6 | SUB expression6 | expression7;
 
+//-1.c -> failed, a.b -> passed
 expression7: operand (element_access | field_access | call_expr)*;
 
 // Operands
@@ -333,4 +334,4 @@ ILLEGAL_ESCAPE:
         raise IllegalEscape(illegal_str[1:i+2])
     };
 
-ERROR_CHAR: . {raise ErrorToken(self.text[0])};
+ERROR_CHAR: . {raise ErrorToken(self.text)};
