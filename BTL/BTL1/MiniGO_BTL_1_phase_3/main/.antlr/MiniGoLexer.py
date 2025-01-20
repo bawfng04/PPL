@@ -1,4 +1,4 @@
-# Generated from d:/Projects/PPL-Assignment/BTL/MiniGO_BTL2p2/main/MiniGo.g4 by ANTLR 4.13.1
+# Generated from d:/Projects/PPL-Assignment/BTL/BTL1/MiniGO_BTL_1_phase_3/main/MiniGo.g4 by ANTLR 4.13.1
 from antlr4 import *
 from io import StringIO
 import sys

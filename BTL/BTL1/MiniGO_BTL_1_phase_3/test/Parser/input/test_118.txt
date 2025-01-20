@@ -1,1 +1,1 @@
-const Votien = 1 + 2 * 3 / 4 - 5 % 6;
+const Votien = Person{name: "Alice", address: Address{street: "123 Main St", city: "Anytown"}}.address.city;

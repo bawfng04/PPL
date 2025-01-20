@@ -871,13 +871,99 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
 
     def test_118(self):
-        """expression"""
-        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
+        """expression - nested struct access"""
+        self.assertTrue(TestParser.test("const Votien = Person{name: \"Alice\", address: Address{street: \"123 Main St\", city: \"Anytown\"}}.address.city;","successful", inspect.stack()[0].function))
 
     def test_119(self):
-        """expression"""
-        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
+        """expression - array access and function call"""
+        self.assertTrue(TestParser.test("const Votien = arr[2] + foo(1, 2);","successful", inspect.stack()[0].function))
 
     def test_120(self):
-        """expression"""
-        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
+        """expression - multiple operators and nested function calls"""
+        self.assertTrue(TestParser.test("const Votien = foo(bar(1, 2), baz(3, 4)) + 5 * 6 - 7 % 8;","successful", inspect.stack()[0].function))
+
+    def test_121(self):
+        """expression - invalid array access"""
+        self.assertTrue(TestParser.test("const Votien = arr[2.5];","Error on line 1 col 19: 2.5", inspect.stack()[0].function))
+
+
+    # def test_122(self):
+    #     """expression - invalid struct field access"""
+    #     self.assertTrue(TestParser.test("const Votien = Person{name: \"Alice\", age: 30}.nonexistentField;","Error on line 1 col 32: nonexistentField", inspect.stack()[0].function))
+
+    def test_123(self):
+        """expression - function call with string argument"""
+        self.assertTrue(TestParser.test("const Votien = foo(1, \"string\");","successful", inspect.stack()[0].function))
+
+    def test_124(self):
+        """expression - operator with string literal"""
+        self.assertTrue(TestParser.test("const Votien = 1 + \"string\";","successful", inspect.stack()[0].function))
+
+    def test_125(self):
+        """expression - valid nested function call"""
+        self.assertTrue(TestParser.test("const Votien = foo(bar(1, 2));","successful", inspect.stack()[0].function))
+
+    def test_126(self):
+        """expression - valid function call with correct arguments"""
+        self.assertTrue(TestParser.test("const Votien = foo(1, 2);","successful", inspect.stack()[0].function))
+
+    ##this testcases is successful because it belong to the semantic analysis (?)
+    def test_127(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_122(self):
+        """struct field access syntax test"""
+        self.assertTrue(TestParser.test("const Votien = Person{name: \"Alice\", age: 30}.nonexistentField;","successful", inspect.stack()[0].function))
+
+    def test_129(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_130(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_131(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_132(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_133(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_134(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_135(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_136(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_137(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_138(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_139(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_140(self):
+        """expression - valid array access with correct index"""
+        self.assertTrue(TestParser.test("const Votien = arr[2];","successful", inspect.stack()[0].function))
+
+    def test_141(self):
+        """array"""
+        self.assertTrue(TestParser.test("const Votien = arr[2.5];","Error on line 1 col 19: 2.5", inspect.stack()[0].function))
