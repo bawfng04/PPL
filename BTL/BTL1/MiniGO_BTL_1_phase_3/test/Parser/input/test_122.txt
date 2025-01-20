@@ -1,1 +1,1 @@
-const Votien = Person{name: "Alice", age: 30}.nonexistentField;
+const Votien = 1 + "string";

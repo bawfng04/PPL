@@ -174,9 +174,7 @@ operand: literal | ID | LP expression RP;
 
 // Element access, field access, function calls
 
-array_index_expr: INT_LIT | ID | LP array_index_expr RP | call_expr | element_access;
-
-element_access: LSB array_index_expr RSB;
+element_access: LSB expression RSB;
 
 field_access: DOT ID;
 

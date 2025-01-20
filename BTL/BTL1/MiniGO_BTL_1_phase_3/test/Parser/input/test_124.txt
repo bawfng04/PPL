@@ -1,1 +1,1 @@
-const Votien = 1 + "string";
+const Votien = foo(1, 2);
