@@ -14,15 +14,15 @@ import inspect
 class ParserSuite(unittest.TestCase):
     def test_001(self):
         """Literal"""
-        self.assertTrue(TestParser.test("const Votien = 1;","successful", inspect.stack()[0].function))
+        self.assertTrue(TestParser.test("const a = 1;","successful", inspect.stack()[0].function))
 
     def test_002(self):
         """Literal"""
-        self.assertTrue(TestParser.test("const Votien = true;","successful", inspect.stack()[0].function))
+        self.assertTrue(TestParser.test("const a = true;","successful", inspect.stack()[0].function))
 
     def test_003(self):
         """Literal"""
-        self.assertTrue(TestParser.test("const Votien = [5][0]string{1, \"string\"};","successful", inspect.stack()[0].function))
+        self.assertTrue(TestParser.test("const a = [5][0]string{1, \"string\"};","successful", inspect.stack()[0].function))
 
     def test_004(self):
         """Literal"""
