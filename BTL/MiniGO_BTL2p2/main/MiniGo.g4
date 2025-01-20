@@ -140,8 +140,8 @@ break_statement: BREAK (SEMI | NEWLINE);
 continue_statement: CONTINUE (SEMI | NEWLINE);
 
 // Prevents return return expr (Test 34 passes) Allows return expr; and return; and return (Test 35 passes) Maintains proper statement separation with
-// semicolons /newlines Forces proper statement termination
-return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
+// semicolons /newlines Forces proper statement termination return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
+return_statement: RETURN (expression? SEMI | expression? NEWLINE);
 
 call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
@@ -306,7 +306,8 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 WS: [ \t\r\f]+ -> skip;
 
-NEWLINE: '\n' | '\r' '\n' { self.text = "\n" };
+// NEWLINE: '\n' | '\r' '\n' { self.text = "\n" };
+NEWLINE: 'r'? '\n';
 
 //nếu skip n -> fail lexer 14, 31, 32 nếu '\r'? '\n' {self.text = "\n"} -> fail parser 14, 15, 16, 28, 29
 

@@ -328,12 +328,20 @@ class ParserSuite(unittest.TestCase):
                                         return -1.c
                                     }""","Error on line 4 col 50: c", inspect.stack()[0].function))
 
+    def test_039(self):
+        """negativeFloatLiteral"""
+        self.assertTrue(TestParser.test("var x = -1.0;","successful", inspect.stack()[0].function))
 
 
+    def test_040(self):
+        """negativeFloatLiteral"""
+        self.assertTrue(TestParser.test("var x = -1.;","successful", inspect.stack()[0].function))
 
 
-
-
+    def test_041(self):
+        """negativeFloatLiteral"""
+        self.assertTrue(TestParser.test("var x = -1.c;",
+        "Error on line 1 col 11: c", inspect.stack()[0].function))
 
 
 
@@ -753,3 +761,4 @@ class ParserSuite(unittest.TestCase):
                 }
             }
         ""","successful", inspect.stack()[0].function))
+
