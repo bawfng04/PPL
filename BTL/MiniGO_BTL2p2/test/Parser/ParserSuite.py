@@ -272,7 +272,14 @@ class ParserSuite(unittest.TestCase):
                                         }
                                     }""","successful", inspect.stack()[0].function))
 
-
+    def test_033(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        for var i [2]int = 0; foo().a.b(); i[3] := 1 {
+                                            // loop body
+                                        }
+                                    }""","successful", inspect.stack()[0].function))
 
 ###################         Testcase của Bằng
     def test_050(self):

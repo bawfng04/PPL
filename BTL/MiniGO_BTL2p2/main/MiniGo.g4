@@ -129,7 +129,8 @@ for_init:
 	| ID assign_op expression				// Assignment
 	| VAR ID type_name? ASSIGN expression;	// Variable declaration
 
-for_update: ID assign_op expression;
+//assign_lhs: ID (field_access | element_access)*;
+for_update: assign_lhs assign_op expression;
 
 break_statement: BREAK SEMI?;
 

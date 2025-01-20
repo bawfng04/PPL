@@ -185,7 +185,7 @@ def serializedATN():
         3,46,23,0,435,436,3,70,35,0,436,445,1,0,0,0,437,438,5,14,0,0,438,
         440,5,53,0,0,439,441,3,100,50,0,440,439,1,0,0,0,440,441,1,0,0,0,
         441,442,1,0,0,0,442,443,5,35,0,0,443,445,3,70,35,0,444,430,1,0,0,
-        0,444,433,1,0,0,0,444,437,1,0,0,0,445,55,1,0,0,0,446,447,5,53,0,
+        0,444,433,1,0,0,0,444,437,1,0,0,0,445,55,1,0,0,0,446,447,3,48,24,
         0,447,448,3,46,23,0,448,449,3,70,35,0,449,57,1,0,0,0,450,452,5,16,
         0,0,451,453,5,52,0,0,452,451,1,0,0,0,452,453,1,0,0,0,453,59,1,0,
         0,0,454,456,5,15,0,0,455,457,5,52,0,0,456,455,1,0,0,0,456,457,1,
@@ -2628,8 +2628,9 @@ class MiniGoParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def ID(self):
-            return self.getToken(MiniGoParser.ID, 0)
+        def assign_lhs(self):
+            return self.getTypedRuleContext(MiniGoParser.Assign_lhsContext,0)
+
 
         def assign_op(self):
             return self.getTypedRuleContext(MiniGoParser.Assign_opContext,0)
@@ -2652,7 +2653,7 @@ class MiniGoParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 446
-            self.match(MiniGoParser.ID)
+            self.assign_lhs()
             self.state = 447
             self.assign_op()
             self.state = 448

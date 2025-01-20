@@ -238,29 +238,29 @@ def serializedATN():
         buf.write("\2\u01ba\u01b9\3\2\2\2\u01ba\u01bb\3\2\2\2\u01bb\u01bc")
         buf.write("\3\2\2\2\u01bc\u01bd\7%\2\2\u01bd\u01bf\5H%\2\u01be\u01b0")
         buf.write("\3\2\2\2\u01be\u01b3\3\2\2\2\u01be\u01b7\3\2\2\2\u01bf")
-        buf.write("9\3\2\2\2\u01c0\u01c1\7\67\2\2\u01c1\u01c2\5\60\31\2\u01c2")
-        buf.write("\u01c3\5H%\2\u01c3;\3\2\2\2\u01c4\u01c6\7\22\2\2\u01c5")
-        buf.write("\u01c7\7\66\2\2\u01c6\u01c5\3\2\2\2\u01c6\u01c7\3\2\2")
-        buf.write("\2\u01c7=\3\2\2\2\u01c8\u01ca\7\21\2\2\u01c9\u01cb\7\66")
-        buf.write("\2\2\u01ca\u01c9\3\2\2\2\u01ca\u01cb\3\2\2\2\u01cb?\3")
-        buf.write("\2\2\2\u01cc\u01ce\7\6\2\2\u01cd\u01cf\5H%\2\u01ce\u01cd")
-        buf.write("\3\2\2\2\u01ce\u01cf\3\2\2\2\u01cf\u01d1\3\2\2\2\u01d0")
-        buf.write("\u01d2\7\66\2\2\u01d1\u01d0\3\2\2\2\u01d1\u01d2\3\2\2")
-        buf.write("\2\u01d2A\3\2\2\2\u01d3\u01d8\7\67\2\2\u01d4\u01d5\7\67")
-        buf.write("\2\2\u01d5\u01d6\7+\2\2\u01d6\u01d8\7\67\2\2\u01d7\u01d3")
-        buf.write("\3\2\2\2\u01d7\u01d4\3\2\2\2\u01d8\u01d9\3\2\2\2\u01d9")
-        buf.write("\u01db\7/\2\2\u01da\u01dc\5n8\2\u01db\u01da\3\2\2\2\u01db")
-        buf.write("\u01dc\3\2\2\2\u01dc\u01dd\3\2\2\2\u01dd\u01df\7\60\2")
-        buf.write("\2\u01de\u01e0\7\66\2\2\u01df\u01de\3\2\2\2\u01df\u01e0")
-        buf.write("\3\2\2\2\u01e0C\3\2\2\2\u01e1\u01e3\7<\2\2\u01e2\u01e1")
-        buf.write("\3\2\2\2\u01e2\u01e3\3\2\2\2\u01e3\u01e4\3\2\2\2\u01e4")
-        buf.write("\u01e6\7\61\2\2\u01e5\u01e7\7<\2\2\u01e6\u01e5\3\2\2\2")
-        buf.write("\u01e6\u01e7\3\2\2\2\u01e7\u01ec\3\2\2\2\u01e8\u01eb\5")
-        buf.write("\b\5\2\u01e9\u01eb\7<\2\2\u01ea\u01e8\3\2\2\2\u01ea\u01e9")
-        buf.write("\3\2\2\2\u01eb\u01ee\3\2\2\2\u01ec\u01ea\3\2\2\2\u01ec")
-        buf.write("\u01ed\3\2\2\2\u01ed\u01f0\3\2\2\2\u01ee\u01ec\3\2\2\2")
-        buf.write("\u01ef\u01f1\7<\2\2\u01f0\u01ef\3\2\2\2\u01f0\u01f1\3")
-        buf.write("\2\2\2\u01f1\u01f2\3\2\2\2\u01f2\u01f3\7\62\2\2\u01f3")
+        buf.write("9\3\2\2\2\u01c0\u01c1\5\62\32\2\u01c1\u01c2\5\60\31\2")
+        buf.write("\u01c2\u01c3\5H%\2\u01c3;\3\2\2\2\u01c4\u01c6\7\22\2\2")
+        buf.write("\u01c5\u01c7\7\66\2\2\u01c6\u01c5\3\2\2\2\u01c6\u01c7")
+        buf.write("\3\2\2\2\u01c7=\3\2\2\2\u01c8\u01ca\7\21\2\2\u01c9\u01cb")
+        buf.write("\7\66\2\2\u01ca\u01c9\3\2\2\2\u01ca\u01cb\3\2\2\2\u01cb")
+        buf.write("?\3\2\2\2\u01cc\u01ce\7\6\2\2\u01cd\u01cf\5H%\2\u01ce")
+        buf.write("\u01cd\3\2\2\2\u01ce\u01cf\3\2\2\2\u01cf\u01d1\3\2\2\2")
+        buf.write("\u01d0\u01d2\7\66\2\2\u01d1\u01d0\3\2\2\2\u01d1\u01d2")
+        buf.write("\3\2\2\2\u01d2A\3\2\2\2\u01d3\u01d8\7\67\2\2\u01d4\u01d5")
+        buf.write("\7\67\2\2\u01d5\u01d6\7+\2\2\u01d6\u01d8\7\67\2\2\u01d7")
+        buf.write("\u01d3\3\2\2\2\u01d7\u01d4\3\2\2\2\u01d8\u01d9\3\2\2\2")
+        buf.write("\u01d9\u01db\7/\2\2\u01da\u01dc\5n8\2\u01db\u01da\3\2")
+        buf.write("\2\2\u01db\u01dc\3\2\2\2\u01dc\u01dd\3\2\2\2\u01dd\u01df")
+        buf.write("\7\60\2\2\u01de\u01e0\7\66\2\2\u01df\u01de\3\2\2\2\u01df")
+        buf.write("\u01e0\3\2\2\2\u01e0C\3\2\2\2\u01e1\u01e3\7<\2\2\u01e2")
+        buf.write("\u01e1\3\2\2\2\u01e2\u01e3\3\2\2\2\u01e3\u01e4\3\2\2\2")
+        buf.write("\u01e4\u01e6\7\61\2\2\u01e5\u01e7\7<\2\2\u01e6\u01e5\3")
+        buf.write("\2\2\2\u01e6\u01e7\3\2\2\2\u01e7\u01ec\3\2\2\2\u01e8\u01eb")
+        buf.write("\5\b\5\2\u01e9\u01eb\7<\2\2\u01ea\u01e8\3\2\2\2\u01ea")
+        buf.write("\u01e9\3\2\2\2\u01eb\u01ee\3\2\2\2\u01ec\u01ea\3\2\2\2")
+        buf.write("\u01ec\u01ed\3\2\2\2\u01ed\u01f0\3\2\2\2\u01ee\u01ec\3")
+        buf.write("\2\2\2\u01ef\u01f1\7<\2\2\u01f0\u01ef\3\2\2\2\u01f0\u01f1")
+        buf.write("\3\2\2\2\u01f1\u01f2\3\2\2\2\u01f2\u01f3\7\62\2\2\u01f3")
         buf.write("E\3\2\2\2\u01f4\u01f9\5H%\2\u01f5\u01f6\7\65\2\2\u01f6")
         buf.write("\u01f8\5H%\2\u01f7\u01f5\3\2\2\2\u01f8\u01fb\3\2\2\2\u01f9")
         buf.write("\u01f7\3\2\2\2\u01f9\u01fa\3\2\2\2\u01faG\3\2\2\2\u01fb")
@@ -2879,8 +2879,9 @@ class MiniGoParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def ID(self):
-            return self.getToken(MiniGoParser.ID, 0)
+        def assign_lhs(self):
+            return self.getTypedRuleContext(MiniGoParser.Assign_lhsContext,0)
+
 
         def assign_op(self):
             return self.getTypedRuleContext(MiniGoParser.Assign_opContext,0)
@@ -2909,7 +2910,7 @@ class MiniGoParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 446
-            self.match(MiniGoParser.ID)
+            self.assign_lhs()
             self.state = 447
             self.assign_op()
             self.state = 448
