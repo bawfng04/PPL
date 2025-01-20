@@ -1,4 +1,0 @@
-
-            var p = Person{name: "Alice", age: 30};
-            var name = p.name;
-        

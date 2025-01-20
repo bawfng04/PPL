@@ -1,3 +1,0 @@
-
-            const VoTien = a.b() + 2;
-        

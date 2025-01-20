@@ -245,7 +245,7 @@ class ParserSuite(unittest.TestCase):
             const a = 2 func (c c) Add(x int) {}
 ""","Error on line 3 col 24: func", inspect.stack()[0].function))
 
-    def test_115(self):
+    def test_031(self):
         """Statement"""
         self.assertTrue(TestParser.test("""
                                     func Add() {
@@ -256,7 +256,10 @@ class ParserSuite(unittest.TestCase):
                                     }""","Error on line 5 col 48: )", inspect.stack()[0].function))
 
 
-#Testcase của Bằng
+
+
+
+###################         Testcase của Bằng
     def test_050(self):
         """variable declaration"""
         self.assertTrue(TestParser.test("var x int;","successful", inspect.stack()[0].function))

@@ -68,7 +68,7 @@ const_decl_list: const_decl (COMMA const_decl)*;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt
-function_declared: FUNC ID LP params_list? RP (type_name)? block_stmt;
+function_declared: FUNC ID LP params_list? RP (type_name)? NEWLINE? block_stmt;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
@@ -115,7 +115,7 @@ assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSI
 
 assign_lhs: ID (field_access | element_access)*;
 
-if_statement: IF LP expression RP block_stmt (ELSE if_statement | ELSE block_stmt)?;
+if_statement: IF LP expression RP NEWLINE? block_stmt (ELSE if_statement | ELSE block_stmt)?;
 
 for_statement:
 	FOR (
@@ -139,7 +139,7 @@ return_statement: RETURN expression? SEMI?;
 
 call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
 
-block_stmt: LB (statement | NEWLINE)* RB;
+block_stmt: LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
 
 expr_list: expression (COMMA expression)*;
 
