@@ -137,7 +137,7 @@ break_statement: BREAK SEMI?;
 
 continue_statement: CONTINUE SEMI?;
 
-return_statement: RETURN (NEWLINE? expression SEMI? | SEMI);
+return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
 
 call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
 

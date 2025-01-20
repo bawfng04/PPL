@@ -291,6 +291,19 @@ class ParserSuite(unittest.TestCase):
 
                                     }""","Error on line 3 col 47: return", inspect.stack()[0].function))
 
+
+    def test_035(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        return
+                                        return 2 + a[2].b()
+                                        return; return a
+                                    }""","successful", inspect.stack()[0].function))
+
+
+
+
 ###################         Testcase của Bằng
     def test_050(self):
         """variable declaration"""
