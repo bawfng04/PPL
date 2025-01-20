@@ -355,6 +355,67 @@ class ParserSuite(unittest.TestCase):
 
 
     ###################         Testcase của Bằng
+
+    def test_043(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        for var i [2]int = 0; foo().a.b(); i[3] := 1 {
+                                            // loop body
+                                        }
+                                    }""","successful", inspect.stack()[0].function))
+
+
+
+    def test_044(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        return return 2 + a[2].b()
+
+                                    }""","Error on line 3 col 47: return", inspect.stack()[0].function))
+
+
+    def test_045(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        return
+                                        return 2 + a[2].b()
+                                        return; return a
+                                    }""","successful", inspect.stack()[0].function))
+
+    def test_046(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        break continue
+
+                                    }""","Error on line 3 col 46: continue", inspect.stack()[0].function))
+
+    def test_047(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        //a[2][3]           //->successful
+                                        //a[2][3].foo()     //->failed
+                                        a.foo();            //->successful
+                                        a[2][3].foo()       //->failed
+                                        //a[2][3].foo(2 + 3, a {a:2}) //->failed
+                                    }""","successful", inspect.stack()[0].function))
+
+    def test_048(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        return (2 + 3).b
+                                        return -1.c
+                                    }""","Error on line 4 col 50: c", inspect.stack()[0].function))
+
+    def test_049(self):
+        """negativeFloatLiteral"""
+        self.assertTrue(TestParser.test("var x = -1.0;","successful", inspect.stack()[0].function))
+
     def test_050(self):
         """variable declaration"""
         self.assertTrue(TestParser.test("var x int;","successful", inspect.stack()[0].function))
