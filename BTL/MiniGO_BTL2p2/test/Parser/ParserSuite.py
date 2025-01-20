@@ -313,11 +313,15 @@ class ParserSuite(unittest.TestCase):
         """Statement"""
         self.assertTrue(TestParser.test("""
                                     func Add() {
-                                        a[2][3].foo(2 + 3, a {a:2})
+                                        //a[2][3]           //->successful
+                                        //a[2][3].foo()     //->failed
+                                        a.foo();            //->successful
+                                        a[2][3].foo()       //->failed
+                                        //a[2][3].foo(2 + 3, a {a:2}) //->failed
                                     }""","successful", inspect.stack()[0].function))
 
 
-###################         Testcase của Bằng
+    ###################         Testcase của Bằng
     def test_050(self):
         """variable declaration"""
         self.assertTrue(TestParser.test("var x int;","successful", inspect.stack()[0].function))

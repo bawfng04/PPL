@@ -143,7 +143,7 @@ continue_statement: CONTINUE (SEMI | NEWLINE);
 // semicolons /newlines Forces proper statement termination
 return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
 
-call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
+call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
 block_stmt: NEWLINE? LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
 
