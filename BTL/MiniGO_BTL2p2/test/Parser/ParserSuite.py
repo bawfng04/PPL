@@ -309,6 +309,13 @@ class ParserSuite(unittest.TestCase):
 
                                     }""","Error on line 3 col 46: continue", inspect.stack()[0].function))
 
+    def test_037(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        a[2][3].foo(2 + 3, a {a:2})
+                                    }""","successful", inspect.stack()[0].function))
+
 
 ###################         Testcase của Bằng
     def test_050(self):
@@ -516,3 +523,211 @@ class ParserSuite(unittest.TestCase):
     def test_078(self):
         """string concatenation"""
         self.assertTrue(TestParser.test('var str = "Hello" + " " + "World";',"successful", inspect.stack()[0].function))
+
+    def test_079(self):
+        """Integer variable declaration"""
+        self.assertTrue(TestParser.test("var x int;","successful", inspect.stack()[0].function))
+
+    def test_080(self):
+        """Integer variable declaration with initialization"""
+        self.assertTrue(TestParser.test("var x = 10;","successful", inspect.stack()[0].function))
+
+    def test_081(self):
+        """Float variable declaration"""
+        self.assertTrue(TestParser.test("var y float;","successful", inspect.stack()[0].function))
+
+    def test_082(self):
+        """Float variable declaration with initialization"""
+        self.assertTrue(TestParser.test("var y = 3.14;","successful", inspect.stack()[0].function))
+
+    def test_083(self):
+        """Boolean variable declaration"""
+        self.assertTrue(TestParser.test("var isTrue bool;","successful", inspect.stack()[0].function))
+
+    def test_084(self):
+        """Boolean variable declaration with initialization"""
+        self.assertTrue(TestParser.test("var isTrue = true;","successful", inspect.stack()[0].function))
+
+    def test_085(self):
+        """String variable declaration"""
+        self.assertTrue(TestParser.test("var message string;","successful", inspect.stack()[0].function))
+
+    def test_086(self):
+        """String variable declaration with initialization"""
+        self.assertTrue(TestParser.test('var message = "Hello, MiniGo!";',"successful", inspect.stack()[0].function))
+
+    def test_087(self):
+        """Array declaration with integer type"""
+        self.assertTrue(TestParser.test("var numbers [5]int;","successful", inspect.stack()[0].function))
+
+    def test_088(self):
+        """Array declaration with float type"""
+        self.assertTrue(TestParser.test("var decimals [3]float;","successful", inspect.stack()[0].function))
+
+    def test_089(self):
+        """Array declaration with string type"""
+        self.assertTrue(TestParser.test("var names [10]string;","successful", inspect.stack()[0].function))
+
+    def test_090(self):
+        """Multi-dimensional array declaration"""
+        self.assertTrue(TestParser.test("var matrix [2][3]int;","successful", inspect.stack()[0].function))
+
+    def test_091(self):
+        """Struct declaration with basic fields"""
+        self.assertTrue(TestParser.test("""
+            type Person struct {
+                name string;
+                age int;
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_092(self):
+        """Struct declaration with nested struct"""
+        self.assertTrue(TestParser.test("""
+            type Address struct {
+                street string;
+                city string;
+            }
+            type Person struct {
+                name string;
+                age int;
+                address Address;
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_093(self):
+        """Interface declaration with a single method"""
+        self.assertTrue(TestParser.test("""
+            type Greeter interface {
+                greet() string;
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_094(self):
+        """Interface declaration with multiple methods"""
+        self.assertTrue(TestParser.test("""
+            type Shape interface {
+                area() float;
+                perimeter() float;
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_095(self):
+        """Function declaration without parameters and return type"""
+        self.assertTrue(TestParser.test("func sayHello() {}","successful", inspect.stack()[0].function))
+
+    def test_096(self):
+        """Function declaration with parameters and return type"""
+        self.assertTrue(TestParser.test("func add(a int, b int) int {}","successful", inspect.stack()[0].function))
+
+    def test_097(self):
+        """Function declaration with multiple return values"""
+        self.assertTrue(TestParser.test("func divide(a int, b int) (int, int) {}","successful", inspect.stack()[0].function))
+
+    def test_098(self):
+        """Method declaration on a struct"""
+        self.assertTrue(TestParser.test("""
+            type Person struct {
+                name string;
+            }
+            func (p Person) greet() string {
+                return "Hello, " + p.name;
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_099(self):
+        """Method declaration on an interface"""
+        self.assertTrue(TestParser.test("""
+            type Greeter interface {
+                greet() string;
+            }
+            func (g Greeter) sayHello() string {
+                return "Hello from " + g.greet();
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_100(self):
+        """Simple if statement"""
+        self.assertTrue(TestParser.test("""
+            func check(x int) {
+                if (x > 0) {
+                    return true;
+                }
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_101(self):
+        """If-else statement"""
+        self.assertTrue(TestParser.test("""
+            func check(x int) {
+                if (x > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_102(self):
+        """If-else if-else statement"""
+        self.assertTrue(TestParser.test("""
+            func check(x int) {
+                if (x > 10) {
+                    return "Greater than 10";
+                } else if (x == 10) {
+                    return "Equal to 10";
+                } else {
+                    return "Less than 10";
+                }
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_103(self):
+        """Basic for loop"""
+        self.assertTrue(TestParser.test("""
+            func countToTen() {
+                for i < 10 {
+                    i += 1;
+                }
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_104(self):
+        """For loop with initialization, condition, and update"""
+        self.assertTrue(TestParser.test("""
+            func countToTen() {
+                for i := 0; i < 10; i += 1 {}
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_105(self):
+        """For loop with range"""
+        self.assertTrue(TestParser.test("""
+            func printArray(arr [5]int) {
+                for index, value := range arr {}
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_106(self):
+        """Break statement in a for loop"""
+        self.assertTrue(TestParser.test("""
+            func breakLoop() {
+                for i := 0; i < 10; i += 1 {
+                    if (i == 5) {
+                        break;
+                    }
+                }
+            }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_107(self):
+        """Continue statement in a for loop"""
+        self.assertTrue(TestParser.test("""
+            func continueLoop() {
+                for i := 0; i < 10; i += 1 {
+                    if (i == 5) {
+                        continue;
+                    }
+                }
+            }
+        ""","successful", inspect.stack()[0].function))
