@@ -1,0 +1,6 @@
+
+                                    func Add() {
+                                        if (1) {}
+                                        else if(2) {return string;}
+                                        else if(3) {reutrn int;}
+                                    }
