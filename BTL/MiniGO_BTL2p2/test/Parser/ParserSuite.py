@@ -301,7 +301,13 @@ class ParserSuite(unittest.TestCase):
                                         return; return a
                                     }""","successful", inspect.stack()[0].function))
 
+    def test_036(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        break continue
 
+                                    }""","Error on line 3 col 46: continue", inspect.stack()[0].function))
 
 
 ###################         Testcase của Bằng

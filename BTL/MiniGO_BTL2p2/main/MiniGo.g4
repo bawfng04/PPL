@@ -133,10 +133,12 @@ for_init:
 //assign_lhs: ID (field_access | element_access)*;
 for_update: assign_lhs assign_op expression;
 
-break_statement: BREAK SEMI?;
+break_statement: BREAK (SEMI | NEWLINE);
 
-continue_statement: CONTINUE SEMI?;
+continue_statement: CONTINUE (SEMI | NEWLINE);
 
+// Prevents return return expr (Test 34 passes) Allows return expr; and return; and return (Test 35 passes) Maintains proper statement separation with
+// semicolons /newlines Forces proper statement termination
 return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
 
 call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
