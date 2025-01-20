@@ -40,6 +40,7 @@ declared:
 	) NEWLINE*;
 
 list_statement: (statement NEWLINE*)* | statement;
+
 statement:
 	declared_statement
 	| assign_statement
@@ -136,7 +137,7 @@ break_statement: BREAK SEMI?;
 
 continue_statement: CONTINUE SEMI?;
 
-return_statement: RETURN expression? SEMI?;
+return_statement: RETURN (NEWLINE? expression SEMI? | SEMI);
 
 call_statement: (ID | ID DOT ID) LP list_expression? RP SEMI?;
 
