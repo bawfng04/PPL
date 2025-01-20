@@ -830,3 +830,54 @@ class ParserSuite(unittest.TestCase):
             }
         ""","successful", inspect.stack()[0].function))
 
+    def test_108(self):
+        """Literal"""
+        self.assertTrue(TestParser.test("const Votien = 1;","successful", inspect.stack()[0].function))
+
+    def test_109(self):
+        """Literal"""
+        self.assertTrue(TestParser.test("const Votien = true;","successful", inspect.stack()[0].function))
+
+    def test_110(self):
+        """Literal"""
+        self.assertTrue(TestParser.test("const Votien = [5][0]string{1, \"string\"};","successful", inspect.stack()[0].function))
+
+    def test_111(self):
+        """Literal"""
+        self.assertTrue(TestParser.test("const Votien = [1.]ID{1, 3};","Error on line 1 col 16: 1.", inspect.stack()[0].function))
+
+    def test_112(self):
+        """Literal"""
+        self.assertTrue(TestParser.test("const Votien = Person{name: \"Alice\", age: 30};","successful", inspect.stack()[0].function))
+
+    def test_113(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = 1 || 2 && c + 3 / 2 - -1;","successful", inspect.stack()[0].function))
+
+    def test_114(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = 1[2] + foo()[2] + ID[2].b.b;","successful", inspect.stack()[0].function))
+
+    def test_115(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = ca.foo(132) + b.c[2];","successful", inspect.stack()[0].function))
+
+    def test_116(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = a.a.foo();","successful", inspect.stack()[0].function))
+
+    def test_117(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
+
+    def test_118(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
+
+    def test_119(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))
+
+    def test_120(self):
+        """expression"""
+        self.assertTrue(TestParser.test("const Votien = 1 + 2 * 3 / 4 - 5 % 6;","successful", inspect.stack()[0].function))

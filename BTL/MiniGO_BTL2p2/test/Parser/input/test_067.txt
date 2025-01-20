@@ -1,7 +1,0 @@
-
-            func nestedLoop() {
-                for i := 0; i < 10; i += 1 {
-                    for j := 0; j < 5; j += 1 {}
-                }
-            }
-        
