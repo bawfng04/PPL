@@ -320,6 +320,24 @@ class ParserSuite(unittest.TestCase):
                                         //a[2][3].foo(2 + 3, a {a:2}) //->failed
                                     }""","successful", inspect.stack()[0].function))
 
+    def test_038(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        return (2 + 3).b
+                                        return -1.c
+                                    }""","Error on line 4 col 50: c", inspect.stack()[0].function))
+
+
+
+
+
+
+
+
+
+
+
 
     ###################         Testcase của Bằng
     def test_050(self):

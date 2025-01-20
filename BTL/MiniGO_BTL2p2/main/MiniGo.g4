@@ -307,7 +307,7 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 WS: [ \t\r\f]+ -> skip;
 
-NEWLINE: '\n' | '\r\n' {self.text = "\n"};
+NEWLINE: '\n' | '\r' '\n' { self.text = "\n" };
 
 //nếu skip n -> fail lexer 14, 31, 32 nếu '\r'? '\n' {self.text = "\n"} -> fail parser 14, 15, 16, 28, 29
 
@@ -333,4 +333,4 @@ ILLEGAL_ESCAPE:
         raise IllegalEscape(illegal_str[1:i+2])
     };
 
-ERROR_CHAR: . {raise ErrorToken(self.text)};
+ERROR_CHAR: . {raise ErrorToken(self.text[0])};
