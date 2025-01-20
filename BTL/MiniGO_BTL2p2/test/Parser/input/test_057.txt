@@ -1,0 +1,5 @@
+
+            type Greeter interface {
+                greet() string;
+            }
+        

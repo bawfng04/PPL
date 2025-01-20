@@ -1,0 +1,7 @@
+
+            func (p Person) greet() string {
+                return "Hello, " + p.name;
+            }
+            var p = Person{name: "Alice"};
+            var greeting = p.greet();
+        
