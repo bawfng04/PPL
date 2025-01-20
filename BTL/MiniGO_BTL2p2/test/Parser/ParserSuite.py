@@ -231,6 +231,13 @@ class ParserSuite(unittest.TestCase):
 
 ""","Error on line 3 col 0: <EOF>", inspect.stack()[0].function))
 
+    def test_029(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        const a = a[2].b
+                                        var a = a[2].b; var a = "s";
+                                    }""","successful", inspect.stack()[0].function))
 
 #Testcase của Bằng
 

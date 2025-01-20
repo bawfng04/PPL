@@ -1,0 +1,7 @@
+
+
+            func (c c) Add(x int) {}
+
+            func Add(x int) {} var c int;
+
+            var c int; type Calculator struct{} type Calculator struct{} var c int;
