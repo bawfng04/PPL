@@ -14,6 +14,16 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#newlines.
+    def visitNewlines(self, ctx:MiniGoParser.NewlinesContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#more_declared.
+    def visitMore_declared(self, ctx:MiniGoParser.More_declaredContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#declared.
     def visitDeclared(self, ctx:MiniGoParser.DeclaredContext):
         return self.visitChildren(ctx)
@@ -104,6 +114,21 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#struct_field.
+    def visitStruct_field(self, ctx:MiniGoParser.Struct_fieldContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#more_ids.
+    def visitMore_ids(self, ctx:MiniGoParser.More_idsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#struct_end.
+    def visitStruct_end(self, ctx:MiniGoParser.Struct_endContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#interface_declared.
     def visitInterface_declared(self, ctx:MiniGoParser.Interface_declaredContext):
         return self.visitChildren(ctx)
@@ -111,6 +136,26 @@ class MiniGoVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniGoParser#interface_type.
     def visitInterface_type(self, ctx:MiniGoParser.Interface_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#interface_method.
+    def visitInterface_method(self, ctx:MiniGoParser.Interface_methodContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#optional_params.
+    def visitOptional_params(self, ctx:MiniGoParser.Optional_paramsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#optional_type.
+    def visitOptional_type(self, ctx:MiniGoParser.Optional_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#optional_semi.
+    def visitOptional_semi(self, ctx:MiniGoParser.Optional_semiContext):
         return self.visitChildren(ctx)
 
 

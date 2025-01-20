@@ -27,10 +27,7 @@ options{
 //========================================================== PARSER ==========================================================
 
 // program: (NEWLINE | declared)* EOF;
-// Original: program: NEWLINE* declared (NEWLINE* declared)* NEWLINE* EOF;
-program: newlines declared more_declared newlines EOF;
-newlines: | NEWLINE newlines;
-more_declared: | newlines declared more_declared;
+program: NEWLINE* declared (NEWLINE* declared)* NEWLINE* EOF;
 
 declared:
 	(
@@ -42,8 +39,7 @@ declared:
 		| interface_declared
 	) NEWLINE*;
 
-// Original: list_statement: (statement NEWLINE*)* | statement;
-list_statement: statement | statement newlines list_statement;
+list_statement: (statement NEWLINE*)* | statement;
 
 statement:
 	declared_statement
@@ -60,8 +56,7 @@ statement:
 //khai báo biến - var + tên biến + type (optional) + giá trị (optional) + ";"
 variables_declared: VAR var_decl_list SEMI;
 
-// Original: var_decl_list: var_decl (COMMA var_decl)*;
-var_decl_list: var_decl | var_decl COMMA var_decl_list;
+var_decl_list: var_decl (COMMA var_decl)*;
 
 var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
 
@@ -69,8 +64,7 @@ var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN
 
 constants_declared: CONST const_decl_list (SEMI | NEWLINE);
 
-// Original: const_decl_list: const_decl (COMMA const_decl)*;
-const_decl_list: const_decl | const_decl COMMA const_decl_list;
+const_decl_list: const_decl (COMMA const_decl)*;
 
 const_decl: ID ASSIGN expression;
 
@@ -85,14 +79,12 @@ receiver: ID (ID | STRUCT | INTERFACE);
 method_declared:
 	FUNC LP receiver RP ID LP method_params? RP (LP type_name (COMMA type_name)* RP | type_name)? block_stmt;
 
-// Original: method_params: method_param (COMMA method_param)*;
-method_params: method_param | method_param COMMA method_params;
+method_params: method_param (COMMA method_param)*;
 
 method_param: ID type_name;
 
 // Block statement
-// Original: params_list: param (COMMA param)*;
-params_list: param | param COMMA params_list;
+params_list: param (COMMA param)*;
 
 param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 
@@ -108,24 +100,14 @@ struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type NEWLINE* RB (SEMI | NEWL
 //c Cal a int; -> wrong, c Calculator -> right;
 
 // struct_type: ((ID (COMMA ID)* type_name SEMI? NEWLINE) | (ID (COMMA ID)* type_name SEMI NEWLINE?))*;
-
-// Original: struct_type: (ID (COMMA ID)* type_name (SEMI | SEMI? NEWLINE))*;
-struct_type: | struct_field struct_type;
-struct_field: ID more_ids type_name struct_end;
-more_ids: | COMMA ID more_ids;
-struct_end: SEMI | SEMI? NEWLINE;
+struct_type: (ID (COMMA ID)* type_name (SEMI | SEMI? NEWLINE))*;
 
 // Interface declaration
 
 interface_declared: TYPE ID INTERFACE LB NEWLINE* interface_type RB SEMI?;
 
 // Update interface_type rule
-// Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
-interface_type: | interface_method interface_type;
-interface_method: ID LP optional_params RP optional_type optional_semi newlines;
-optional_params: | params_list;
-optional_type: | type_name;
-optional_semi: | SEMI;
+interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 
 // Statements
 declared_statement: variables_declared | constants_declared;
@@ -166,8 +148,7 @@ call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
 block_stmt: NEWLINE? LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
 
-// Original: expr_list: expression (COMMA expression)*;
-expr_list: expression | expression COMMA expr_list;
+expr_list: expression (COMMA expression)*;
 
 expression: expression OR expression1 | expression1;
 
@@ -217,15 +198,13 @@ type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 
 struct_literal: ID LB (field_list)? RB;
 
-// Original: field_list: field_init (COMMA field_init)*;
-field_list: field_init | field_init COMMA field_list;
+field_list: field_init (COMMA field_init)*;
 
 field_init: ID COLON expression;
 
 // List of expressions
 
-// Original: list_expression: expression (COMMA expression)*;
-list_expression: expression | expression COMMA list_expression;
+list_expression: expression (COMMA expression)*;
 
 //========================================================== LEXER ==========================================================
 
