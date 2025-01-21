@@ -121,14 +121,23 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#receiver.
-    def visitReceiver(self, ctx:MiniGoParser.ReceiverContext):
-        return self.visitChildren(ctx)
+    def visitReceiver(self, ctx: MiniGoParser.ReceiverContext):
+        return VariablesDecl(Id(ctx.ID(0).getText()), ClassType(Id(ctx.ID(1).getText())), None)
 
 
     # Visit a parse tree produced by MiniGoParser#method_declared.
-    def visitMethod_declared(self, ctx:MiniGoParser.Method_declaredContext):
-        return self.visitChildren(ctx)
-
+    def visitMethod_declared(self, ctx: MiniGoParser.Method_declaredContext):
+        name = Id(ctx.ID().getText())
+        receiver = None
+        if ctx.receiver():
+            receiver = self.visit(ctx.receiver())
+        params = []
+        if ctx.method_params():
+            params = self.visit(ctx.method_params())
+        returnType = VoidType()
+        if ctx.type_name():
+            returnType = self.visit(ctx.type_name())
+        return FunctionDecl(name, returnType, receiver, params, [])
 
     # Visit a parse tree produced by MiniGoParser#method_params.
     def visitMethod_params(self, ctx:MiniGoParser.Method_paramsContext):
@@ -158,14 +167,15 @@ class ASTGeneration(MiniGoVisitor):
     # Visit a parse tree produced by MiniGoParser#params_list.
     def visitParams_list(self, ctx: MiniGoParser.Params_listContext):
         if ctx.getChildCount() == 1:
-            return self.visit(ctx.param())
+            params = self.visit(ctx.param())
+            return params if isinstance(params, list) else [params]
         return self.visit(ctx.param()) + self.visit(ctx.params_list())
-
 
     # Visit a parse tree produced by MiniGoParser#param.
     def visitParam(self, ctx: MiniGoParser.ParamContext):
         typ = self.visit(ctx.type_name())
         return [VariablesDecl(Id(id.getText()), typ, None) for id in ctx.ID()]
+
 
 
     # Visit a parse tree produced by MiniGoParser#struct_declared.
@@ -221,7 +231,8 @@ class ASTGeneration(MiniGoVisitor):
     def visitInterface_type(self, ctx: MiniGoParser.Interface_typeContext):
         if not ctx.children:
             return []
-        return self.visit(ctx.interface_method()) + self.visit(ctx.interface_type())
+        method = self.visit(ctx.interface_method())
+        return [method] + self.visit(ctx.interface_type())
 
 
 
