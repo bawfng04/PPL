@@ -35,6 +35,7 @@ options{
 program: list_expression;
 
 newlines: | NEWLINE newlines;
+
 more_declared: | newlines declared more_declared;
 
 declared:
