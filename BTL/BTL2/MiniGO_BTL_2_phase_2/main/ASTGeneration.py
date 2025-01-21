@@ -17,9 +17,16 @@ class ASTGeneration(MiniGoVisitor):
     pass
     # Tất cả các hàm trong class MiniGoVisitor
     # Visit a parse tree produced by MiniGoParser#program.
-    def visitProgram(self, ctx:MiniGoParser.ProgramContext):
-        # return self.visitChildren(ctx)
-        return Program(self.visit(ctx.list_expression()))
+    def visitProgram(self, ctx: MiniGoParser.ProgramContext):
+        decls = []
+        for child in ctx.children:
+            if isinstance(child, MiniGoParser.DeclaredContext):
+                decl = self.visit(child)
+                if isinstance(decl, list):
+                    decls.extend(decl)
+                else:
+                    decls.append(decl)
+        return Program(decls)
 
 
     # Visit a parse tree produced by MiniGoParser#newlines.
@@ -49,37 +56,54 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#variables_declared.
     def visitVariables_declared(self, ctx:MiniGoParser.Variables_declaredContext):
-        return self.visitChildren(ctx)
+        if not ctx.var_decl_list():
+            return []
+        return self.visit(ctx.var_decl_list())
 
 
     # Visit a parse tree produced by MiniGoParser#var_decl_list.
     def visitVar_decl_list(self, ctx:MiniGoParser.Var_decl_listContext):
-        return self.visitChildren(ctx)
+        if ctx.getChildCount() == 1:
+            return [self.visit(ctx.var_decl())]
+        return [self.visit(ctx.var_decl())] + self.visit(ctx.var_decl_list())
 
 
     # Visit a parse tree produced by MiniGoParser#var_decl.
     def visitVar_decl(self, ctx:MiniGoParser.Var_declContext):
-        return self.visitChildren(ctx)
+        id = Id(ctx.ID().getText())
+        typ = self.visit(ctx.type_name()) if ctx.type_name() else None
+        init = self.visit(ctx.expression()) if ctx.expression() else None
+        return VariablesDecl(id, typ, init)
 
 
     # Visit a parse tree produced by MiniGoParser#constants_declared.
     def visitConstants_declared(self, ctx:MiniGoParser.Constants_declaredContext):
-        return self.visitChildren(ctx)
+        if not ctx.const_decl_list():
+            return []
+        return self.visit(ctx.const_decl_list())
 
 
     # Visit a parse tree produced by MiniGoParser#const_decl_list.
     def visitConst_decl_list(self, ctx:MiniGoParser.Const_decl_listContext):
-        return self.visitChildren(ctx)
-
+        if ctx.getChildCount() == 1:
+            return [self.visit(ctx.const_decl())]
+        return [self.visit(ctx.const_decl())] + self.visit(ctx.const_decl_list())
 
     # Visit a parse tree produced by MiniGoParser#const_decl.
     def visitConst_decl(self, ctx:MiniGoParser.Const_declContext):
-        return self.visitChildren(ctx)
+        return ConstDecl(Id(ctx.ID().getText()), self.visit(ctx.expression()))
 
 
     # Visit a parse tree produced by MiniGoParser#function_declared.
     def visitFunction_declared(self, ctx:MiniGoParser.Function_declaredContext):
-        return self.visitChildren(ctx)
+        name = Id(ctx.ID().getText())
+        returnType = VoidType()
+        if ctx.type_name():
+            returnType = self.visit(ctx.type_name())
+        params = []
+        if ctx.params_list():
+            params = self.visit(ctx.params_list())
+        return FunctionDecl(name, returnType, None, params, [])
 
 
     # Visit a parse tree produced by MiniGoParser#receiver.
@@ -89,7 +113,15 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#method_declared.
     def visitMethod_declared(self, ctx:MiniGoParser.Method_declaredContext):
-        return self.visitChildren(ctx)
+        name = Id(ctx.ID().getText())
+        returnType = VoidType()
+        if ctx.type_name():
+            returnType = self.visit(ctx.type_name())
+        receiver = self.visit(ctx.receiver())
+        params = []
+        if ctx.method_params():
+            params = self.visit(ctx.method_params())
+        return FunctionDecl(name, returnType, receiver, params, [])
 
 
     # Visit a parse tree produced by MiniGoParser#method_params.

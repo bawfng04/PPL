@@ -30,9 +30,9 @@ options{
 
 // program: (NEWLINE | declared)* EOF; Original: program: NEWLINE* declared (NEWLINE* declared)* NEWLINE* EOF;
 
-// program: newlines declared more_declared newlines EOF;
+program: newlines declared more_declared newlines EOF;
 
-program: list_expression;
+// program: list_expression;
 
 newlines: | NEWLINE newlines;
 
