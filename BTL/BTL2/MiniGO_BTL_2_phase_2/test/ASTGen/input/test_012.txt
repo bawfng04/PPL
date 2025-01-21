@@ -1,0 +1,4 @@
+
+            var Votien = 1;
+            var Votien int;
+            var Votine int = 1;
