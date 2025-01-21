@@ -19,13 +19,21 @@ class ASTGeneration(MiniGoVisitor):
     # Visit a parse tree produced by MiniGoParser#program.
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
         decls = []
+        # Process newlines and declared nodes to collect all declarations
         for child in ctx.children:
             if isinstance(child, MiniGoParser.DeclaredContext):
                 decl = self.visit(child)
                 if isinstance(decl, list):
-                    decls.extend(decl)
+                    decls.extend(decl)  # Extend list for multiple declarations
                 else:
                     decls.append(decl)
+            elif isinstance(child, MiniGoParser.More_declaredContext):
+                more_decls = self.visit(child)
+                if more_decls:
+                    if isinstance(more_decls, list):
+                        decls.extend(more_decls)
+                    else:
+                        decls.append(more_decls)
         return Program(decls)
 
 
@@ -36,14 +44,33 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#more_declared.
     def visitMore_declared(self, ctx:MiniGoParser.More_declaredContext):
-        return self.visitChildren(ctx)
+        if not ctx.children:
+            return []
+
+        decls = []
+        if ctx.declared():
+            decl = self.visit(ctx.declared())
+            if isinstance(decl, list):
+                decls.extend(decl)
+            else:
+                decls.append(decl)
+
+        if ctx.more_declared():
+            more_decls = self.visit(ctx.more_declared())
+            if isinstance(more_decls, list):
+                decls.extend(more_decls)
+            else:
+                decls.append(more_decls)
+
+        return decls
 
 
     # Visit a parse tree produced by MiniGoParser#declared.
     def visitDeclared(self, ctx:MiniGoParser.DeclaredContext):
         # Handle each type of declaration
         if ctx.variables_declared():
-            return self.visit(ctx.variables_declared())
+            vars_decl = self.visit(ctx.variables_declared())
+            return vars_decl if isinstance(vars_decl, list) else [vars_decl]
         elif ctx.constants_declared():
             return self.visit(ctx.constants_declared())
         elif ctx.function_declared():
@@ -72,7 +99,7 @@ class ASTGeneration(MiniGoVisitor):
         if not ctx.var_decl_list():
             return []
         decls = self.visit(ctx.var_decl_list())
-        # Flatten the list if it contains nested lists
+        # Flatten the list if needed
         if isinstance(decls[0], list):
             return [item for sublist in decls for item in sublist]
         return decls
@@ -183,8 +210,10 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#method_params.
-    def visitMethod_params(self, ctx:MiniGoParser.Method_paramsContext):
-        return self.visitChildren(ctx)
+    def visitMethod_param(self, ctx: MiniGoParser.Method_paramContext):
+        param_name = ctx.ID().getText()
+        param_type = self.visit(ctx.type_name())
+        return VariablesDecl(variable=Id(param_name), varType=param_type)
 
 
     # Visit a parse tree produced by MiniGoParser#method_param.
