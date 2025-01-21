@@ -58,7 +58,11 @@ class ASTGeneration(MiniGoVisitor):
     def visitVariables_declared(self, ctx:MiniGoParser.Variables_declaredContext):
         if not ctx.var_decl_list():
             return []
-        return self.visit(ctx.var_decl_list())
+        vars = self.visit(ctx.var_decl_list())
+        # Handle both single and multiple declarations
+        if isinstance(vars, list):
+            return vars
+        return [vars]
 
 
     # Visit a parse tree produced by MiniGoParser#var_decl_list.
@@ -72,7 +76,7 @@ class ASTGeneration(MiniGoVisitor):
     def visitVar_decl(self, ctx:MiniGoParser.Var_declContext):
         # Handle single ID case
         if not ctx.COMMA():
-            id = Id(ctx.ID(0).getText()) # Get first ID
+            id = Id(ctx.ID(0).getText())
             typ = self.visit(ctx.type_name()) if ctx.type_name() else None
             init = self.visit(ctx.expression()) if ctx.expression() else None
             return VariablesDecl(id, typ, init)
@@ -80,10 +84,10 @@ class ASTGeneration(MiniGoVisitor):
         # Handle multiple IDs case
         ids = [Id(id.getText()) for id in ctx.ID()]
         typ = self.visit(ctx.type_name()) if ctx.type_name() else None
-        inits = self.visit(ctx.expr_list()) if ctx.expr_list() else None
-        if isinstance(inits, list):
-            return [VariablesDecl(id, typ, init) for id, init in zip(ids, inits)]
-        return [VariablesDecl(id, typ, None) for id in ids]
+        inits = []
+        if ctx.expr_list():
+            inits = self.visit(ctx.expr_list())
+        return [VariablesDecl(id, typ, init) for id, init in zip(ids, inits)] if inits else [VariablesDecl(id, typ, None) for id in ids]
 
 
     # Visit a parse tree produced by MiniGoParser#constants_declared.
@@ -108,16 +112,23 @@ class ASTGeneration(MiniGoVisitor):
     def visitFunction_declared(self, ctx:MiniGoParser.Function_declaredContext):
         name = Id(ctx.ID().getText())
         returnType = VoidType()
-        if ctx.type_name(): # Check if type_name exists
-            type_nodes = ctx.type_name()
-            if isinstance(type_nodes, list):
-                returnType = self.visit(type_nodes[0]) # Get first type if multiple
-            else:
-                returnType = self.visit(type_nodes)
+
+        # Handle single return type
+        if ctx.type_name() and not isinstance(ctx.type_name(), list):
+            returnType = self.visit(ctx.type_name())
+        # Handle multiple return types (taking first one)
+        elif ctx.type_name() and isinstance(ctx.type_name(), list):
+            returnType = self.visit(ctx.type_name()[0])
+
         params = []
         if ctx.params_list():
             params = self.visit(ctx.params_list())
-        return FunctionDecl(name, returnType, None, params, [])
+
+        body = []
+        if ctx.block_stmt():
+            body = self.visit(ctx.block_stmt())
+
+        return FunctionDecl(name, returnType, None, params, body)
 
 
     # Visit a parse tree produced by MiniGoParser#receiver.
@@ -126,17 +137,21 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#method_declared.
-    def visitMethod_declared(self, ctx: MiniGoParser.Method_declaredContext):
+    def visitMethod_declared(self, ctx:MiniGoParser.Method_declaredContext):
         name = Id(ctx.ID().getText())
-        receiver = None
-        if ctx.receiver():
-            receiver = self.visit(ctx.receiver())
+        receiver = self.visit(ctx.receiver())
+
         params = []
         if ctx.method_params():
             params = self.visit(ctx.method_params())
+
         returnType = VoidType()
         if ctx.type_name():
-            returnType = self.visit(ctx.type_name())
+            if isinstance(ctx.type_name(), list):
+                returnType = self.visit(ctx.type_name()[0])
+            else:
+                returnType = self.visit(ctx.type_name())
+
         return FunctionDecl(name, returnType, receiver, params, [])
 
     # Visit a parse tree produced by MiniGoParser#method_params.
@@ -145,8 +160,10 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#method_param.
-    def visitMethod_param(self, ctx:MiniGoParser.Method_paramContext):
-        return self.visitChildren(ctx)
+    def visitMethod_param(self, ctx: MiniGoParser.Method_paramContext):
+        param_name = self.visit(ctx.ID())
+        param_type = self.visit(ctx.type_name())
+        return VariablesDecl(variable=Id(param_name), varType=param_type)
 
 
     ##
@@ -219,7 +236,7 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#interface_declared.
-    def visitInterface_declared(self, ctx: MiniGoParser.Interface_declaredContext):
+    def visitInterface_declared(self, ctx:MiniGoParser.Interface_declaredContext):
         name = Id(ctx.ID().getText())
         methods = []
         if ctx.interface_type():
@@ -228,23 +245,27 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#interface_type.
-    def visitInterface_type(self, ctx: MiniGoParser.Interface_typeContext):
+    def visitInterface_type(self, ctx:MiniGoParser.Interface_typeContext):
         if not ctx.children:
             return []
-        method = self.visit(ctx.interface_method())
-        return [method] + self.visit(ctx.interface_type())
+        return [self.visit(ctx.interface_method())] + self.visit(ctx.interface_type())
 
 
 
     # Visit a parse tree produced by MiniGoParser#interface_method.
-    def visitInterface_method(self, ctx: MiniGoParser.Interface_methodContext):
+    def visitInterface_method(self, ctx:MiniGoParser.Interface_methodContext):
         name = Id(ctx.ID().getText())
+
+        # Handle parameters
         params = []
-        if ctx.optional_params():
-            params = self.visit(ctx.optional_params())
+        if ctx.optional_params() and ctx.optional_params().params_list():
+            params = self.visit(ctx.optional_params().params_list())
+
+        # Handle return type
         returnType = VoidType()
-        if ctx.optional_type():
-            returnType = self.visit(ctx.optional_type())
+        if ctx.optional_type() and ctx.optional_type().type_name():
+            returnType = self.visit(ctx.optional_type().type_name())
+
         return FunctionDecl(name, returnType, None, params, [])
 
 
