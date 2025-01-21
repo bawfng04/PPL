@@ -41,7 +41,20 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#declared.
     def visitDeclared(self, ctx:MiniGoParser.DeclaredContext):
-        return self.visitChildren(ctx)
+        # Handle each type of declaration
+        if ctx.variables_declared():
+            return self.visit(ctx.variables_declared())
+        elif ctx.constants_declared():
+            return self.visit(ctx.constants_declared())
+        elif ctx.function_declared():
+            return self.visit(ctx.function_declared())
+        elif ctx.method_declared():
+            return self.visit(ctx.method_declared())
+        elif ctx.struct_declared():
+            return self.visit(ctx.struct_declared())
+        elif ctx.interface_declared():
+            return self.visit(ctx.interface_declared())
+        return None
 
 
     # Visit a parse tree produced by MiniGoParser#list_statement.
