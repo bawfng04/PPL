@@ -4,14 +4,14 @@ from typing import List, Tuple
 
 
 class AST(ABC):
-    def __eq__(self, other): 
+    def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
     def accept(self, v, param):
         method_name = 'visit{}'.format(self.__class__.__name__)
         visit = getattr(v, method_name)
         return visit(self,param)
-    
+
 class Expr(AST):
     __metaclass__ = ABCMeta
     pass
@@ -25,7 +25,7 @@ class Id(LHS):
     name:str
     def __str__(self):
         return "Id(\"" + self.name + "\")"
-        
+
 class Type(AST):
     __metaclass__ = ABCMeta
     pass
@@ -37,19 +37,19 @@ class IntType(Type):
 class FloatType(Type):
     def __str__(self):
         return "FloatType()"
-    
+
 class StringType(Type):
     def __str__(self):
-        return "StringType()" 
-    
+        return "StringType()"
+
 class BooleanType(Type):
     def __str__(self):
-        return "BooleanType()" 
-    
+        return "BooleanType()"
+
 class StructType(Type):
     name: Id
     def __str__(self):
-        return f"StructType({str(name)})" 
+        return f"StructType({str(name)})"
 
 # used for binary expression
 @dataclass
@@ -132,8 +132,8 @@ class StructLiteral(Literal):
     name: Id
     value: List[Tuple[Id, Expr]]
     def __str__(self):
-         return  f"StructLiteral({self.name}, [{",".join(f"({str(id)},{str(expr)})" for id, expr in self.value)}])"
-    
+        return f"StructLiteral({self.name}, [{','.join(f'({str(id)},{str(expr)})' for id, expr in self.value)}])"
+
 @dataclass
 class NilLiteral(Literal):
     def __str__(self):

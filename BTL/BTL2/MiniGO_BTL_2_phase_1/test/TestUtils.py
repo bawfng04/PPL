@@ -39,7 +39,7 @@ class TestUtil:
 
 class TestLexer:
     _DIR = './test/Lexer/'
-    
+
     @staticmethod
     def test(input, expect, num):
         inputfile = TestUtil.makeSource(input, TestLexer._DIR + 'input/' + str(num) + ".txt")
@@ -82,9 +82,9 @@ class SyntaxException(Exception):
         self.message = msg
 
 class TestParser:
-    
+
     _DIR = './test/Parser/'
-    
+
     @staticmethod
     def createErrorListener():
         return NewErrorListener.INSTANCE
@@ -96,7 +96,7 @@ class TestParser:
         dest = open(TestParser._DIR + 'output/' + str(num) + ".txt", "r")
         line = dest.read()
         return line == expect
-        
+
     @staticmethod
     def check(soldir, inputfile):
         dest = open(soldir, "w")
@@ -129,9 +129,9 @@ class SyntaxException(Exception):
         self.message = msg
 
 class TestParser:
-    
+
     _DIR = './test/Parser/'
-    
+
     @staticmethod
     def createErrorListener():
         return NewErrorListener.INSTANCE
@@ -143,7 +143,7 @@ class TestParser:
         dest = open(TestParser._DIR + 'output/' + str(num) + ".txt", "r")
         line = dest.read()
         return line == expect
-        
+
     @staticmethod
     def check(soldir, inputfile):
         dest = open(soldir, "w")
@@ -165,7 +165,7 @@ class TestParser:
 
 class TestAST:
     _DIR = './test/ASTGen/'
-    
+
     @staticmethod
     def test(input, expect, num):
         inputfile = TestUtil.makeSource(input, TestAST._DIR + 'input/' + str(num) + ".txt")
@@ -188,7 +188,7 @@ class TestAST:
 
 class TestAST:
     _DIR = './test/ASTGen/'
-    
+
     @staticmethod
     def test(input, expect, num):
         inputfile = TestUtil.makeSource(input, TestAST._DIR + 'input/' + str(num) + ".txt")
