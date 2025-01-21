@@ -29,6 +29,7 @@ options{
 //========================================================== PARSER ==========================================================
 
 // program: (NEWLINE | declared)* EOF; Original: program: NEWLINE* declared (NEWLINE* declared)* NEWLINE* EOF;
+
 program: newlines declared more_declared newlines EOF;
 newlines: | NEWLINE newlines;
 more_declared: | newlines declared more_declared;

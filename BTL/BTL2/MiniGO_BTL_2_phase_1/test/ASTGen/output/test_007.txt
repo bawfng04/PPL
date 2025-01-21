@@ -1,1 +1,0 @@
-Program([FieldAccess(FieldAccess(Id("a"),Id("b")),Id("c"))])
