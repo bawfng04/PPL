@@ -101,7 +101,22 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#statement.
     def visitStatement(self, ctx:MiniGoParser.StatementContext):
-        return self.visitChildren(ctx)
+        if ctx.declared_statement():
+            return self.visit(ctx.declared_statement())
+        elif ctx.assign_statement():
+            return self.visit(ctx.assign_statement())
+        elif ctx.if_statement():
+            return self.visit(ctx.if_statement())
+        elif ctx.for_statement():
+            return self.visit(ctx.for_statement())
+        elif ctx.break_statement():
+            return self.visit(ctx.break_statement())
+        elif ctx.continue_statement():
+            return self.visit(ctx.continue_statement())
+        elif ctx.call_statement():
+            return self.visit(ctx.call_statement())
+        elif ctx.return_statement():
+            return self.visit(ctx.return_statement())
 
 
     # Fix variables_declared to handle multiple declarations correctly
@@ -177,7 +192,12 @@ class ASTGeneration(MiniGoVisitor):
             if not isinstance(params, list):
                 params = [params]
 
-        return FunctionDecl(name, returnType, None, params, [])
+        # Handle block statement
+        body = []
+        if ctx.block_stmt():
+            body = self.visit(ctx.block_stmt())
+
+        return FunctionDecl(name, returnType, None, params, body)
 
 
 
@@ -352,13 +372,20 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#declared_statement.
-    def visitDeclared_statement(self, ctx:MiniGoParser.Declared_statementContext):
-        return self.visitChildren(ctx)
+    def visitDeclared_statement(self, ctx: MiniGoParser.Declared_statementContext):
+        if ctx.variables_declared():
+            return self.visit(ctx.variables_declared())
+        else:
+            return self.visit(ctx.constants_declared())
 
 
     # Visit a parse tree produced by MiniGoParser#assign_statement.
-    def visitAssign_statement(self, ctx:MiniGoParser.Assign_statementContext):
-        return self.visitChildren(ctx)
+    def visitAssign_statement(self, ctx: MiniGoParser.Assign_statementContext):
+        lhs = self.visit(ctx.assign_lhs())
+        op = ctx.assign_op().getText()
+        exp = self.visit(ctx.expression())
+        return AssignStmt(lhs, op, exp)
+
 
 
     # Visit a parse tree produced by MiniGoParser#assign_op.
@@ -372,13 +399,56 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#if_statement.
-    def visitIf_statement(self, ctx:MiniGoParser.If_statementContext):
-        return self.visitChildren(ctx)
+    def visitIf_statement(self, ctx: MiniGoParser.If_statementContext):
+        expr = self.visit(ctx.expression())
+        thenStmt = []
+        if ctx.block_stmt(0):
+            thenStmt = self.visit(ctx.block_stmt(0))
+
+        elifStmt = None
+        elseStmt = None
+
+        if ctx.ELSE():
+            if ctx.if_statement(): # else if case
+                elif_if = self.visit(ctx.if_statement())
+                if isinstance(elif_if, list):
+                    elifStmt = [(expr, thenStmt) for expr, thenStmt in elif_if]
+                else:
+                    elifStmt = [(elif_if.expr, elif_if.thenStmt)]
+                    if elif_if.elifStmt:
+                        elifStmt.extend(elif_if.elifStmt)
+                    if elif_if.elseStmt:
+                        elseStmt = elif_if.elseStmt
+            else: # else case
+                elseStmt = self.visit(ctx.block_stmt(1))
+
+        return If(expr, thenStmt, elifStmt, elseStmt)
 
 
     # Visit a parse tree produced by MiniGoParser#for_statement.
-    def visitFor_statement(self, ctx:MiniGoParser.For_statementContext):
-        return self.visitChildren(ctx)
+    def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
+        if ctx.SHORT_ASSIGN() and ctx.RANGE():
+            # Handle range-based for loop
+            index = Id(ctx.ID(0).getText())
+            value = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
+            array = self.visit(ctx.expression())
+            body = self.visit(ctx.block_stmt())
+            return For(index, value, array, body)
+        else:
+            # Handle traditional for loop
+            init = None
+            cond = None
+            update = None
+
+            if ctx.for_init():
+                init = self.visit(ctx.for_init())
+            if ctx.expression():
+                cond = self.visit(ctx.expression())
+            if ctx.for_update():
+                update = self.visit(ctx.for_update())
+
+            body = self.visit(ctx.block_stmt())
+            return For(init, cond, update, body)
 
 
     # Visit a parse tree produced by MiniGoParser#for_init.
@@ -392,29 +462,52 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#break_statement.
-    def visitBreak_statement(self, ctx:MiniGoParser.Break_statementContext):
-        return self.visitChildren(ctx)
+    def visitBreak_statement(self, ctx: MiniGoParser.Break_statementContext):
+        return Break()
+
 
 
     # Visit a parse tree produced by MiniGoParser#continue_statement.
-    def visitContinue_statement(self, ctx:MiniGoParser.Continue_statementContext):
-        return self.visitChildren(ctx)
+    def visitContinue_statement(self, ctx: MiniGoParser.Continue_statementContext):
+        return Continue()
 
 
     # Visit a parse tree produced by MiniGoParser#return_statement.
-    def visitReturn_statement(self, ctx:MiniGoParser.Return_statementContext):
-        return self.visitChildren(ctx)
+    def visitReturn_statement(self, ctx: MiniGoParser.Return_statementContext):
+        expr = self.visit(ctx.expression()) if ctx.expression() else None
+        return Return(expr)
 
 
     # Visit a parse tree produced by MiniGoParser#call_statement.
     def visitCall_statement(self, ctx:MiniGoParser.Call_statementContext):
-        return self.visitChildren(ctx)
+        obj = None
+        method = None
+
+        if ctx.assign_lhs():
+            obj = self.visit(ctx.assign_lhs())
+            method = Id(ctx.ID().getText())
+        else:
+            method = Id(ctx.ID().getText())
+
+        params = []
+        if ctx.list_expression():
+            params = self.visit(ctx.list_expression())
+            if not isinstance(params, list):
+                params = [params]
+
+        return CallStmt(obj, method, params)
 
 
     # Visit a parse tree produced by MiniGoParser#block_stmt.
-    def visitBlock_stmt(self, ctx:MiniGoParser.Block_stmtContext):
-        return self.visitChildren(ctx)
-
+    def visitBlock_stmt(self, ctx: MiniGoParser.Block_stmtContext):
+        stmts = []
+        for stmt_ctx in ctx.statement():
+            stmt = self.visit(stmt_ctx)
+            if isinstance(stmt, list):
+                stmts.extend(stmt)
+            else:
+                stmts.append(stmt)
+        return stmts
 
     # Visit a parse tree produced by MiniGoParser#expr_list.
     def visitExpr_list(self, ctx:MiniGoParser.Expr_listContext):

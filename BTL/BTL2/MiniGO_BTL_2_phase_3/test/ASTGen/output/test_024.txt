@@ -1,3 +1,3 @@
 Program([
-			FunctionDecl(Id("votien"), VoidType(), None,[],[])
+			FunctionDecl(Id("votien"), VoidType(), None,[],[For(None,BinaryOp("<",Id("i"),IntLiteral(10)),None,[]), For(IntLiteral(0),BinaryOp("<",Id("i"),IntLiteral(10)),IntLiteral(1),[])])
 		])
