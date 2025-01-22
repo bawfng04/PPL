@@ -212,12 +212,10 @@ class ASTGeneration(MiniGoVisitor):
             if not isinstance(params, list):
                 params = [params]
 
-        # Handle method body
-        body = []
-        if ctx.block_stmt():
-            body = self.visit(ctx.block_stmt())
+        # Initialize empty list for body/statements
+        stmts = []
 
-        return FunctionDecl(name, returnType, receiver, params, body)
+        return FunctionDecl(name, returnType, receiver, params, stmts)
 
 
 
