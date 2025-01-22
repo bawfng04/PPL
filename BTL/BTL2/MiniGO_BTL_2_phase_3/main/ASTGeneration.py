@@ -381,9 +381,7 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#assign_statement.
     def visitAssign_statement(self, ctx: MiniGoParser.Assign_statementContext):
-        lhs = None
-        if ctx.assign_lhs():
-            lhs = self.visit(ctx.assign_lhs())
+        lhs = self.visit(ctx.assign_lhs()) if ctx.assign_lhs() else None
         op = ctx.assign_op().getText()
         exp = self.visit(ctx.expression())
         return AssignStmt(lhs, op, exp)
@@ -396,7 +394,19 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#assign_lhs.
     def visitAssign_lhs(self, ctx:MiniGoParser.Assign_lhsContext):
-        return self.visitChildren(ctx)
+        if ctx.ID():
+            result = Id(ctx.ID().getText())
+            if not ctx.field_access() and not ctx.element_access():
+                return result
+
+            for i in range(len(ctx.children)):
+                child = ctx.children[i]
+                if child.getRuleIndex() == MiniGoParser.RULE_element_access:
+                    result = ArrayCell(result, self.visit(child))
+                elif child.getRuleIndex() == MiniGoParser.RULE_field_access:
+                    result = FieldAccess(result, self.visit(child))
+            return result
+        return None
 
 
     # Visit a parse tree produced by MiniGoParser#if_statement.
