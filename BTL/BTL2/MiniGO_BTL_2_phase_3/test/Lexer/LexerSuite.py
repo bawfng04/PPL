@@ -117,7 +117,7 @@ class LexerSuite(unittest.TestCase):
         """ERROR_CHAR"""
         self.assertTrue(TestLexer.test("^","ErrorToken ^", inspect.stack()[0].function))
 
-    def test_26(self):
+    def test_026(self):
         """UNCLOSE_STRING"""
         self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: VOTIEN", inspect.stack()[0].function))
 
@@ -432,3 +432,43 @@ class LexerSuite(unittest.TestCase):
     def test_100(self):
         """Operators"""
         self.assertTrue(TestLexer.test("+","+,<EOF>", inspect.stack()[0].function))
+
+    def test_101(self):
+        """Valid octal integer literal with Oo prefix"""
+        self.assertTrue(TestLexer.test("Oo177", "Oo177,<EOF>", inspect.stack()[0].function))
+
+    def test_102(self):
+        """Hexadecimal integer literal with lowercase letters"""
+        self.assertTrue(TestLexer.test("Ox1af", "Ox1af,<EOF>", inspect.stack()[0].function))
+
+    def test_103(self):
+        """Invalid binary literal"""
+        self.assertTrue(TestLexer.test("0b21","0,b21,<EOF>", inspect.stack()[0].function))
+
+    def test_104(self):
+        """Floating point with exponent only"""
+        self.assertTrue(TestLexer.test(".E+5",".,E,+,5,<EOF>", inspect.stack()[0].function))
+
+    def test_105(self):
+        """Complex float literal"""
+        self.assertTrue(TestLexer.test("12.345e-67","12.345e-67,<EOF>", inspect.stack()[0].function))
+
+    def test_106(self):
+        """String with valid escape sequences"""
+        self.assertTrue(TestLexer.test(r'"Hello\nWorld\t\"Escaped\""',r'Hello\nWorld\t\"Escaped\",<EOF>', inspect.stack()[0].function))
+
+    def test_107(self):
+        """Unclosed string with escaped quote"""
+        self.assertTrue(TestLexer.test(r'"Hello\"',r'Unclosed string: Hello\"', inspect.stack()[0].function))
+
+    def test_108(self):
+        """Nested comments"""
+        self.assertTrue(TestLexer.test("/* This is /* a nested */ comment */", "<EOF>", inspect.stack()[0].function))
+
+    def test_109(self):
+        """Invalid operator combination"""
+        self.assertTrue(TestLexer.test("&&&","&&,ErrorToken &", inspect.stack()[0].function))
+
+    def test_110(self):
+        """Mixed number formats"""
+        self.assertTrue(TestLexer.test("123_456","123,_456,<EOF>", inspect.stack()[0].function))
