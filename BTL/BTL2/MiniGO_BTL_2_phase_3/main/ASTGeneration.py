@@ -678,6 +678,7 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#array_literal.
     def visitArray_literal(self, ctx: MiniGoParser.Array_literalContext):
+        # Get type and dimensions from array_type
         type_info = self.visit(ctx.array_type())
         values = []
         if ctx.list_expression():
@@ -685,11 +686,8 @@ class ASTGeneration(MiniGoVisitor):
             if not isinstance(values, list):
                 values = [values]
 
-        # Use empty list for dimensions in first array literal
-        if len(type_info[1]) == 1:
-            dimensions = []
-        else:
-            dimensions = type_info[1][1:]
+        # Use all dimensions from type_info
+        dimensions = type_info[1]
 
         return ArrayLiteral(type_info[0], dimensions, values)
 
@@ -713,7 +711,7 @@ class ASTGeneration(MiniGoVisitor):
         else:
             typ = None
 
-        # Collect dimensions
+        # Collect dimensions in order
         dimensions = []
         for lit in ctx.INT_LIT():
             dimensions.append(int(lit.getText()))

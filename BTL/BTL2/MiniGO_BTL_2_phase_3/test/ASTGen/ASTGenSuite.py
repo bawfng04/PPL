@@ -65,7 +65,9 @@ class ASTGenSuite(unittest.TestCase):
 
     def test_011(self):
         input = """const VoTien = foo( [1]int{1}, [1][1]int{2} ); """
-        expect = Program([ConstDecl(Id("VoTien"),CallExpr(None,Id("foo"),[ArrayLiteral(IntType(), [], value=[IntLiteral(1)]),ArrayLiteral(IntType(), [1], value=[IntLiteral(2)])]))])
+        expect = Program([
+                ConstDecl(Id("VoTien"),CallExpr(None,Id("foo"),[ArrayLiteral(IntType(), [1], value=[IntLiteral(1)]),ArrayLiteral(IntType(), [1, 1], value=[IntLiteral(2)])]))
+            ])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
     def test_012(self):
