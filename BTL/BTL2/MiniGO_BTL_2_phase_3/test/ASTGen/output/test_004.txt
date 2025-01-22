@@ -1,0 +1,3 @@
+Program([
+			ConstDecl(Id("VoTien"),CallExpr(None,Id("foo"),[BinaryOp("&&",BinaryOp("-",BinaryOp("+",IntLiteral(1),IntLiteral(2)),IntLiteral(3)),BinaryOp("-",IntLiteral(5),UnaryOp("-",IntLiteral(1))))]))
+		])
