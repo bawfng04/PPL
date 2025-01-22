@@ -394,19 +394,22 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#assign_lhs.
     def visitAssign_lhs(self, ctx:MiniGoParser.Assign_lhsContext):
-        if ctx.ID():
-            result = Id(ctx.ID().getText())
-            if not ctx.field_access() and not ctx.element_access():
-                return result
+        if not ctx.ID():
+            return None
 
-            for i in range(len(ctx.children)):
-                child = ctx.children[i]
-                if child.getRuleIndex() == MiniGoParser.RULE_element_access:
-                    result = ArrayCell(result, self.visit(child))
-                elif child.getRuleIndex() == MiniGoParser.RULE_field_access:
-                    result = FieldAccess(result, self.visit(child))
+        result = Id(ctx.ID().getText())
+
+        if not ctx.field_access() and not ctx.element_access():
             return result
-        return None
+
+        for i in range(len(ctx.children)):
+            child = ctx.children[i]
+            if isinstance(child, MiniGoParser.Element_accessContext):
+                result = ArrayCell(result, self.visit(child))
+            elif isinstance(child, MiniGoParser.Field_accessContext):
+                result = FieldAccess(result, self.visit(child))
+
+        return result
 
 
     # Visit a parse tree produced by MiniGoParser#if_statement.
@@ -444,7 +447,7 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#for_statement.
     def visitFor_statement(self, ctx:MiniGoParser.For_statementContext):
-        # Handle range-based for
+        # For range-based form
         if ctx.SHORT_ASSIGN() and ctx.RANGE():
             index = Id(ctx.ID(0).getText())
             value = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
@@ -454,32 +457,45 @@ class ASTGeneration(MiniGoVisitor):
                 body = [body]
             return ForArray(index, value, array, body)
 
-        # Handle traditional for loop
-        init = None
-        cond = None
-        update = None
-
+        # For three-part form
         if ctx.for_init():
             init = self.visit(ctx.for_init())
-        if ctx.expression():
             cond = self.visit(ctx.expression())
-        if ctx.for_update():
             update = self.visit(ctx.for_update())
+        # For condition-only form
+        else:
+            init = None
+            cond = self.visit(ctx.expression())
+            update = None
 
         body = self.visit(ctx.block_stmt())
         if not isinstance(body, list):
             body = [body]
+
         return For(init, cond, update, body)
 
 
+
     # Visit a parse tree produced by MiniGoParser#for_init.
-    def visitFor_init(self, ctx:MiniGoParser.For_initContext):
-        return self.visitChildren(ctx)
+    def visitFor_init(self, ctx: MiniGoParser.For_initContext):
+        if ctx.VAR():
+            # Handle variable declaration initialization
+            return VariablesDecl(Id(ctx.ID().getText()), None, self.visit(ctx.expression()))
+        elif ctx.SHORT_ASSIGN():
+            # Handle short declaration initialization
+            return AssignStmt(Id(ctx.ID().getText()), ":=", self.visit(ctx.expression()))
+        elif ctx.assign_op():
+            # Handle assignment initialization
+            return AssignStmt(Id(ctx.ID().getText()), ctx.assign_op().getText(), self.visit(ctx.expression()))
+
 
 
     # Visit a parse tree produced by MiniGoParser#for_update.
-    def visitFor_update(self, ctx:MiniGoParser.For_updateContext):
-        return self.visitChildren(ctx)
+    def visitFor_update(self, ctx: MiniGoParser.For_updateContext):
+        lhs = self.visit(ctx.assign_lhs())
+        op = ctx.assign_op().getText()
+        exp = self.visit(ctx.expression())
+        return AssignStmt(lhs, op, exp)
 
 
     # Visit a parse tree produced by MiniGoParser#break_statement.
@@ -501,23 +517,24 @@ class ASTGeneration(MiniGoVisitor):
 
     # Visit a parse tree produced by MiniGoParser#call_statement.
     def visitCall_statement(self, ctx:MiniGoParser.Call_statementContext):
-        obj = None
-        method = None
-
-        # Get the method identifier
+        # Direct function call
         if ctx.ID():
-            # Direct function call
             method = Id(ctx.ID().getText())
-        elif ctx.assign_lhs():
-            # Method call on object
-            obj = self.visit(ctx.assign_lhs())
-            if ctx.ID():
-                method = Id(ctx.ID().getText())
-            elif isinstance(obj, FieldAccess):
-                method = obj.fieldname
-                obj = obj.obj
+            obj = None
+        # Method call through assign_lhs
+        else:
+            lhs = self.visit(ctx.assign_lhs())
+            if isinstance(lhs, FieldAccess):
+                obj = lhs.obj
+                method = lhs.fieldname
+            elif isinstance(lhs, ArrayCell):
+                obj = lhs
+                method = Id(ctx.ID().getText()) if ctx.ID() else None
+            else:
+                obj = None
+                method = Id(ctx.ID().getText()) if ctx.ID() else lhs
 
-        # Get parameters
+        # Handle parameters
         params = []
         if ctx.list_expression():
             params = self.visit(ctx.list_expression())
