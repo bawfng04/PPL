@@ -456,22 +456,21 @@ class ASTGeneration(MiniGoVisitor):
                 body = [body]
             return ForArray(index, value, array, body)
 
-        # For three-part form
-        if ctx.for_init():
-            init = self.visit(ctx.for_init())
-            cond = self.visit(ctx.expression())
-            update = self.visit(ctx.for_update())
-        # For condition-only form
-        else:
-            init = None
-            cond = self.visit(ctx.expression())
-            update = None
-
+        # Get the body statements
         body = self.visit(ctx.block_stmt())
         if not isinstance(body, list):
             body = [body]
 
-        return For(init, cond, update, body)
+        # For three-part form
+        if ctx.for_init() and ctx.for_update():
+            init = self.visit(ctx.for_init())
+            cond = self.visit(ctx.expression())
+            update = self.visit(ctx.for_update())
+            return For(init, cond, update, body)
+        # For condition-only form
+        else:
+            cond = self.visit(ctx.expression())
+            return For(None, cond, None, body)
 
 
 
