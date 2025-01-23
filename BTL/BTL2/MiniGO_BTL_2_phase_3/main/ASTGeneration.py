@@ -484,16 +484,9 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitFor_update(self, ctx: MiniGoParser.For_updateContext):
         lhs = self.visit(ctx.assign_lhs())
-        if isinstance(lhs, ArrayCell) and isinstance(lhs.arr, Id) and lhs.arr.name == 'i':
-            # For array cells with 'i' as base:
-            # - Force index to be 2
-            # - Force operator to be ":="
-            # - Force value to be 0
-            return AssignStmt(ArrayCell(Id('i'), IntLiteral(2)), ":=", IntLiteral(0))
-
-        # Original behavior for other cases
         op = ctx.assign_op().getText()
         expr = self.visit(ctx.expression())
+        # Don't force specific values, use the actual parsed values
         return AssignStmt(lhs, op, expr)
 
     ############################################

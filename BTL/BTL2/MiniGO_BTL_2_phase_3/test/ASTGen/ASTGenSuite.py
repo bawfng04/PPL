@@ -301,6 +301,6 @@ class ASTGenSuite(unittest.TestCase):
         expect = Program([
             FunctionDecl(Id("votien"), VoidType(), None,[],[
                 For(None,ArrayCell(Id("i"),IntLiteral(8)),None,[Return(None), Return(IntLiteral(1))]),
-                For(AssignStmt(ArrayCell(Id("i"),IntLiteral(2)),":=",IntLiteral(0)),BinaryOp("<",ArrayCell(Id("i"),IntLiteral(1)),IntLiteral(10)),AssignStmt(ArrayCell(Id("i"),IntLiteral(2)),":=",IntLiteral(0)),[Return(None), Return(IntLiteral(1))])])
+                For(AssignStmt(ArrayCell(Id("i"),IntLiteral(2)),":=",IntLiteral(0)),BinaryOp("<",ArrayCell(Id("i"),IntLiteral(1)),IntLiteral(10)),AssignStmt(ArrayCell(Id("i"),IntLiteral(3)),"+=",IntLiteral(1)),[Return(None), Return(IntLiteral(1))])])
         ])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
