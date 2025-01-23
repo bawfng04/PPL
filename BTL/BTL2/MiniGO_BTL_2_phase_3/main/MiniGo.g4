@@ -314,7 +314,9 @@ INT_LIT:
 	| OCTAL { self.text = str(int(self.text,8)) }
 	| BINARY { self.text = str(int(self.text,2)) };
 
-FLOAT_LIT: FLOAT_DECIMAL DECIMAL_PART EXPONENT?;
+// FLOAT_LIT: FLOAT_DECIMAL DECIMAL_PART EXPONENT?;
+
+FLOAT_LIT: ('0' | [1-9][0-9]*) '.' [0-9]* ([eE] [+-]? ('0' | [1-9][0-9]*))?;
 
 // | FLOAT_DECIMAL EXPONENT | DECIMAL_PART [0-9]+ EXPONENT? | FLOAT_DECIMAL DECIMAL_PART;
 

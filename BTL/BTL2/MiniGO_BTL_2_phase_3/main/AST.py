@@ -265,6 +265,13 @@ class StructDecl(Declared):
     def __str__(self):
         return "StructDecl(" + str(self.name) +  ",[" +  ','.join(str(i) for i in self.fields) + "])"
 
+@dataclass
+class ArrayType(Type):
+    typ : Type
+    dimensions : list[int]
+    def __str__(self):
+        return (f"ArrayType({self.typ}, "
+                f"{self.dimensions})")
 
 # used for whole program
 @dataclass
@@ -272,3 +279,4 @@ class Program(AST):
     decl : List[Declared]
     def __str__(self):
         return "Program([\n\t\t\t" + ',\n\t\t\t'.join(str(i) for i in self.decl) + "\n\t\t])"
+

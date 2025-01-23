@@ -138,7 +138,7 @@ class ASTGeneration(MiniGoVisitor):
 
 
     # Visit a parse tree produced by MiniGoParser#var_decl.
-    def visitVar_decl(self, ctx:MiniGoParser.Var_declContext):
+    def visitVar_decl(self, ctx: MiniGoParser.Var_declContext):
         # Handle single ID case
         if not ctx.COMMA():
             id = Id(ctx.ID(0).getText())
@@ -153,7 +153,6 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.expr_list():
             inits = self.visit(ctx.expr_list())
         return [VariablesDecl(id, typ, init) for id, init in zip(ids, inits)] if inits else [VariablesDecl(id, typ, None) for id in ids]
-
 
     # Visit a parse tree produced by MiniGoParser#constants_declared.
     def visitConstants_declared(self, ctx:MiniGoParser.Constants_declaredContext):
@@ -679,17 +678,16 @@ class ASTGeneration(MiniGoVisitor):
     # Visit a parse tree produced by MiniGoParser#array_literal.
     def visitArray_literal(self, ctx: MiniGoParser.Array_literalContext):
         # Get type and dimensions from array_type
-        type_info = self.visit(ctx.array_type())
+        array_type = self.visit(ctx.array_type())
         values = []
         if ctx.list_expression():
             values = self.visit(ctx.list_expression())
             if not isinstance(values, list):
                 values = [values]
 
-        # Use all dimensions from type_info
-        dimensions = type_info[1]
+        # Since array_type is now an ArrayType object, get dimensions directly
+        return ArrayLiteral(array_type.typ, array_type.dimensions, values)
 
-        return ArrayLiteral(type_info[0], dimensions, values)
 
 
     # Visit a parse tree produced by MiniGoParser#array_type.
@@ -705,7 +703,7 @@ class ASTGeneration(MiniGoVisitor):
             elif ctx.type_name().BOOLEAN():
                 typ = BooleanType()
             elif ctx.type_name().ID():
-                typ = Id(ctx.type_name().ID().getText())
+                typ = ClassType(Id(ctx.type_name().ID().getText()))
             else:
                 typ = self.visit(ctx.type_name())
         else:
@@ -716,7 +714,8 @@ class ASTGeneration(MiniGoVisitor):
         for lit in ctx.INT_LIT():
             dimensions.append(int(lit.getText()))
 
-        return (typ, dimensions)
+        # Return ArrayType
+        return ArrayType(typ, dimensions)
 
 
     # Visit a parse tree produced by MiniGoParser#struct_literal.

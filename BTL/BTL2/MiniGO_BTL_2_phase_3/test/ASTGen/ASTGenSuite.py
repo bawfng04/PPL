@@ -266,3 +266,14 @@ class ASTGenSuite(unittest.TestCase):
 				CallStmt(ArrayCell(Id("a"),IntLiteral(2)),Id("foo"),[IntLiteral(1),IntLiteral(3)])])
 		])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
+
+
+    def test_027(self):
+        "thêm type array vào AST anh có thông bao trong nhóm task 3"
+        input = """
+            var a [2][3]int;
+"""
+        expect = Program([
+            VariablesDecl(Id("a"), ArrayType(IntType(), [2, 3]), None)
+        ])
+        self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))

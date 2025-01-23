@@ -1,0 +1,3 @@
+Program([
+			VariablesDecl(Id("a"), ArrayType(IntType(), [2, 3]), None)
+		])
