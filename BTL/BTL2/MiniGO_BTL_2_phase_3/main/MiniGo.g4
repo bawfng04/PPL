@@ -150,9 +150,13 @@ for_statement:
 		| expression block_stmt																// Basic form
 	);
 
+// for_init: ID SHORT_ASSIGN expression // Short declaration | ID assign_op expression // Assignment | VAR ID type_name? ASSIGN expression; //
+// Variable declaration
+
+//for init cho btl2
 for_init:
-	ID SHORT_ASSIGN expression				// Short declaration
-	| ID assign_op expression				// Assignment
+	assign_lhs SHORT_ASSIGN expression		// Short declaration
+	| assign_lhs assign_op expression		// Assignment
 	| VAR ID type_name? ASSIGN expression;	// Variable declaration
 
 //assign_lhs: ID (field_access | element_access)*;

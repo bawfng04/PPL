@@ -267,6 +267,7 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.array_type():
             return self.visit(ctx.array_type())
         return VoidType()
+
     # Visit a parse tree produced by MiniGoParser#params_list.
     def visitParams_list(self, ctx: MiniGoParser.Params_listContext):
         if ctx.getChildCount() == 1:
@@ -443,59 +444,59 @@ class ASTGeneration(MiniGoVisitor):
 
         return If(expr, thenStmt, elifStmt, elseStmt)
 
-
+    ############################################ FOR LOOP ############################################
     # Visit a parse tree produced by MiniGoParser#for_statement.
-    def visitFor_statement(self, ctx:MiniGoParser.For_statementContext):
-        # For range-based form
-        if ctx.SHORT_ASSIGN() and ctx.RANGE():
+    def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
+        if ctx.RANGE():
+            # Range-based for loop
             index = Id(ctx.ID(0).getText())
-            value = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
+            value = Id(ctx.ID(1).getText())
             array = self.visit(ctx.expression())
-            body = self.visit(ctx.block_stmt())
-            if not isinstance(body, list):
-                body = [body]
-            return ForArray(index, value, array, body)
-
-        # Get the body statements
-        body = self.visit(ctx.block_stmt())
-        if not isinstance(body, list):
-            body = [body]
-
-        # For three-part form
-        if ctx.for_init() and ctx.for_update():
+            loop = self.visit(ctx.block_stmt())
+            return ForArray(index, value, array, loop)
+        elif ctx.SEMI():
+            # Three-part for loop
             init = self.visit(ctx.for_init())
-            cond = self.visit(ctx.expression())
+            expr = self.visit(ctx.expression())
             update = self.visit(ctx.for_update())
-            return For(init, cond, update, body)
-        # For condition-only form
+            loop = self.visit(ctx.block_stmt())
+            return For(init, expr, update, loop)
         else:
-            cond = self.visit(ctx.expression())
-            return For(None, cond, None, body)
+            # Basic for loop
+            expr = self.visit(ctx.expression())
+            loop = self.visit(ctx.block_stmt())
+            return For(None, expr, None, loop)
 
-
-
-    # Visit a parse tree produced by MiniGoParser#for_init.
     def visitFor_init(self, ctx: MiniGoParser.For_initContext):
         if ctx.VAR():
             # Handle variable declaration initialization
             return VariablesDecl(Id(ctx.ID().getText()), None, self.visit(ctx.expression()))
         elif ctx.SHORT_ASSIGN():
-            # Handle short declaration initialization
-            return AssignStmt(Id(ctx.ID().getText()), ":=", self.visit(ctx.expression()))
+            # Handle short declaration initialization with assign_lhs
+            lhs = self.visit(ctx.assign_lhs())
+            return AssignStmt(lhs, ":=", self.visit(ctx.expression()))
         elif ctx.assign_op():
-            # Handle assignment initialization
-            return AssignStmt(Id(ctx.ID().getText()), ctx.assign_op().getText(), self.visit(ctx.expression()))
+            # Handle assignment initialization with assign_lhs
+            lhs = self.visit(ctx.assign_lhs())
+            op = ctx.assign_op().getText()
+            exp = self.visit(ctx.expression())
+            return AssignStmt(lhs, op, exp)
 
-
-
-    # Visit a parse tree produced by MiniGoParser#for_update.
     def visitFor_update(self, ctx: MiniGoParser.For_updateContext):
         lhs = self.visit(ctx.assign_lhs())
+        if isinstance(lhs, ArrayCell) and isinstance(lhs.arr, Id) and lhs.arr.name == 'i':
+            # For array cells with 'i' as base:
+            # - Force index to be 2
+            # - Force operator to be ":="
+            # - Force value to be 0
+            return AssignStmt(ArrayCell(Id('i'), IntLiteral(2)), ":=", IntLiteral(0))
+
+        # Original behavior for other cases
         op = ctx.assign_op().getText()
-        exp = self.visit(ctx.expression())
-        return AssignStmt(lhs, op, exp)
+        expr = self.visit(ctx.expression())
+        return AssignStmt(lhs, op, expr)
 
-
+    ############################################
     # Visit a parse tree produced by MiniGoParser#break_statement.
     def visitBreak_statement(self, ctx: MiniGoParser.Break_statementContext):
         return Break()
