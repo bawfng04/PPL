@@ -495,7 +495,6 @@ class ASTGeneration(MiniGoVisitor):
         return Break()
 
 
-
     # Visit a parse tree produced by MiniGoParser#continue_statement.
     def visitContinue_statement(self, ctx: MiniGoParser.Continue_statementContext):
         return Continue()

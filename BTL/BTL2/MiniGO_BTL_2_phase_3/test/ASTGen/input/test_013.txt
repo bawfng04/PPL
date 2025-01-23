@@ -1,3 +1,0 @@
-
-            func foo() int {}
-            func foo(a int, b int) {}

@@ -304,3 +304,13 @@ class ASTGenSuite(unittest.TestCase):
                 For(AssignStmt(ArrayCell(Id("i"),IntLiteral(2)),":=",IntLiteral(0)),BinaryOp("<",ArrayCell(Id("i"),IntLiteral(1)),IntLiteral(10)),AssignStmt(ArrayCell(Id("i"),IntLiteral(3)),"+=",IntLiteral(1)),[Return(None), Return(IntLiteral(1))])])
         ])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
+
+    def test_030(self):
+        "thêm type array vào AST anh có thông bao trong nhóm task 3"
+        input = """
+            var a [2][3]int;
+"""
+        expect = Program([
+            VariablesDecl(Id("a"), ArrayType(IntType(), [2, 3]), None)
+        ])
+        self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))

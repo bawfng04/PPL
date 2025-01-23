@@ -1,4 +1,0 @@
-
-            type Votien struct {
-                a int;
-            }

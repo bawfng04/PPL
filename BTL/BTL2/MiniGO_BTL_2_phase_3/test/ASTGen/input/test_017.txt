@@ -1,4 +1,0 @@
-
-            type Votien interface {
-                Add(x, y int) int;
-            }

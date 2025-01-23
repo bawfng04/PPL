@@ -1,3 +1,0 @@
-Program([
-			ConstDecl(Id("VoTien"),CallExpr(None,Id("foo"),[StructLiteral(Id("Votien"), []),StructLiteral(Id("Votien"), [(Id("a"),IntLiteral(1))])]))
-		])

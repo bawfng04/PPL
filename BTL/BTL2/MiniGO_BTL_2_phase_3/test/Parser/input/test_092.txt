@@ -1,0 +1,11 @@
+
+            type Address struct {
+                street string;
+                city string;
+            }
+            type Person struct {
+                name string;
+                age int;
+                address Address;
+            }
+        
