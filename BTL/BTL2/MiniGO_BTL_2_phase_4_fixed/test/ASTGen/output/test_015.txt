@@ -1,0 +1,3 @@
+Program([
+			StructDecl(Id("Votien"),[VariablesDecl(Id("a"), IntType(), None)])
+		])

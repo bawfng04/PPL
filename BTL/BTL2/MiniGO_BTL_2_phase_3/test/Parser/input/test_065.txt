@@ -1,6 +1,0 @@
-
-            func main() {
-                foo(2 + x, 4 / y);
-                m.goo();
-            }
-        

@@ -1,0 +1,3 @@
+Program([
+			FunctionDecl(Id("votien"), VoidType(), None,[],[If(IntLiteral(1), [], None, None)])
+		])

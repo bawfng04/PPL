@@ -1,1 +1,0 @@
-var decimals [3]float;

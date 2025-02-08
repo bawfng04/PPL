@@ -1,1 +1,0 @@
-const Votien = Person{name: "Alice", address: Address{street: "123 Main St", city: "Anytown"}}.address.city;

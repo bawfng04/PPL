@@ -1,1 +1,0 @@
-const Votien = foo(1, "string");
