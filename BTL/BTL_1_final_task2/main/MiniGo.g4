@@ -383,7 +383,8 @@ NEWLINE:
         if self.preType in [self.ID, self.INT_LIT, self.FLOAT_LIT, self.STRING_LIT,
                            self.TRUE, self.FALSE, self.NIL,
                            self.RETURN, self.CONTINUE, self.BREAK,
-                           self.RP, self.RB, self.RSB]:
+                           self.RP, self.RB, self.RSB
+						   ]:
             self.text = ';'
         else:
             self.skip()

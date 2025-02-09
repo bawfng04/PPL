@@ -1,10 +1,15 @@
 
-            type Person struct {
                 func (p Person) Greet() string {
-                    return "Hello, " + p.name
-                }; c c;
-                func (p Person) Greet() string {
-                    return "Hello, " + p.name
-            } c c;
-            }
+                    for i := 0
+                        i < 10
+                        i += 1 {
+                        return
+                    }
+                    for i := 0
+                        i < 10
+                        i += 1
+                    {
+                        return
+                    }
+                };
     
