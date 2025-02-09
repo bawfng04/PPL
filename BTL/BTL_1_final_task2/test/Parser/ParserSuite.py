@@ -251,7 +251,7 @@ class ParserSuite(unittest.TestCase):
             """Statement"""
             self.assertTrue(TestParser.test("""
                 func Add() {
-                                            }
+                                        }
     ""","Error on line 3 col 40: }", inspect.stack()[0].function))
 
 

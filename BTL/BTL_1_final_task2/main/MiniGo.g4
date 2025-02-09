@@ -93,7 +93,7 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 
 const_decl: ID ASSIGN expression;
 
-// khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt
+// khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
 function_declared:
 	FUNC ID LP params_list? RP (LP type_name (COMMA type_name)* RP | type_name)? NEWLINE? block_stmt SEMI?;
 
@@ -193,6 +193,8 @@ continue_statement: CONTINUE (SEMI | NEWLINE);
 return_statement: RETURN (expression? SEMI | expression? NEWLINE);
 
 call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
+
+// block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
 block_stmt: NEWLINE? LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
 
