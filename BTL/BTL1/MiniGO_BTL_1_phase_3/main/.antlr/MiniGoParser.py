@@ -485,14 +485,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_program
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterProgram" ):
-                listener.enterProgram(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitProgram" ):
-                listener.exitProgram(self)
-
 
 
 
@@ -537,14 +529,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_newlines
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterNewlines" ):
-                listener.enterNewlines(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitNewlines" ):
-                listener.exitNewlines(self)
 
 
 
@@ -601,14 +585,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_more_declared
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMore_declared" ):
-                listener.enterMore_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMore_declared" ):
-                listener.exitMore_declared(self)
 
 
 
@@ -685,14 +661,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_declared
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterDeclared" ):
-                listener.enterDeclared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitDeclared" ):
-                listener.exitDeclared(self)
 
 
 
@@ -779,14 +747,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_list_statement
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterList_statement" ):
-                listener.enterList_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitList_statement" ):
-                listener.exitList_statement(self)
-
 
 
 
@@ -865,14 +825,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStatement" ):
-                listener.enterStatement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStatement" ):
-                listener.exitStatement(self)
 
 
 
@@ -963,14 +915,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_variables_declared
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterVariables_declared" ):
-                listener.enterVariables_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitVariables_declared" ):
-                listener.exitVariables_declared(self)
-
 
 
 
@@ -1015,14 +959,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_var_decl_list
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterVar_decl_list" ):
-                listener.enterVar_decl_list(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitVar_decl_list" ):
-                listener.exitVar_decl_list(self)
 
 
 
@@ -1097,14 +1033,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_var_decl
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterVar_decl" ):
-                listener.enterVar_decl(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitVar_decl" ):
-                listener.exitVar_decl(self)
 
 
 
@@ -1212,14 +1140,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_constants_declared
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterConstants_declared" ):
-                listener.enterConstants_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitConstants_declared" ):
-                listener.exitConstants_declared(self)
-
 
 
 
@@ -1270,14 +1190,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_const_decl_list
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterConst_decl_list" ):
-                listener.enterConst_decl_list(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitConst_decl_list" ):
-                listener.exitConst_decl_list(self)
 
 
 
@@ -1335,14 +1247,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_const_decl
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterConst_decl" ):
-                listener.enterConst_decl(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitConst_decl" ):
-                listener.exitConst_decl(self)
 
 
 
@@ -1419,14 +1323,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_function_declared
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterFunction_declared" ):
-                listener.enterFunction_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitFunction_declared" ):
-                listener.exitFunction_declared(self)
 
 
 
@@ -1526,14 +1422,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_receiver
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterReceiver" ):
-                listener.enterReceiver(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitReceiver" ):
-                listener.exitReceiver(self)
-
 
 
 
@@ -1614,14 +1502,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_method_declared
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMethod_declared" ):
-                listener.enterMethod_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMethod_declared" ):
-                listener.exitMethod_declared(self)
 
 
 
@@ -1718,14 +1598,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_method_params
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMethod_params" ):
-                listener.enterMethod_params(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMethod_params" ):
-                listener.exitMethod_params(self)
-
 
 
 
@@ -1780,14 +1652,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_method_param
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMethod_param" ):
-                listener.enterMethod_param(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMethod_param" ):
-                listener.exitMethod_param(self)
-
 
 
 
@@ -1830,14 +1694,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_params_list
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterParams_list" ):
-                listener.enterParams_list(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitParams_list" ):
-                listener.exitParams_list(self)
 
 
 
@@ -1901,14 +1757,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_param
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterParam" ):
-                listener.enterParam(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitParam" ):
-                listener.exitParam(self)
 
 
 
@@ -1999,14 +1847,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_struct_declared
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStruct_declared" ):
-                listener.enterStruct_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStruct_declared" ):
-                listener.exitStruct_declared(self)
-
 
 
 
@@ -2084,14 +1924,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_struct_type
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStruct_type" ):
-                listener.enterStruct_type(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStruct_type" ):
-                listener.exitStruct_type(self)
-
 
 
 
@@ -2151,14 +1983,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_struct_field
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStruct_field" ):
-                listener.enterStruct_field(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStruct_field" ):
-                listener.exitStruct_field(self)
-
 
 
 
@@ -2204,14 +2028,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_more_ids
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMore_ids" ):
-                listener.enterMore_ids(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMore_ids" ):
-                listener.exitMore_ids(self)
 
 
 
@@ -2264,14 +2080,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_struct_end
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStruct_end" ):
-                listener.enterStruct_end(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStruct_end" ):
-                listener.exitStruct_end(self)
 
 
 
@@ -2353,14 +2161,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_interface_declared
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterInterface_declared" ):
-                listener.enterInterface_declared(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitInterface_declared" ):
-                listener.exitInterface_declared(self)
-
 
 
 
@@ -2427,14 +2227,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_interface_type
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterInterface_type" ):
-                listener.enterInterface_type(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitInterface_type" ):
-                listener.exitInterface_type(self)
 
 
 
@@ -2505,14 +2297,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_interface_method
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterInterface_method" ):
-                listener.enterInterface_method(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitInterface_method" ):
-                listener.exitInterface_method(self)
-
 
 
 
@@ -2558,14 +2342,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_optional_params
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterOptional_params" ):
-                listener.enterOptional_params(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitOptional_params" ):
-                listener.exitOptional_params(self)
 
 
 
@@ -2613,14 +2389,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_optional_type
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterOptional_type" ):
-                listener.enterOptional_type(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitOptional_type" ):
-                listener.exitOptional_type(self)
-
 
 
 
@@ -2665,14 +2433,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_optional_semi
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterOptional_semi" ):
-                listener.enterOptional_semi(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitOptional_semi" ):
-                listener.exitOptional_semi(self)
 
 
 
@@ -2723,14 +2483,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_declared_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterDeclared_statement" ):
-                listener.enterDeclared_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitDeclared_statement" ):
-                listener.exitDeclared_statement(self)
 
 
 
@@ -2789,14 +2541,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_assign_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterAssign_statement" ):
-                listener.enterAssign_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitAssign_statement" ):
-                listener.exitAssign_statement(self)
 
 
 
@@ -2862,14 +2606,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_assign_op
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterAssign_op" ):
-                listener.enterAssign_op(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitAssign_op" ):
-                listener.exitAssign_op(self)
-
 
 
 
@@ -2922,14 +2658,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_assign_lhs
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterAssign_lhs" ):
-                listener.enterAssign_lhs(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitAssign_lhs" ):
-                listener.exitAssign_lhs(self)
 
 
 
@@ -3016,14 +2744,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_if_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterIf_statement" ):
-                listener.enterIf_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitIf_statement" ):
-                listener.exitIf_statement(self)
 
 
 
@@ -3141,14 +2861,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_for_statement
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterFor_statement" ):
-                listener.enterFor_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitFor_statement" ):
-                listener.exitFor_statement(self)
-
 
 
 
@@ -3257,14 +2969,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_for_init
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterFor_init" ):
-                listener.enterFor_init(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitFor_init" ):
-                listener.exitFor_init(self)
-
 
 
 
@@ -3349,14 +3053,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_for_update
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterFor_update" ):
-                listener.enterFor_update(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitFor_update" ):
-                listener.exitFor_update(self)
-
 
 
 
@@ -3399,14 +3095,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_break_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterBreak_statement" ):
-                listener.enterBreak_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitBreak_statement" ):
-                listener.exitBreak_statement(self)
 
 
 
@@ -3454,14 +3142,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_continue_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterContinue_statement" ):
-                listener.enterContinue_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitContinue_statement" ):
-                listener.exitContinue_statement(self)
 
 
 
@@ -3513,14 +3193,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_return_statement
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterReturn_statement" ):
-                listener.enterReturn_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitReturn_statement" ):
-                listener.exitReturn_statement(self)
 
 
 
@@ -3603,14 +3275,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_call_statement
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterCall_statement" ):
-                listener.enterCall_statement(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitCall_statement" ):
-                listener.exitCall_statement(self)
-
 
 
 
@@ -3692,14 +3356,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_block_stmt
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterBlock_stmt" ):
-                listener.enterBlock_stmt(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitBlock_stmt" ):
-                listener.exitBlock_stmt(self)
 
 
 
@@ -3792,14 +3448,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_expr_list
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpr_list" ):
-                listener.enterExpr_list(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpr_list" ):
-                listener.exitExpr_list(self)
-
 
 
 
@@ -3857,14 +3505,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression" ):
-                listener.enterExpression(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression" ):
-                listener.exitExpression(self)
 
 
 
@@ -3931,14 +3571,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression1
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression1" ):
-                listener.enterExpression1(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression1" ):
-                listener.exitExpression1(self)
 
 
 
@@ -4008,14 +3640,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression2
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression2" ):
-                listener.enterExpression2(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression2" ):
-                listener.exitExpression2(self)
 
 
 
@@ -4098,14 +3722,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression3
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression3" ):
-                listener.enterExpression3(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression3" ):
-                listener.exitExpression3(self)
-
 
 
     def expression3(self, _p:int=0):
@@ -4180,14 +3796,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression4
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression4" ):
-                listener.enterExpression4(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression4" ):
-                listener.exitExpression4(self)
 
 
 
@@ -4267,14 +3875,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression5
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression5" ):
-                listener.enterExpression5(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression5" ):
-                listener.exitExpression5(self)
-
 
 
     def expression5(self, _p:int=0):
@@ -4349,14 +3949,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression6
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression6" ):
-                listener.enterExpression6(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression6" ):
-                listener.exitExpression6(self)
 
 
 
@@ -4435,14 +4027,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_expression7
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExpression7" ):
-                listener.enterExpression7(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExpression7" ):
-                listener.exitExpression7(self)
-
 
 
 
@@ -4517,14 +4101,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_operand
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterOperand" ):
-                listener.enterOperand(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitOperand" ):
-                listener.exitOperand(self)
-
 
 
 
@@ -4588,14 +4164,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_element_access
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterElement_access" ):
-                listener.enterElement_access(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitElement_access" ):
-                listener.exitElement_access(self)
-
 
 
 
@@ -4635,14 +4203,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_field_access
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterField_access" ):
-                listener.enterField_access(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitField_access" ):
-                listener.exitField_access(self)
 
 
 
@@ -4685,14 +4245,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_call_expr
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterCall_expr" ):
-                listener.enterCall_expr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitCall_expr" ):
-                listener.exitCall_expr(self)
 
 
 
@@ -4760,14 +4312,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_literal
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterLiteral" ):
-                listener.enterLiteral(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitLiteral" ):
-                listener.exitLiteral(self)
 
 
 
@@ -4856,14 +4400,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_array_literal
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterArray_literal" ):
-                listener.enterArray_literal(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitArray_literal" ):
-                listener.exitArray_literal(self)
-
 
 
 
@@ -4921,14 +4457,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_array_type
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterArray_type" ):
-                listener.enterArray_type(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitArray_type" ):
-                listener.exitArray_type(self)
 
 
 
@@ -4999,14 +4527,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_type_name
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterType_name" ):
-                listener.enterType_name(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitType_name" ):
-                listener.exitType_name(self)
 
 
 
@@ -5084,14 +4604,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_struct_literal
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStruct_literal" ):
-                listener.enterStruct_literal(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStruct_literal" ):
-                listener.exitStruct_literal(self)
-
 
 
 
@@ -5145,14 +4657,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_field_list
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterField_list" ):
-                listener.enterField_list(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitField_list" ):
-                listener.exitField_list(self)
 
 
 
@@ -5211,14 +4715,6 @@ class MiniGoParser ( Parser ):
         def getRuleIndex(self):
             return MiniGoParser.RULE_field_init
 
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterField_init" ):
-                listener.enterField_init(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitField_init" ):
-                listener.exitField_init(self)
-
 
 
 
@@ -5263,14 +4759,6 @@ class MiniGoParser ( Parser ):
 
         def getRuleIndex(self):
             return MiniGoParser.RULE_list_expression
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterList_expression" ):
-                listener.enterList_expression(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitList_expression" ):
-                listener.exitList_expression(self)
 
 
 
