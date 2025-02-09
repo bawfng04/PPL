@@ -103,7 +103,8 @@ function_declared:
 receiver: ID (ID | STRUCT | INTERFACE);
 
 // method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
-method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? NEWLINE? block_stmt SEMI?;
+method_declared:
+	FUNC LP receiver RP ID LP params_list? RP (type_name)? NEWLINE? block_stmt (SEMI | NEWLINE);
 
 // Original: method_params: method_param (COMMA method_param)*;
 method_params: method_param | method_param COMMA method_params;
