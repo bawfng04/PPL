@@ -104,7 +104,7 @@ method_params: method_param | method_param COMMA method_params;
 method_param: ID type_name;
 
 // Block statement Original: params_list: param (COMMA param)*;
-params_list: param | param COMMA params_list;
+params_list: ID type_name | ID (COMMA ID)* type_name | param (COMMA param)*;
 
 param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 
@@ -113,7 +113,7 @@ param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 //ex: type Point struct {x, y int}
 struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type_list NEWLINE* RB (SEMI | NEWLINE);
 
-struct_type_list: struct_field (NEWLINE* struct_field)*;
+struct_type_list: (struct_field NEWLINE*)+;
 
 struct_field: ID more_ids type_name struct_end | method_declared;
 
@@ -135,11 +135,14 @@ struct_type: | struct_field struct_type;
 
 // Interface declaration
 
-interface_declared: TYPE ID INTERFACE LB NEWLINE* interface_type RB SEMI?;
+interface_declared: TYPE ID INTERFACE LB NEWLINE* interface_type_list NEWLINE* RB SEMI?;
+interface_type_list: interface_method+;
 
 // Update interface_type rule Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 interface_type: | interface_method interface_type;
-interface_method: ID LP optional_params RP optional_type optional_semi newlines;
+interface_method:
+	ID LP params_list? RP (type_name)? (SEMI | NEWLINE)
+	| ID LP params_list? RP (type_name)? NEWLINE?;
 optional_params: | params_list;
 optional_type: | type_name;
 optional_semi: | SEMI;

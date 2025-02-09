@@ -139,6 +139,11 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#interface_type_list.
+    def visitInterface_type_list(self, ctx:MiniGoParser.Interface_type_listContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#interface_type.
     def visitInterface_type(self, ctx:MiniGoParser.Interface_typeContext):
         return self.visitChildren(ctx)
