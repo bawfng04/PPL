@@ -240,6 +240,21 @@ class ParserSuite(unittest.TestCase):
             var z VOTIEN = [2]int{};
             ""","Error on line 2 col 34: }", inspect.stack()[0].function))
 
+    def test_032(self):
+            """Declared"""
+            self.assertTrue(TestParser.test("""
+
+            var c int func (c c) Add(x int) {return ;}
+    ""","Error on line 3 col 22: func", inspect.stack()[0].function))
+
+    def test_033(self):
+            """Statement"""
+            self.assertTrue(TestParser.test("""
+                func Add() {
+                                            }
+    ""","Error on line 3 col 40: }", inspect.stack()[0].function))
+
+
 #mấy test này lỗi index?
     # def test_023(self):
     #         """Expressions"""
