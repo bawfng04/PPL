@@ -131,12 +131,24 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 // Newline + comments
 
-WS: [ \t\r\n\f]+ -> skip;
+// In the lexer rules section, modify the NEWLINE rule:
 
-NEWLINE: '\r'? '\n';
+NEWLINE:
+	'\r'? '\n' {
+        if self.preType in [self.ID, self.INT_LIT, self.FLOAT_LIT, self.STRING_LIT,
+                           self.TRUE, self.FALSE, self.NIL,
+                           self.RETURN, self.CONTINUE, self.BREAK,
+                           self.RP, self.RB, self.RSB]:
+            self.text = ';'
+        else:
+            self.skip()
+    };
 
+// Move the whitespace rule after NEWLINE to ensure newlines are processed first
+WS: [ \t\f\r]+ -> skip;
+
+// Comment rules should also be after NEWLINE
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
-
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
 // WS: [ \t\r\n\f]+ -> skip;

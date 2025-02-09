@@ -45,7 +45,7 @@ class MiniGoParser ( Parser ):
                       "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "COLON", "SHORT_ASSIGN", 
                       "UNDERSCORE", "LP", "RP", "LB", "RB", "LSB", "RSB", 
                       "COMMA", "SEMI", "ID", "INT_LIT", "FLOAT_LIT", "STRING_LIT", 
-                      "WS", "NEWLINE", "BLOCK_COMMENT", "LINE_COMMENT", 
+                      "NEWLINE", "WS", "BLOCK_COMMENT", "LINE_COMMENT", 
                       "UNCLOSE_STRING", "ILLEGAL_ESCAPE", "ERROR_CHAR" ]
 
     RULE_program = 0
@@ -110,8 +110,8 @@ class MiniGoParser ( Parser ):
     INT_LIT=55
     FLOAT_LIT=56
     STRING_LIT=57
-    WS=58
-    NEWLINE=59
+    NEWLINE=58
+    WS=59
     BLOCK_COMMENT=60
     LINE_COMMENT=61
     UNCLOSE_STRING=62
