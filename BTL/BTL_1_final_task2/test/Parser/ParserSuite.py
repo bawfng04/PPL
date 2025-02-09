@@ -183,6 +183,7 @@ class ParserSuite(unittest.TestCase):
             self.assertTrue(TestParser.test("""
                 var z VOTIEN = int{1};
             ""","Error on line 2 col 27: int", inspect.stack()[0].function))
+
     def test_024(self):
         """array_literal"""
         self.assertTrue(TestParser.test("""const a = [1]int{1+1}

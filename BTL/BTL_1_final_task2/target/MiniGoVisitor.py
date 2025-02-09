@@ -309,6 +309,16 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#literal_list.
+    def visitLiteral_list(self, ctx:MiniGoParser.Literal_listContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#literal_item.
+    def visitLiteral_item(self, ctx:MiniGoParser.Literal_itemContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#array_type.
     def visitArray_type(self, ctx:MiniGoParser.Array_typeContext):
         return self.visitChildren(ctx)

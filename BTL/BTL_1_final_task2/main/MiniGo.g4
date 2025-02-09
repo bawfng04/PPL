@@ -236,7 +236,20 @@ literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | NIL | array_literal |
 // Array literal with type
 
 // ex: [2][3]int{{1,2,3},{4,5,6}};
-array_literal: array_type LB list_expression RB;
+array_literal: array_type LB literal_list? RB | LB literal_list? RB;
+
+literal_list: literal_item (COMMA literal_item)*;
+
+literal_item:
+	array_literal
+	| struct_literal
+	| INT_LIT
+	| FLOAT_LIT
+	| STRING_LIT
+	| TRUE
+	| FALSE
+	| NIL
+	| ID;
 
 // ex: [2][3]int;
 array_type: LSB INT_LIT RSB (LSB INT_LIT RSB)* type_name;
