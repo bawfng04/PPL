@@ -102,9 +102,12 @@ fragment EXPONENT: [eE] [+-]? ('0' | [1-9][0-9]*);
 
 INT_LIT:
 	DECIMAL
-	| HEX { self.text = str(int(self.text,16)) }
-	| OCTAL { self.text = str(int(self.text,8)) }
-	| BINARY { self.text = str(int(self.text,2)) };
+	| HEX
+	// { self.text = str(int(self.text,16)) }
+	| OCTAL
+	// { self.text = str(int(self.text,8)) }
+	| BINARY;
+// { self.text = str(int(self.text,2)) };
 
 FLOAT_LIT:
 	FLOAT_DECIMAL DECIMAL_PART EXPONENT?
