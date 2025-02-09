@@ -235,7 +235,7 @@ literal: INT_LIT | FLOAT_LIT | STRING_LIT | TRUE | FALSE | NIL | array_literal |
 // Array literal with type
 
 // ex: [2][3]int{{1,2,3},{4,5,6}};
-array_literal: array_type LB literal_list? RB | LB literal_list? RB;
+array_literal: array_type LB literal_list RB | LB literal_list RB;
 
 literal_list: literal_item (COMMA literal_item)*;
 

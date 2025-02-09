@@ -1,1 +1,9 @@
-const a = [1]int{{1, 0x1}, ID{}, {{ID{}}}}
+
+        type Person struct {
+            func (p Person) Greet() string {
+                return "Hello, " + p.name
+            }
+            c c
+            func (c c) Add(x, y int, b float) {return ;}
+            value int;
+        }

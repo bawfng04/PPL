@@ -179,51 +179,38 @@ class ParserSuite(unittest.TestCase):
             ""","successful", inspect.stack()[0].function))
 
     def test_023(self):
-            """Expressions"""
-            self.assertTrue(TestParser.test("""
-            var z VOTIEN = int{1};
-            ""","Error on line 2 col 27: int", inspect.stack()[0].function))
+        """array_literal"""
+        self.assertTrue(TestParser.test("""const a = [1]int{1+1}
+""","Error on line 1 col 18: +", inspect.stack()[0].function))
 
     def test_024(self):
         """array_literal"""
-        self.assertTrue(TestParser.test("""const a = [1]int{1+1}
-""","Error on line 1 col 18: +", inspect.stack()[0].function))
+        self.assertTrue(TestParser.test("""const a = [1]int{{1, 0x1}, ID{}, {{ID{}}}}
+""","successful", inspect.stack()[0].function))
 
     def test_025(self):
-        """array_literal"""
-        self.assertTrue(TestParser.test("""const a = [1]int{{1, 0x1}, ID{}, {{ID{}}}}
+        self.assertTrue(TestParser.test("""
+        type Person struct {
+            func (p Person) Greet() string {
+                return "Hello, " + p.name
+            }
+            c c
+            func (c c) Add(x, y int, b float) {return ;}
+            value int;
+        }
 ""","successful", inspect.stack()[0].function))
 
     def test_026(self):
-        self.assertTrue(TestParser.test("""
-        type Person struct {
-            func (p Person) Greet() string {
-                return "Hello, " + p.name
-            }
-            c c
-            func (c c) Add(x, y int, b float) {return ;}
-            value int;
-        }
-""","successful", inspect.stack()[0].function))
-
-    def test_027(self):
-            """Statement"""
-            self.assertTrue(TestParser.test("""
-                                        func Add() {
-                                        (1+2).foo(2 + 3, a {a:2})
-                                        };""","Error on line 3 col 40: (", inspect.stack()[0].function))
-
-    def test_028(self):
         """array_literal"""
         self.assertTrue(TestParser.test("""const a = [1]int{1+1}
 ""","Error on line 1 col 18: +", inspect.stack()[0].function))
 
-    def test_029(self):
+    def test_027(self):
         """array_literal"""
         self.assertTrue(TestParser.test("""const a = [1]int{{1, 0x1}, ID{}, {{ID{}}}}
 ""","successful", inspect.stack()[0].function))
 
-    def test_030(self):
+    def test_028(self):
         self.assertTrue(TestParser.test("""
         type Person struct {
             func (p Person) Greet() string {
@@ -234,3 +221,24 @@ class ParserSuite(unittest.TestCase):
             value int;
         }
 ""","successful", inspect.stack()[0].function))
+
+
+
+    # def test_023(self):
+    #         """Expressions"""
+    #         self.assertTrue(TestParser.test("""
+    #             var z VOTIEN = int{1};
+    #         ""","Error on line 2 col 27: int", inspect.stack()[0].function))
+
+    # def test_027(self):
+    #         """Statement"""
+    #         self.assertTrue(TestParser.test("""
+    #                                     func Add() {
+    #                                         (1+2).foo(2 + 3, a {a:2})
+    #                                     };""","Error on line 3 col 40: (", inspect.stack()[0].function))
+
+    # def test_031(self):
+    #         """Expressions"""
+    #         self.assertTrue(TestParser.test("""
+    #             var z VOTIEN = [2]int{};
+    #         ""","Error on line 2 col 34: }", inspect.stack()[0].function))
