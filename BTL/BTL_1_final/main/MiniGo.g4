@@ -108,7 +108,7 @@ fragment BINARY: ('0b' | '0B') [0-1]+;
 // fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
 fragment FLOAT_DECIMAL: [0-9]+;
 fragment DECIMAL_PART: '.' [0-9]*;
-fragment EXPONENT: [eE] [+-]? ('0' | [1-9][0-9]*);
+fragment EXPONENT: [eE] [+-]? FLOAT_DECIMAL;
 
 INT_LIT:
 	DECIMAL
@@ -131,9 +131,9 @@ STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 // Newline + comments
 
-WS: [ \t\r\f]+ -> skip;
+WS: [ \t\r\n\f]+ -> skip;
 
-NEWLINE: '\r'? '\n' {self.text = "\n"};
+NEWLINE: '\r'? '\n';
 
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 
