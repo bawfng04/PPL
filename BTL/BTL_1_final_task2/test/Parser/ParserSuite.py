@@ -231,9 +231,8 @@ class ParserSuite(unittest.TestCase):
     def test_030(self):
             """Declared"""
             self.assertTrue(TestParser.test("""
-                type Calculator interface {Reset();} type Person struct{value int;}
+            type Calculator interface {Reset();} type Person struct{value int;}
     ""","Error on line 2 col 49: type", inspect.stack()[0].function))
-
 
     def test_031(self):
             """Expressions"""

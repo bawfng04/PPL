@@ -140,7 +140,8 @@ struct_type: | struct_field struct_type;
 
 // Interface declaration
 
-interface_declared: TYPE ID INTERFACE LB NEWLINE* interface_type_list NEWLINE* RB SEMI?;
+interface_declared:
+	TYPE ID INTERFACE LB NEWLINE* interface_type_list NEWLINE* RB (SEMI | NEWLINE);
 interface_type_list: interface_method+;
 
 // Update interface_type rule Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
