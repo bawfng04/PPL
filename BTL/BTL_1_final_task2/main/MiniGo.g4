@@ -147,7 +147,7 @@ interface_type_list: interface_method+;
 interface_type: | interface_method interface_type;
 interface_method:
 	ID LP params_list? RP (type_name)? (SEMI | NEWLINE)
-	| ID LP params_list? RP (type_name)? NEWLINE?;
+	| ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
 optional_params: | params_list;
 optional_type: | type_name;
 optional_semi: | SEMI;

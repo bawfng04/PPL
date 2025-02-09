@@ -222,8 +222,19 @@ class ParserSuite(unittest.TestCase):
         }
 ""","successful", inspect.stack()[0].function))
 
+    def test_029(self):
+            """Declared"""
+            self.assertTrue(TestParser.test("""
+                type Calculator interface {Reset()}
+    ""","Error on line 2 col 46: }", inspect.stack()[0].function))
 
+    def test_086(self):
+            """Declared"""
+            self.assertTrue(TestParser.test("""
+                type Calculator interface {Reset();} type Person struct{value int;}
+    ""","Error on line 2 col 49: type", inspect.stack()[0].function))
 
+#mấy test này lỗi index?
     # def test_023(self):
     #         """Expressions"""
     #         self.assertTrue(TestParser.test("""
