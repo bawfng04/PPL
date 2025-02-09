@@ -254,6 +254,10 @@ class ParserSuite(unittest.TestCase):
                                         }
     ""","Error on line 3 col 40: }", inspect.stack()[0].function))
 
+    def test_034(self):
+            """array_literal"""
+            self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
+    ""","Error on line 1 col 17: [", inspect.stack()[0].function))
 
 #mấy test này lỗi index?
     # def test_023(self):

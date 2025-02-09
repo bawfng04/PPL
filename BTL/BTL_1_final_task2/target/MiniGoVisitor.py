@@ -69,6 +69,11 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#function_block_statement.
+    def visitFunction_block_statement(self, ctx:MiniGoParser.Function_block_statementContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#function_declared.
     def visitFunction_declared(self, ctx:MiniGoParser.Function_declaredContext):
         return self.visitChildren(ctx)
