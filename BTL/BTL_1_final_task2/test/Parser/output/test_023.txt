@@ -1,1 +1,1 @@
-Error on line 2 col 22: VOTIEN
+Error on line 2 col 31: int

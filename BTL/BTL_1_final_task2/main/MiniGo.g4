@@ -76,7 +76,14 @@ variables_declared: VAR var_decl_list SEMI?;
 // Original: var_decl_list: var_decl (COMMA var_decl)*;
 var_decl_list: var_decl | var_decl COMMA var_decl_list;
 
-var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
+// var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
+var_decl:
+	ID (COMMA ID)* (
+		// With explicit type, optionally followed by an initializer
+		type_name (ASSIGN (expression | expr_list))?
+		| // Without explicit type, a mandatory initializer must follow
+		ASSIGN (expression | expr_list)
+	);
 
 //khai báo hằng - const + tên hằng + giá trị + ";"
 
