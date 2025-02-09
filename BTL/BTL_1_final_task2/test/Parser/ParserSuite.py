@@ -259,21 +259,7 @@ class ParserSuite(unittest.TestCase):
             self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
     ""","Error on line 1 col 17: [", inspect.stack()[0].function))
 
-
     def test_035(self):
-            self.assertTrue(TestParser.test("""
-            type Person struct {
-                func (p Person) Greet() string {
-                    return "Hello, " + p.name
-                }; c c;
-                func (p Person) Greet() string {
-                    return "Hello, " + p.name
-                } c c;
-            }
-    ""","Error on line 8 col 14: c", inspect.stack()[0].function))
-
-
-    def test_159(self):
             self.assertTrue(TestParser.test("""
                 func (p Person) Greet() string {
                     for i := 0
@@ -289,6 +275,8 @@ class ParserSuite(unittest.TestCase):
                     }
                 };
     ""","Error on line 10 col 27: ;", inspect.stack()[0].function))
+
+
 
 #mấy test này lỗi index?
     # def test_023(self):
@@ -310,3 +298,15 @@ class ParserSuite(unittest.TestCase):
     #             var z VOTIEN = [2]int{};
     #         ""","Error on line 2 col 34: }", inspect.stack()[0].function))
 
+
+    # def test_035(self):
+    #         self.assertTrue(TestParser.test("""
+    #         type Person struct {
+    #             func (p Person) Greet() string {
+    #                 return "Hello, " + p.name
+    #             }; c c;
+    #             func (p Person) Greet() string {
+    #                 return "Hello, " + p.name
+    #             } c c;
+    #         }
+    # ""","Error on line 8 col 14: c", inspect.stack()[0].function))

@@ -5,6 +5,6 @@
                 }; c c;
                 func (p Person) Greet() string {
                     return "Hello, " + p.name
-                } c c;
+            } c c;
             }
     
