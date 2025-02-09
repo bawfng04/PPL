@@ -5,14 +5,23 @@ from lexererr import *
 }
 
 @lexer::members {
+def __init__(self, input=None, output:TextIO = sys.stdout):
+    super().__init__(input, output)
+    self.checkVersion("4.9.2")
+    self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
+    self._actions = None
+    self._predicates = None
+    self.preType = None
+
 def emit(self):
     tk = self.type
+    self.preType = tk;
     if tk == self.UNCLOSE_STRING:
         result = super().emit();
-        raise UncloseString(result.text[1:]);
+        raise UncloseString(result.text);
     elif tk == self.ILLEGAL_ESCAPE:
         result = super().emit();
-        raise IllegalEscape(result.text[1:]);
+        raise IllegalEscape(result.text);
     elif tk == self.ERROR_CHAR:
         result = super().emit();
         raise ErrorToken(result.text);
@@ -90,13 +99,14 @@ SEMI: ';';
 
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
-// Literals
+// Literals fragment DECIMAL: '0' | [1-9][0-9]*;
 fragment DECIMAL: '0' | [1-9][0-9]*;
 fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
 fragment OCTAL: ('0o' | '0O') [0-7]+;
 fragment BINARY: ('0b' | '0B') [0-1]+;
 
-fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
+// fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
+fragment FLOAT_DECIMAL: [0-9]+;
 fragment DECIMAL_PART: '.' [0-9]*;
 fragment EXPONENT: [eE] [+-]? ('0' | [1-9][0-9]*);
 
