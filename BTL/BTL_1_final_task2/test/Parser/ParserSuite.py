@@ -225,14 +225,21 @@ class ParserSuite(unittest.TestCase):
     def test_029(self):
             """Declared"""
             self.assertTrue(TestParser.test("""
-                type Calculator interface {Reset()}
+            type Calculator interface {Reset()}
     ""","Error on line 2 col 46: }", inspect.stack()[0].function))
 
-    def test_086(self):
+    def test_030(self):
             """Declared"""
             self.assertTrue(TestParser.test("""
                 type Calculator interface {Reset();} type Person struct{value int;}
     ""","Error on line 2 col 49: type", inspect.stack()[0].function))
+
+
+    def test_031(self):
+            """Expressions"""
+            self.assertTrue(TestParser.test("""
+            var z VOTIEN = [2]int{};
+            ""","Error on line 2 col 34: }", inspect.stack()[0].function))
 
 #mấy test này lỗi index?
     # def test_023(self):
@@ -253,3 +260,4 @@ class ParserSuite(unittest.TestCase):
     #         self.assertTrue(TestParser.test("""
     #             var z VOTIEN = [2]int{};
     #         ""","Error on line 2 col 34: }", inspect.stack()[0].function))
+
