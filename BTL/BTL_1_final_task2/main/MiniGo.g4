@@ -71,7 +71,7 @@ statement:
 // Variable and constant declarations
 
 //khai báo biến - var + tên biến + type (optional) + giá trị (optional) + ";"
-variables_declared: VAR var_decl_list SEMI;
+variables_declared: VAR var_decl_list SEMI?;
 
 // Original: var_decl_list: var_decl (COMMA var_decl)*;
 var_decl_list: var_decl | var_decl COMMA var_decl_list;

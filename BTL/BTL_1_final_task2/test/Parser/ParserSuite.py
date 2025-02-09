@@ -171,3 +171,15 @@ class ParserSuite(unittest.TestCase):
              }
 
         ""","successful", inspect.stack()[0].function))
+
+    def test_022(self):
+            """Declared"""
+            self.assertTrue(TestParser.test("""
+                var c [2][3]ID
+            ""","successful", inspect.stack()[0].function))
+
+    def test_023(self):
+            """Expressions"""
+            self.assertTrue(TestParser.test("""
+                var z VOTIEN = int{1};
+            ""","Error on line 2 col 27: int", inspect.stack()[0].function))
