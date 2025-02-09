@@ -369,6 +369,8 @@ NEWLINE:
             self.skip()
     };
 
+// TAB: '\t';
+
 WS: [ \t\f\r]+ -> skip;
 
 // Comments
