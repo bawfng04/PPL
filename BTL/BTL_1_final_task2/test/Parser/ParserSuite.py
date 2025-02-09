@@ -183,3 +183,24 @@ class ParserSuite(unittest.TestCase):
             self.assertTrue(TestParser.test("""
                 var z VOTIEN = int{1};
             ""","Error on line 2 col 27: int", inspect.stack()[0].function))
+    def test_024(self):
+        """array_literal"""
+        self.assertTrue(TestParser.test("""const a = [1]int{1+1}
+""","Error on line 1 col 18: +", inspect.stack()[0].function))
+
+    def test_025(self):
+        """array_literal"""
+        self.assertTrue(TestParser.test("""const a = [1]int{{1, 0x1}, ID{}, {{ID{}}}}
+""","successful", inspect.stack()[0].function))
+
+    def test_026(self):
+        self.assertTrue(TestParser.test("""
+        type Person struct {
+            func (p Person) Greet() string {
+                return "Hello, " + p.name
+            }
+            c c
+            func (c c) Add(x, y int, b float) {return ;}
+            value int;
+        }
+""","successful", inspect.stack()[0].function))

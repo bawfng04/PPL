@@ -77,13 +77,12 @@ variables_declared: VAR var_decl_list SEMI?;
 var_decl_list: var_decl | var_decl COMMA var_decl_list;
 
 // var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
+
 var_decl:
-	ID (COMMA ID)* (
-		// With explicit type, optionally followed by an initializer
-		type_name (ASSIGN (expression | expr_list))?
-		| // Without explicit type, a mandatory initializer must follow
-		ASSIGN (expression | expr_list)
-	);
+	ID type_name (ASSIGN expression)?
+	| ID (COMMA ID)* type_name (ASSIGN expr_list)?
+	| ID (ASSIGN expression)
+	| ID (COMMA ID)* (ASSIGN expr_list);
 
 //khai báo hằng - const + tên hằng + giá trị + ";"
 
@@ -333,14 +332,7 @@ fragment FLOAT_DECIMAL: [0-9]+;
 fragment DECIMAL_PART: '.' [0-9]*;
 fragment EXPONENT: [eE] [+-]? FLOAT_DECIMAL;
 
-INT_LIT:
-	DECIMAL
-	| HEX
-	// { self.text = str(int(self.text,16)) }
-	| OCTAL
-	// { self.text = str(int(self.text,8)) }
-	| BINARY;
-// { self.text = str(int(self.text,2)) };
+INT_LIT: DECIMAL | HEX | OCTAL | BINARY;
 
 FLOAT_LIT:
 	FLOAT_DECIMAL DECIMAL_PART EXPONENT?
@@ -353,8 +345,6 @@ fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
 STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
 // Newline + comments
-
-// In the lexer rules section, modify the NEWLINE rule:
 
 NEWLINE:
 	'\r'? '\n' {
