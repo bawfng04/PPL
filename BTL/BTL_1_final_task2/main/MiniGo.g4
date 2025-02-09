@@ -175,6 +175,9 @@ for_statement:
 		| expression block_stmt																// Basic form
 	);
 
+// for_statement: FOR ( (ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt | for_init (SEMI | NEWLINE) expression
+// (SEMI | NEWLINE) for_update block_stmt | expression block_stmt );
+
 // for_init: ID SHORT_ASSIGN expression // Short declaration | ID assign_op expression // Assignment | VAR ID type_name? ASSIGN expression; //
 // Variable declaration
 
