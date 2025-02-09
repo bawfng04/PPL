@@ -89,14 +89,14 @@ const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt
 function_declared:
-	FUNC ID LP params_list? RP (LP type_name (COMMA type_name)* RP | type_name)? NEWLINE? block_stmt;
+	FUNC ID LP params_list? RP (LP type_name (COMMA type_name)* RP | type_name)? NEWLINE? block_stmt SEMI?;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
 
 // method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
 method_declared:
-	FUNC LP receiver RP ID LP method_params? RP (LP type_name (COMMA type_name)* RP | type_name)? block_stmt;
+	FUNC LP receiver RP ID LP method_params? RP (LP type_name (COMMA type_name)* RP | type_name)? block_stmt SEMI?;
 
 // Original: method_params: method_param (COMMA method_param)*;
 method_params: method_param | method_param COMMA method_params;
@@ -111,7 +111,15 @@ param: (ID | ID COMMA ID (COMMA ID)*) type_name;
 // Struct declaration
 
 //ex: type Point struct {x, y int}
-struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type NEWLINE* RB (SEMI | NEWLINE);
+struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type_list NEWLINE* RB (SEMI | NEWLINE);
+
+struct_type_list: struct_field (NEWLINE* struct_field)*;
+
+struct_field: ID more_ids type_name struct_end | method_declared;
+
+more_ids: | COMMA ID more_ids;
+
+struct_end: SEMI | SEMI? NEWLINE;
 
 // struct_type: (ID type_name SEMI? NEWLINE*)*;
 
@@ -123,9 +131,7 @@ struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type NEWLINE* RB (SEMI | NEWL
 
 // Original: struct_type: (ID (COMMA ID)* type_name (SEMI | SEMI? NEWLINE))*;
 struct_type: | struct_field struct_type;
-struct_field: ID more_ids type_name struct_end;
-more_ids: | COMMA ID more_ids;
-struct_end: SEMI | SEMI? NEWLINE;
+// struct_field: ID more_ids type_name struct_end; more_ids: | COMMA ID more_ids; struct_end: SEMI | SEMI? NEWLINE;
 
 // Interface declaration
 
