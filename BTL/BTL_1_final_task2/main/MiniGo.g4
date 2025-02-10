@@ -94,10 +94,10 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-function_block_statement: NEWLINE? LB NEWLINE? statement (statement | NEWLINE)* NEWLINE? RB;
+not_null_block_statement: LB NEWLINE? statement (statement | NEWLINE)* NEWLINE? RB;
 
 function_declared:
-	FUNC ID LP params_list? RP (LP type_name (COMMA type_name)* RP | type_name)? NEWLINE? function_block_statement SEMI?;
+	FUNC ID LP params_list? RP (LP type_name (COMMA type_name)* RP | type_name)? NEWLINE? not_null_block_statement SEMI?;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
@@ -166,9 +166,9 @@ assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSI
 assign_lhs: ID (field_access | element_access)*;
 
 if_statement:
-	IF LP expression RP function_block_statement (
+	IF LP expression RP not_null_block_statement (
 		ELSE if_statement
-		| ELSE function_block_statement
+		| ELSE not_null_block_statement
 	)?;
 
 // FOR STATEMENT
@@ -208,7 +208,7 @@ call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 // block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
 block_stmt: LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
-//function_block_statement: not null
+//not_null_block_statement: not null
 
 // Original: expr_list: expression (COMMA expression)*;
 expr_list: expression | expression COMMA expr_list;
