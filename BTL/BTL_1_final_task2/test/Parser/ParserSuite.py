@@ -260,34 +260,17 @@ class ParserSuite(unittest.TestCase):
     ""","Error on line 1 col 17: [", inspect.stack()[0].function))
 
     def test_035(self):
-            self.assertTrue(TestParser.test("""
-                func (p Person) Greet() string {
-                    for i := 0
-                        i < 10
-                        i += 1 {
-                        return
-                    }
-                    for i := 0
-                        i < 10
-                        i += 1
-                    {
-                        return
-                    }
-                };
-    ""","Error on line 10 col 27: ;", inspect.stack()[0].function))
-
-    def test_036(self):
         """array_literal"""
         self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
 ""","Error on line 1 col 17: [", inspect.stack()[0].function))
 
-    def test_037(self):
+    def test_036(self):
         """Declared"""
         self.assertTrue(TestParser.test("""
             func (c c) Add(x, c int) {return ;}
 ""","successful", inspect.stack()[0].function))
 
-    def test_038(self):
+    def test_037(self):
         self.assertTrue(TestParser.test("""
         type Person struct {
             func (p Person) Greet() string {
@@ -299,15 +282,42 @@ class ParserSuite(unittest.TestCase):
         }
 ""","Error on line 8 col 14: c", inspect.stack()[0].function))
 
-
-    def test_039(self):
+    def test_038(self):
         """Statement"""
         self.assertTrue(TestParser.test("""
             func Add() {
                                         }
 ""","Error on line 3 col 40: }", inspect.stack()[0].function))
 
+
+    def test_039(self):
+            self.assertTrue(TestParser.test("""
+                func (p Person) Greet() string {
+                    if (1) {return;}
+                    else if (1)
+                    {}
+                };
+    ""","Error on line 4 col 16: else", inspect.stack()[0].function))
+
 #mấy test này lỗi index?
+
+    # def test_035(self):
+    #         self.assertTrue(TestParser.test("""
+    #             func (p Person) Greet() string {
+    #                 for i := 0
+    #                     i < 10
+    #                     i += 1 {
+    #                     return
+    #                 }
+    #                 for i := 0
+    #                     i < 10
+    #                     i += 1
+    #                 {
+    #                     return
+    #                 }
+    #             };
+    # ""","Error on line 10 col 27: ;", inspect.stack()[0].function))
+
     # def test_023(self):
     #         """Expressions"""
     #         self.assertTrue(TestParser.test("""

@@ -1,9 +1,3 @@
 
-        type Person struct {
-            func (p Person) Greet() string {
-                return "Hello, " + p.name
-            }; c c;
-            func (p Person) Greet() string {
-                return "Hello, " + p.name
-            } c c;
-        }
+            func Add() {
+                                        }

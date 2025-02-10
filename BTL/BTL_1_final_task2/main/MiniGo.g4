@@ -168,10 +168,12 @@ assign_lhs: ID (field_access | element_access)*;
 if_statement:
 	IF LP expression RP NEWLINE? block_stmt NEWLINE? (ELSE if_statement | ELSE block_stmt)?;
 
+// FOR STATEMENT
+
 for_statement:
 	FOR (
 		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
-		| for_init SEMI expression SEMI for_update block_stmt								// Three-part form
+		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update block_stmt		// Three-part form
 		| expression block_stmt																// Basic form
 	);
 
@@ -202,7 +204,7 @@ call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
 // block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
-block_stmt: NEWLINE? LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
+block_stmt: LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
 //function_block_statement: not null
 
 // Original: expr_list: expression (COMMA expression)*;

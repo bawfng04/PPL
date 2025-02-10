@@ -1,1 +1,2 @@
-const a = [1]int{[1]int{1}}
+
+            func (c c) Add(x, c int) {return ;}

@@ -1,3 +1,7 @@
 
-            func Add() {
-                                        }
+                func (p Person) Greet() string {
+                    if (1) {return;}
+                    else if (1)
+                    {}
+                };
+    
