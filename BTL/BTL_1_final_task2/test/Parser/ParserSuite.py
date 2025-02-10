@@ -289,15 +289,22 @@ class ParserSuite(unittest.TestCase):
                                         }
 ""","Error on line 3 col 40: }", inspect.stack()[0].function))
 
-
     def test_039(self):
             self.assertTrue(TestParser.test("""
                 func (p Person) Greet() string {
-                    if (1) {return;}
-                    else if (1)
-                    {}
+                    if (1) {return;
+                    }else if (1) {}
                 };
-    ""","Error on line 4 col 16: else", inspect.stack()[0].function))
+    ""","Error on line 4 col 30: }", inspect.stack()[0].function))
+
+    # def test_039(self):
+    #         self.assertTrue(TestParser.test("""
+    #             func (p Person) Greet() string {
+    #                 if (1) {return;}
+    #                 else if (1)
+    #                 {}
+    #             };
+    # ""","Error on line 4 col 16: else", inspect.stack()[0].function))
 
 #mấy test này lỗi index?
 

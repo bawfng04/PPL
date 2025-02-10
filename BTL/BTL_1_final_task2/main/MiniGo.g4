@@ -165,8 +165,7 @@ assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSI
 
 assign_lhs: ID (field_access | element_access)*;
 
-if_statement:
-	IF LP expression RP NEWLINE? block_stmt NEWLINE? (ELSE if_statement | ELSE block_stmt)?;
+if_statement: IF LP expression RP block_stmt (ELSE if_statement | ELSE block_stmt)?;
 
 // FOR STATEMENT
 
