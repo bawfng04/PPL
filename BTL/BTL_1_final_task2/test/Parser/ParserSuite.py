@@ -276,7 +276,36 @@ class ParserSuite(unittest.TestCase):
                 };
     ""","Error on line 10 col 27: ;", inspect.stack()[0].function))
 
+    def test_036(self):
+        """array_literal"""
+        self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
+""","Error on line 1 col 17: [", inspect.stack()[0].function))
 
+    def test_037(self):
+        """Declared"""
+        self.assertTrue(TestParser.test("""
+            func (c c) Add(x, c int) {return ;}
+""","successful", inspect.stack()[0].function))
+
+    def test_038(self):
+        self.assertTrue(TestParser.test("""
+        type Person struct {
+            func (p Person) Greet() string {
+                return "Hello, " + p.name
+            }; c c;
+            func (p Person) Greet() string {
+                return "Hello, " + p.name
+            } c c;
+        }
+""","Error on line 8 col 14: c", inspect.stack()[0].function))
+
+
+    def test_039(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+            func Add() {
+                                        }
+""","Error on line 3 col 40: }", inspect.stack()[0].function))
 
 #mấy test này lỗi index?
     # def test_023(self):

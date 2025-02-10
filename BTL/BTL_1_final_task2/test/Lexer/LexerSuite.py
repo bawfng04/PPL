@@ -530,3 +530,23 @@ class LexerSuite(unittest.TestCase):
             /* test
             */ a /* */
     """, "a,;,<EOF>", inspect.stack()[0].function))
+
+    def test_021(self):
+        """Keywords"""
+        self.assertTrue(TestLexer.test("""
+        /* a * */
+ """, "<EOF>", inspect.stack()[0].function))
+
+    def test_022(self):
+        """INT_LIT"""
+        self.assertTrue(TestLexer.test("0452.", "0452.,<EOF>", inspect.stack()[0].function))
+
+    def test_023(self):
+        """FLOAT_LIT"""
+        self.assertTrue(TestLexer.test("010.010e-020", "010.010e-020,<EOF>", inspect.stack()[0].function))
+
+    def test_110(self):
+        """NEW_LINE"""
+        self.assertTrue(TestLexer.test("""
+            nil
+""", "nil,;,<EOF>", inspect.stack()[0].function))
