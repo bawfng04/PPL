@@ -213,8 +213,8 @@ def serializedATN():
         3,114,57,0,504,506,3,112,56,0,505,503,1,0,0,0,505,504,1,0,0,0,506,
         509,1,0,0,0,507,505,1,0,0,0,507,508,1,0,0,0,508,73,1,0,0,0,509,507,
         1,0,0,0,510,511,5,1,0,0,511,512,5,45,0,0,512,513,3,94,47,0,513,514,
-        5,46,0,0,514,519,3,90,45,0,515,516,5,2,0,0,516,520,3,74,37,0,517,
-        518,5,2,0,0,518,520,3,90,45,0,519,515,1,0,0,0,519,517,1,0,0,0,519,
+        5,46,0,0,514,519,3,24,12,0,515,516,5,2,0,0,516,520,3,74,37,0,517,
+        518,5,2,0,0,518,520,3,24,12,0,519,515,1,0,0,0,519,517,1,0,0,0,519,
         520,1,0,0,0,520,75,1,0,0,0,521,540,5,3,0,0,522,523,7,3,0,0,523,524,
         5,51,0,0,524,525,7,3,0,0,525,526,5,43,0,0,526,527,5,17,0,0,527,528,
         3,94,47,0,528,529,3,90,45,0,529,541,1,0,0,0,530,531,3,78,39,0,531,
@@ -3147,11 +3147,11 @@ class MiniGoParser ( Parser ):
         def RP(self):
             return self.getToken(MiniGoParser.RP, 0)
 
-        def block_stmt(self, i:int=None):
+        def function_block_statement(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MiniGoParser.Block_stmtContext)
+                return self.getTypedRuleContexts(MiniGoParser.Function_block_statementContext)
             else:
-                return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,i)
+                return self.getTypedRuleContext(MiniGoParser.Function_block_statementContext,i)
 
 
         def ELSE(self):
@@ -3182,7 +3182,7 @@ class MiniGoParser ( Parser ):
             self.state = 513
             self.match(MiniGoParser.RP)
             self.state = 514
-            self.block_stmt()
+            self.function_block_statement()
             self.state = 519
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,57,self._ctx)
@@ -3196,7 +3196,7 @@ class MiniGoParser ( Parser ):
                 self.state = 517
                 self.match(MiniGoParser.ELSE)
                 self.state = 518
-                self.block_stmt()
+                self.function_block_statement()
 
 
         except RecognitionException as re:

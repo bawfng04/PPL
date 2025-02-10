@@ -293,9 +293,18 @@ class ParserSuite(unittest.TestCase):
             self.assertTrue(TestParser.test("""
                 func (p Person) Greet() string {
                     if (1) {return;
-                    }else if (1) {}
+                }else if (1) {}
                 };
     ""","Error on line 4 col 30: }", inspect.stack()[0].function))
+
+    def test_040(self):
+            self.assertTrue(TestParser.test("""
+                func (p Person) Greet() string {
+                    for i < 10 {
+    // loop body
+    }
+                };
+    ""","Error on line 5 col 0: }", inspect.stack()[0].function))
 
     # def test_039(self):
     #         self.assertTrue(TestParser.test("""
