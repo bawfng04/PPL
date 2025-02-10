@@ -357,7 +357,7 @@ def serializedATN():
         buf.write("\u02c6\7\67\2\2\u02c6u\3\2\2\2\u02c7\u02c9\7/\2\2\u02c8")
         buf.write("\u02ca\5\u008eH\2\u02c9\u02c8\3\2\2\2\u02c9\u02ca\3\2")
         buf.write("\2\2\u02ca\u02cb\3\2\2\2\u02cb\u02cc\7\60\2\2\u02ccw\3")
-        buf.write("\2\2\2\u02cd\u02d7\78\2\2\u02ce\u02d7\79\2\2\u02cf\u02d7")
+        buf.write("\2\2\2\u02cd\u02d7\79\2\2\u02ce\u02d7\78\2\2\u02cf\u02d7")
         buf.write("\7:\2\2\u02d0\u02d7\7\25\2\2\u02d1\u02d7\7\26\2\2\u02d2")
         buf.write("\u02d7\7\24\2\2\u02d3\u02d7\5z>\2\u02d4\u02d7\5|?\2\u02d5")
         buf.write("\u02d7\5\u0088E\2\u02d6\u02cd\3\2\2\2\u02d6\u02ce\3\2")
@@ -376,14 +376,14 @@ def serializedATN():
         buf.write("\u02ef\u02ed\3\2\2\2\u02f0\u02f3\3\2\2\2\u02f1\u02ef\3")
         buf.write("\2\2\2\u02f1\u02f2\3\2\2\2\u02f2\u0081\3\2\2\2\u02f3\u02f1")
         buf.write("\3\2\2\2\u02f4\u02fe\5|?\2\u02f5\u02fe\5\u0088E\2\u02f6")
-        buf.write("\u02fe\78\2\2\u02f7\u02fe\79\2\2\u02f8\u02fe\7:\2\2\u02f9")
+        buf.write("\u02fe\79\2\2\u02f7\u02fe\78\2\2\u02f8\u02fe\7:\2\2\u02f9")
         buf.write("\u02fe\7\25\2\2\u02fa\u02fe\7\26\2\2\u02fb\u02fe\7\24")
         buf.write("\2\2\u02fc\u02fe\7\67\2\2\u02fd\u02f4\3\2\2\2\u02fd\u02f5")
         buf.write("\3\2\2\2\u02fd\u02f6\3\2\2\2\u02fd\u02f7\3\2\2\2\u02fd")
         buf.write("\u02f8\3\2\2\2\u02fd\u02f9\3\2\2\2\u02fd\u02fa\3\2\2\2")
         buf.write("\u02fd\u02fb\3\2\2\2\u02fd\u02fc\3\2\2\2\u02fe\u0083\3")
-        buf.write("\2\2\2\u02ff\u0300\7\63\2\2\u0300\u0301\78\2\2\u0301\u0307")
-        buf.write("\7\64\2\2\u0302\u0303\7\63\2\2\u0303\u0304\78\2\2\u0304")
+        buf.write("\2\2\2\u02ff\u0300\7\63\2\2\u0300\u0301\79\2\2\u0301\u0307")
+        buf.write("\7\64\2\2\u0302\u0303\7\63\2\2\u0303\u0304\79\2\2\u0304")
         buf.write("\u0306\7\64\2\2\u0305\u0302\3\2\2\2\u0306\u0309\3\2\2")
         buf.write("\2\u0307\u0305\3\2\2\2\u0307\u0308\3\2\2\2\u0308\u030a")
         buf.write("\3\2\2\2\u0309\u0307\3\2\2\2\u030a\u030b\5\u0086D\2\u030b")
@@ -445,7 +445,7 @@ class MiniGoParser ( Parser ):
                       "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", 
                       "DIV_ASSIGN", "MOD_ASSIGN", "DOT", "COLON", "SHORT_ASSIGN", 
                       "UNDERSCORE", "LP", "RP", "LB", "RB", "LSB", "RSB", 
-                      "COMMA", "SEMI", "ID", "INT_LIT", "FLOAT_LIT", "STRING_LIT", 
+                      "COMMA", "SEMI", "ID", "FLOAT_LIT", "INT_LIT", "STRING_LIT", 
                       "NEWLINE", "WS", "BLOCK_COMMENT", "LINE_COMMENT", 
                       "UNCLOSE_STRING", "ILLEGAL_ESCAPE", "ERROR_CHAR" ]
 
@@ -596,8 +596,8 @@ class MiniGoParser ( Parser ):
     COMMA=51
     SEMI=52
     ID=53
-    INT_LIT=54
-    FLOAT_LIT=55
+    FLOAT_LIT=54
+    INT_LIT=55
     STRING_LIT=56
     NEWLINE=57
     WS=58
@@ -3994,7 +3994,7 @@ class MiniGoParser ( Parser ):
                 self.state = 568
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
+                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
                     self.state = 567
                     self.expression(0)
 
@@ -4007,7 +4007,7 @@ class MiniGoParser ( Parser ):
                 self.state = 572
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
+                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
                     self.state = 571
                     self.expression(0)
 
@@ -4091,7 +4091,7 @@ class MiniGoParser ( Parser ):
             self.state = 583
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
                 self.state = 582
                 self.list_expression()
 
@@ -4808,7 +4808,7 @@ class MiniGoParser ( Parser ):
                 self.state = 681
                 self.expression6()
                 pass
-            elif token in [MiniGoParser.NIL, MiniGoParser.TRUE, MiniGoParser.FALSE, MiniGoParser.LP, MiniGoParser.LB, MiniGoParser.LSB, MiniGoParser.ID, MiniGoParser.INT_LIT, MiniGoParser.FLOAT_LIT, MiniGoParser.STRING_LIT]:
+            elif token in [MiniGoParser.NIL, MiniGoParser.TRUE, MiniGoParser.FALSE, MiniGoParser.LP, MiniGoParser.LB, MiniGoParser.LSB, MiniGoParser.ID, MiniGoParser.FLOAT_LIT, MiniGoParser.INT_LIT, MiniGoParser.STRING_LIT]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 682
                 self.expression7()
@@ -5124,7 +5124,7 @@ class MiniGoParser ( Parser ):
             self.state = 711
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << MiniGoParser.NIL) | (1 << MiniGoParser.TRUE) | (1 << MiniGoParser.FALSE) | (1 << MiniGoParser.SUB) | (1 << MiniGoParser.NOT) | (1 << MiniGoParser.LP) | (1 << MiniGoParser.LB) | (1 << MiniGoParser.LSB) | (1 << MiniGoParser.ID) | (1 << MiniGoParser.FLOAT_LIT) | (1 << MiniGoParser.INT_LIT) | (1 << MiniGoParser.STRING_LIT))) != 0):
                 self.state = 710
                 self.list_expression()
 

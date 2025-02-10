@@ -370,16 +370,10 @@ fragment BINARY: ('0b' | '0B') [0-1]+;
 
 // fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
 fragment FLOAT_DECIMAL: [0-9]+;
-fragment DECIMAL_PART: '.' [0-9]*;
 fragment EXPONENT: [eE] [+-]? FLOAT_DECIMAL;
+FLOAT_LIT: FLOAT_DECIMAL '.' [0-9]* EXPONENT?;
 
 INT_LIT: DECIMAL | HEX | OCTAL | BINARY;
-
-FLOAT_LIT:
-	FLOAT_DECIMAL DECIMAL_PART EXPONENT?
-	| FLOAT_DECIMAL EXPONENT
-	| DECIMAL_PART [0-9]+ EXPONENT?
-	| FLOAT_DECIMAL DECIMAL_PART;
 
 fragment ESC_CHAR: 'r' | 'n' | 't' | '"' | '\\';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
