@@ -216,10 +216,10 @@ def serializedATN():
         515,5,2,0,0,515,517,3,24,12,0,516,512,1,0,0,0,516,514,1,0,0,0,516,
         517,1,0,0,0,517,75,1,0,0,0,518,537,5,3,0,0,519,520,7,3,0,0,520,521,
         5,51,0,0,521,522,7,3,0,0,522,523,5,43,0,0,523,524,5,17,0,0,524,525,
-        3,94,47,0,525,526,3,90,45,0,526,538,1,0,0,0,527,528,3,78,39,0,528,
+        3,94,47,0,525,526,3,24,12,0,526,538,1,0,0,0,527,528,3,78,39,0,528,
         529,7,0,0,0,529,530,3,94,47,0,530,531,7,0,0,0,531,532,3,80,40,0,
-        532,533,3,90,45,0,533,538,1,0,0,0,534,535,3,94,47,0,535,536,3,90,
-        45,0,536,538,1,0,0,0,537,519,1,0,0,0,537,527,1,0,0,0,537,534,1,0,
+        532,533,3,24,12,0,533,538,1,0,0,0,534,535,3,94,47,0,535,536,3,24,
+        12,0,536,538,1,0,0,0,537,519,1,0,0,0,537,527,1,0,0,0,537,534,1,0,
         0,0,538,77,1,0,0,0,539,540,3,72,36,0,540,541,5,43,0,0,541,542,3,
         94,47,0,542,555,1,0,0,0,543,544,3,72,36,0,544,545,3,70,35,0,545,
         546,3,94,47,0,546,555,1,0,0,0,547,548,5,14,0,0,548,550,5,53,0,0,
@@ -3222,8 +3222,8 @@ class MiniGoParser ( Parser ):
             return self.getTypedRuleContext(MiniGoParser.ExpressionContext,0)
 
 
-        def block_stmt(self):
-            return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,0)
+        def not_null_block_statement(self):
+            return self.getTypedRuleContext(MiniGoParser.Not_null_block_statementContext,0)
 
 
         def for_init(self):
@@ -3300,7 +3300,7 @@ class MiniGoParser ( Parser ):
                 self.state = 524
                 self.expression(0)
                 self.state = 525
-                self.block_stmt()
+                self.not_null_block_statement()
                 pass
 
             elif la_ == 2:
@@ -3325,14 +3325,14 @@ class MiniGoParser ( Parser ):
                 self.state = 531
                 self.for_update()
                 self.state = 532
-                self.block_stmt()
+                self.not_null_block_statement()
                 pass
 
             elif la_ == 3:
                 self.state = 534
                 self.expression(0)
                 self.state = 535
-                self.block_stmt()
+                self.not_null_block_statement()
                 pass
 
 

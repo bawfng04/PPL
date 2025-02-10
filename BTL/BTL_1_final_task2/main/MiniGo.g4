@@ -175,9 +175,10 @@ if_statement:
 
 for_statement:
 	FOR (
-		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
-		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update block_stmt		// Three-part form
-		| expression block_stmt																// Basic form
+		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression not_null_block_statement	// Range form
+		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update not_null_block_statement			// Three-part form
+		| expression not_null_block_statement
+		// Basic form
 	);
 
 // for_statement: FOR ( (ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt | for_init (SEMI | NEWLINE) expression

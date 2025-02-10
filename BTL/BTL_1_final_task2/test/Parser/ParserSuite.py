@@ -302,9 +302,15 @@ class ParserSuite(unittest.TestCase):
                 func (p Person) Greet() string {
                     for i < 10 {
     // loop body
-    }
+}
                 };
     ""","Error on line 5 col 0: }", inspect.stack()[0].function))
+
+    def test_041(self):
+            self.assertTrue(TestParser.test("""
+            const a = a.2;
+    ""","Error on line 2 col 20: 2", inspect.stack()[0].function))
+
 
     # def test_039(self):
     #         self.assertTrue(TestParser.test("""
