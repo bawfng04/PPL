@@ -311,7 +311,6 @@ class ParserSuite(unittest.TestCase):
         const a = a.2;
     ""","Error on line 2 col 20: 2", inspect.stack()[0].function))
 
-
     # def test_039(self):
     #         self.assertTrue(TestParser.test("""
     #             func (p Person) Greet() string {
