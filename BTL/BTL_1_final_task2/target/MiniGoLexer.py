@@ -434,12 +434,10 @@ class MiniGoLexer(Lexer):
     def ILLEGAL_ESCAPE_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 3:
 
-                    illegal_str = str(self.text)
-                    i = illegal_str.find('\\')
-                    while i != -1 and illegal_str[i+1] in 'rnt"\\':
-                        i = illegal_str.find('\\', i+2)
-                    result = illegal_str[1:i+2].replace('\\', '\\\\')
-                    raise IllegalEscape('\\\"' + result)
+                    illegal_str = self.text
+                    pos = illegal_str.find('\\')
+                    # Return from the starting quote up to and including the illegal escape char
+                    raise IllegalEscape(illegal_str[:pos+2])
                 
      
 

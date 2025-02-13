@@ -421,13 +421,11 @@ UNCLOSE_STRING:
     };
 
 ILLEGAL_ESCAPE:
-	'"' (STR_CHAR* '\\' ~[rnt"\\] STR_CHAR*) '"'? {
-        illegal_str = str(self.text)
-        i = illegal_str.find('\\')
-        while i != -1 and illegal_str[i+1] in 'rnt"\\':
-            i = illegal_str.find('\\', i+2)
-        result = illegal_str[1:i+2].replace('\\', '\\\\')
-        raise IllegalEscape('\\\"' + result)
+	'"' (STR_CHAR* '\\' ~[rnt"\\] STR_CHAR*) ('"')? {
+        illegal_str = self.text
+        pos = illegal_str.find('\\')
+        # Return from the starting quote up to and including the illegal escape char
+        raise IllegalEscape(illegal_str[:pos+2])
     };
 
 ERROR_CHAR: . {raise ErrorToken(self.text)};
