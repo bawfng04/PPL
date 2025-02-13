@@ -39,8 +39,6 @@ options{
 
 program: newlines declared more_declared newlines EOF;
 
-// program: list_expression;
-
 newlines: | NEWLINE newlines;
 
 more_declared: | newlines declared more_declared;
@@ -53,7 +51,7 @@ declared:
 		| method_declared
 		| struct_declared
 		| interface_declared
-	) NEWLINE*;
+	) newlines;
 
 // Original: list_statement: (statement NEWLINE*)* | statement;
 list_statement: statement | statement newlines list_statement;
@@ -94,10 +92,20 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-not_null_block_statement: LB NEWLINE? statement (statement | NEWLINE)* NEWLINE? RB;
+not_null_block_statement: LB NEWLINE? not_null_block_statement_body NEWLINE? RB;
+
+not_null_block_statement_body: statement not_null_block_statement_body_tail;
+
+not_null_block_statement_body_tail:
+	| statement not_null_block_statement_body_tail
+	| NEWLINE not_null_block_statement_body_tail;
 
 function_declared:
-	FUNC ID LP params_list? RP (LP type_name (COMMA type_name)* RP | type_name)? NEWLINE? not_null_block_statement SEMI?;
+	FUNC ID LP params_list? RP return_type? NEWLINE? not_null_block_statement SEMI?;
+
+return_type: LP type_name return_type_tail RP | type_name;
+
+return_type_tail: | COMMA type_name return_type_tail;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
@@ -112,16 +120,20 @@ method_params: method_param | method_param COMMA method_params;
 method_param: ID type_name;
 
 // Block statement Original: params_list: param (COMMA param)*;
-params_list: ID type_name | ID (COMMA ID)* type_name | param (COMMA param)*;
+params_list: ID type_name | ID params_list_tail type_name | param params_list_tail;
 
-param: (ID | ID COMMA ID (COMMA ID)*) type_name;
+params_list_tail: | COMMA ID params_list_tail;
+
+param: ID param_tail type_name;
+
+param_tail: | COMMA ID param_tail;
 
 // Struct declaration
 
 //ex: type Point struct {x, y int}
-struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type_list NEWLINE* RB (SEMI | NEWLINE);
+struct_declared: TYPE ID STRUCT LB newlines struct_type_list newlines RB (SEMI | NEWLINE);
 
-struct_type_list: (struct_field NEWLINE*)+;
+struct_type_list: struct_field newlines struct_type_list | struct_field newlines;
 
 struct_field: ID more_ids type_name (SEMI | SEMI? NEWLINE);
 
@@ -142,9 +154,9 @@ struct_type: | struct_field struct_type;
 // Interface declaration
 
 interface_declared:
-	TYPE ID INTERFACE LB NEWLINE* interface_type_list NEWLINE* RB (SEMI | NEWLINE);
+	TYPE ID INTERFACE LB newlines interface_type_list newlines RB (SEMI | NEWLINE);
 
-interface_type_list: interface_method+;
+interface_type_list: interface_method interface_type_list | interface_method;
 
 // Update interface_type rule Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 interface_type: | interface_method interface_type;
@@ -162,7 +174,9 @@ assign_statement: assign_lhs assign_op expression SEMI?;
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
 
-assign_lhs: ID (field_access | element_access)*;
+assign_lhs: ID assign_lhs_tail?;
+
+assign_lhs_tail: (field_access | element_access) assign_lhs_tail?;
 
 if_statement:
 	IF LP expression RP not_null_block_statement (
@@ -198,7 +212,9 @@ call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
 // block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
-block_stmt: LB NEWLINE? (statement | NEWLINE)* NEWLINE? RB;
+block_stmt: LB NEWLINE? block_stmt_body NEWLINE? RB;
+
+block_stmt_body: | statement block_stmt_body | NEWLINE block_stmt_body;
 //not_null_block_statement: not null
 
 // Original: expr_list: expression (COMMA expression)*;
@@ -220,13 +236,13 @@ expression5: expression5 (MUL | DIV | MOD) expression6 | expression6;
 expression6: NOT expression6 | SUB expression6 | expression7;
 
 //-1.c -> failed, a.b -> passed
-expression7: operand (element_access | field_access | call_expr)*;
+expression7: operand expression7_tail?;
+
+expression7_tail: (element_access | field_access | call_expr) expression7_tail?;
 
 // Operands
 
 operand: literal | ID | LP expression RP;
-
-// Element access, field access, function calls
 
 element_access: LSB expression RSB;
 
@@ -256,7 +272,7 @@ untyped_array_literal: LB literal_list RB;
 
 array_literal: array_type LB literal_list RB | LB literal_list RB;
 
-literal_list: literal_item (COMMA literal_item)*;
+literal_list: literal_item | literal_item COMMA literal_list;
 
 literal_item:
 	untyped_array_literal
@@ -270,7 +286,9 @@ literal_item:
 	| ID;
 
 // ex: [2][3]int;
-array_type: LSB INT_LIT RSB (LSB INT_LIT RSB)* type_name;
+array_type: LSB INT_LIT RSB array_type_tail type_name;
+
+array_type_tail: | LSB INT_LIT RSB array_type_tail;
 
 type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 
