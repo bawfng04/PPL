@@ -424,9 +424,9 @@ class MiniGoLexer(Lexer):
         if actionIndex == 2:
 
                     if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng
-                        self.text = self.text[1:-1]
+                        self.text = '\"' + self.text[1:-1]
                     else: #nếu kết thúc bằng EOF thì lấy từ đầu chuỗi đến hết
-                        self.text = self.text[1:]
+                        self.text = '\"' + self.text[1:]
                     raise UncloseString(self.text)
                 
      
