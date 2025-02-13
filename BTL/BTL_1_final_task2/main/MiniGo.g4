@@ -123,11 +123,9 @@ struct_declared: TYPE ID STRUCT LB NEWLINE* struct_type_list NEWLINE* RB (SEMI |
 
 struct_type_list: (struct_field NEWLINE*)+;
 
-struct_field: ID more_ids type_name struct_end | method_declared;
+struct_field: ID more_ids type_name (SEMI | SEMI? NEWLINE);
 
 more_ids: | COMMA ID more_ids;
-
-struct_end: SEMI | SEMI? NEWLINE;
 
 // struct_type: (ID type_name SEMI? NEWLINE*)*;
 

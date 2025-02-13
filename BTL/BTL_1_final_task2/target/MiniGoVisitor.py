@@ -129,11 +129,6 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#struct_end.
-    def visitStruct_end(self, ctx:MiniGoParser.Struct_endContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by MiniGoParser#struct_type.
     def visitStruct_type(self, ctx:MiniGoParser.Struct_typeContext):
         return self.visitChildren(ctx)

@@ -392,7 +392,7 @@ class ParserSuite(unittest.TestCase):
     def test_003(self):
             self.assertTrue(TestParser.test("""
             type Person struct {
-                func (p Person) Greet() string {
+            func (p Person) Greet() string {
                     return "Hello, " + p.name
                 };
             }
