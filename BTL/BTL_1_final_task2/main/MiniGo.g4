@@ -421,11 +421,10 @@ UNCLOSE_STRING:
     };
 
 ILLEGAL_ESCAPE:
-	'"' (STR_CHAR* '\\' ~[rnt"\\] STR_CHAR*) ('"')? {
-        illegal_str = self.text
-        pos = illegal_str.find('\\')
-        # Return from the starting quote up to and including the illegal escape char
-        raise IllegalEscape(illegal_str[:pos+2])
+	'"' (STR_CHAR* '\\' ~[rnt"\\] STR_CHAR*) {
+        illegal_str = self.text[1:] # Remove leading quote
+        result = '"' + illegal_str # Reconstruct with leading quote
+        raise IllegalEscape(result)
     };
 
 ERROR_CHAR: . {raise ErrorToken(self.text)};
