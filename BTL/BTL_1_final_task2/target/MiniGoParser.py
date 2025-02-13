@@ -291,17 +291,17 @@ def serializedATN():
         buf.write("\2\2\u0228\u0229\3\2\2\2\u0229\u022a\3\2\2\2\u022a\u022b")
         buf.write("\7%\2\2\u022b\u022d\5`\61\2\u022c\u021d\3\2\2\2\u022c")
         buf.write("\u0221\3\2\2\2\u022c\u0225\3\2\2\2\u022dQ\3\2\2\2\u022e")
-        buf.write("\u022f\5J&\2\u022f\u0230\5H%\2\u0230\u0231\5`\61\2\u0231")
-        buf.write("S\3\2\2\2\u0232\u0233\7\22\2\2\u0233\u0234\t\2\2\2\u0234")
-        buf.write("U\3\2\2\2\u0235\u0236\7\21\2\2\u0236\u0237\t\2\2\2\u0237")
-        buf.write("W\3\2\2\2\u0238\u0241\7\6\2\2\u0239\u023b\5`\61\2\u023a")
-        buf.write("\u0239\3\2\2\2\u023a\u023b\3\2\2\2\u023b\u023c\3\2\2\2")
-        buf.write("\u023c\u0242\7\66\2\2\u023d\u023f\5`\61\2\u023e\u023d")
-        buf.write("\3\2\2\2\u023e\u023f\3\2\2\2\u023f\u0240\3\2\2\2\u0240")
-        buf.write("\u0242\7;\2\2\u0241\u023a\3\2\2\2\u0241\u023e\3\2\2\2")
-        buf.write("\u0242Y\3\2\2\2\u0243\u0246\7\67\2\2\u0244\u0246\5J&\2")
-        buf.write("\u0245\u0243\3\2\2\2\u0245\u0244\3\2\2\2\u0246\u0247\3")
-        buf.write("\2\2\2\u0247\u0249\7/\2\2\u0248\u024a\5\u008eH\2\u0249")
+        buf.write("\u022f\7\67\2\2\u022f\u0230\5H%\2\u0230\u0231\5`\61\2")
+        buf.write("\u0231S\3\2\2\2\u0232\u0233\7\22\2\2\u0233\u0234\t\2\2")
+        buf.write("\2\u0234U\3\2\2\2\u0235\u0236\7\21\2\2\u0236\u0237\t\2")
+        buf.write("\2\2\u0237W\3\2\2\2\u0238\u0241\7\6\2\2\u0239\u023b\5")
+        buf.write("`\61\2\u023a\u0239\3\2\2\2\u023a\u023b\3\2\2\2\u023b\u023c")
+        buf.write("\3\2\2\2\u023c\u0242\7\66\2\2\u023d\u023f\5`\61\2\u023e")
+        buf.write("\u023d\3\2\2\2\u023e\u023f\3\2\2\2\u023f\u0240\3\2\2\2")
+        buf.write("\u0240\u0242\7;\2\2\u0241\u023a\3\2\2\2\u0241\u023e\3")
+        buf.write("\2\2\2\u0242Y\3\2\2\2\u0243\u0246\7\67\2\2\u0244\u0246")
+        buf.write("\5J&\2\u0245\u0243\3\2\2\2\u0245\u0244\3\2\2\2\u0246\u0247")
+        buf.write("\3\2\2\2\u0247\u0249\7/\2\2\u0248\u024a\5\u008eH\2\u0249")
         buf.write("\u0248\3\2\2\2\u0249\u024a\3\2\2\2\u024a\u024b\3\2\2\2")
         buf.write("\u024b\u024d\7\60\2\2\u024c\u024e\7\66\2\2\u024d\u024c")
         buf.write("\3\2\2\2\u024d\u024e\3\2\2\2\u024e[\3\2\2\2\u024f\u0251")
@@ -3795,9 +3795,8 @@ class MiniGoParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def assign_lhs(self):
-            return self.getTypedRuleContext(MiniGoParser.Assign_lhsContext,0)
-
+        def ID(self):
+            return self.getToken(MiniGoParser.ID, 0)
 
         def assign_op(self):
             return self.getTypedRuleContext(MiniGoParser.Assign_opContext,0)
@@ -3826,7 +3825,7 @@ class MiniGoParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 556
-            self.assign_lhs()
+            self.match(MiniGoParser.ID)
             self.state = 557
             self.assign_op()
             self.state = 558
