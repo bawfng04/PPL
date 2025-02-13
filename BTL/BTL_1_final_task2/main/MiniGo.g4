@@ -426,7 +426,8 @@ ILLEGAL_ESCAPE:
         i = illegal_str.find('\\')
         while i != -1 and illegal_str[i+1] in 'rnt"\\':
             i = illegal_str.find('\\', i+2)
-        raise IllegalEscape(illegal_str[1:i+2])
+        result = illegal_str[1:i+2].replace('\\', '\\\\')
+        raise IllegalEscape('\\\"' + result)
     };
 
 ERROR_CHAR: . {raise ErrorToken(self.text)};
