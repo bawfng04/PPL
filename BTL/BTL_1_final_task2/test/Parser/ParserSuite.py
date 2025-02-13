@@ -384,7 +384,16 @@ class ParserSuite(unittest.TestCase):
             """Statement"""
             self.assertTrue(TestParser.test("""
                                         func Add() {
-                                            for i[2] := 1; foo().a.b(); i := 1 {
+                                        for i[2] := 1; foo().a.b(); i := 1 {
                                                 return;
                                             }
                                         };""","Error on line 3 col 49: :=", inspect.stack()[0].function))
+
+    def test_003(self):
+            self.assertTrue(TestParser.test("""
+            type Person struct {
+                func (p Person) Greet() string {
+                    return "Hello, " + p.name
+                };
+            }
+    ""","Error on line 3 col 12: func", inspect.stack()[0].function))

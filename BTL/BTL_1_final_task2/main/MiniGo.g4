@@ -179,22 +179,13 @@ for_statement:
 		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression not_null_block_statement	// Range form
 		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update not_null_block_statement			// Three-part form
 		| expression not_null_block_statement
-		// Basic form
 	);
 
-// for_statement: FOR ( (ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt | for_init (SEMI | NEWLINE) expression
-// (SEMI | NEWLINE) for_update block_stmt | expression block_stmt );
-
-// for_init: ID SHORT_ASSIGN expression // Short declaration | ID assign_op expression // Assignment | VAR ID type_name? ASSIGN expression; //
-// Variable declaration
-
-//for init cho btl2
 for_init:
-	assign_lhs SHORT_ASSIGN expression		// Short declaration
-	| assign_lhs assign_op expression		// Assignment
+	ID SHORT_ASSIGN expression				// Short declaration
+	| ID assign_op expression				// Assignment
 	| VAR ID type_name? ASSIGN expression;	// Variable declaration
 
-//assign_lhs: ID (field_access | element_access)*;
 for_update: ID assign_op expression;
 
 break_statement: BREAK (SEMI | NEWLINE);
