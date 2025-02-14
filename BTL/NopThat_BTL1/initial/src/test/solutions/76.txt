@@ -1,1 +1,1 @@
-interface,{,},<EOF>
+float,(,x,),<EOF>

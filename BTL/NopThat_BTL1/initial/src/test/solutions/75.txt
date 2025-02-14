@@ -1,1 +1,1 @@
-float,(,x,),<EOF>
+a,;,b,;,c,<EOF>

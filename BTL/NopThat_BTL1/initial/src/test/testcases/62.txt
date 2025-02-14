@@ -1,1 +1,1 @@
-for _, val := range arr
+draw() int
