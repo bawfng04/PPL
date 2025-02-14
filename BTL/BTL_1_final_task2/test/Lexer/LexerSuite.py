@@ -565,3 +565,8 @@ class LexerSuite(unittest.TestCase):
                 """ILLEGAL_ESCAPE"""
                 self.assertTrue(TestLexer.test(""" "\\" \\\\ \\q" """, "Illegal escape in string: \"\\\" \\\\ \\q", inspect.stack()[0].function))
 
+        def test_004(self):
+                """NEW_LINE"""
+                self.assertTrue(TestLexer.test("""
+                nil
+        """, "nil,;,<EOF>", inspect.stack()[0].function))

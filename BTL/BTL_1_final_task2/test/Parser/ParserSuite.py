@@ -398,10 +398,16 @@ class ParserSuite(unittest.TestCase):
             }
     ""","Error on line 3 col 12: func", inspect.stack()[0].function))
 
-    def test_012(self):
+    def test_004(self):
             """declared function"""
             self.assertTrue(TestParser.test("""
                 func VoTien(x int, y int) int {return;}
                 func VoTien1() [2][3] ID {return;};
                 func VoTien2() {return;}
             ""","successful", inspect.stack()[0].function))
+
+    def test_005(self):
+        """array_literal"""
+        self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
+""","Error on line 1 col 17: [", inspect.stack()[0].function))
+
