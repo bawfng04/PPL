@@ -39,6 +39,8 @@ options{
 
 program: newlines declared more_declared newlines EOF;
 
+// program: list_expression;
+
 newlines: | NEWLINE newlines;
 
 more_declared: | newlines declared more_declared;
@@ -77,10 +79,14 @@ var_decl_list: var_decl | var_decl COMMA var_decl_list;
 // var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
 
 var_decl:
-	ID type_name (ASSIGN expression)?
-	| ID (COMMA ID)* type_name (ASSIGN expr_list)?
-	| ID (ASSIGN expression)
-	| ID (COMMA ID)* (ASSIGN expr_list);
+	ID type_name (ASSIGN expression)?					// Single variable with type
+	| ID type_name_ids type_name (ASSIGN expr_list)?	// Multiple variables with type
+	| ID (ASSIGN expression)							// Single variable without type
+	| ID comma_ids (ASSIGN expr_list);					// Multiple variables without type
+
+// Helper rules for recursion
+type_name_ids: | COMMA ID type_name_ids;	// Replaces (COMMA ID)*
+comma_ids: | COMMA ID comma_ids;			// Replaces (COMMA ID)*
 
 //khai báo hằng - const + tên hằng + giá trị + ";"
 
@@ -92,20 +98,13 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-not_null_block_statement: LB NEWLINE? not_null_block_statement_body NEWLINE? RB;
-
-not_null_block_statement_body: statement not_null_block_statement_body_tail;
-
-not_null_block_statement_body_tail:
-	| statement not_null_block_statement_body_tail
-	| NEWLINE not_null_block_statement_body_tail;
+not_null_block_statement: LB NEWLINE? statement more_statements NEWLINE? RB;
+more_statements: | statement more_statements | NEWLINE more_statements;
 
 function_declared:
 	FUNC ID LP params_list? RP return_type? NEWLINE? not_null_block_statement SEMI?;
-
-return_type: LP type_name return_type_tail RP | type_name;
-
-return_type_tail: | COMMA type_name return_type_tail;
+return_type: LP type_name more_types RP | type_name;
+more_types: | COMMA type_name more_types;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
@@ -119,21 +118,27 @@ method_params: method_param | method_param COMMA method_params;
 
 method_param: ID type_name;
 
-// Block statement Original: params_list: param (COMMA param)*;
-params_list: ID type_name | ID params_list_tail type_name | param params_list_tail;
+// Block statement Original: params_list: param (COMMA param)*; Block statement
+params_list:
+	ID type_name				// Single parameter
+	| ID comma_ids type_name	// Multiple IDs with single type
+	| param						// Single param
+	| param COMMA params_list;	// Multiple params
 
-params_list_tail: | COMMA ID params_list_tail;
+param:
+	ID type_name					// Single ID with type
+	| ID comma_param_ids type_name;	// Multiple IDs with type
 
-param: ID param_tail type_name;
-
-param_tail: | COMMA ID param_tail;
-
+// Helper rules for recursion
+comma_param_ids: COMMA ID | COMMA ID comma_param_ids;
 // Struct declaration
 
 //ex: type Point struct {x, y int}
-struct_declared: TYPE ID STRUCT LB newlines struct_type_list newlines RB (SEMI | NEWLINE);
+struct_declared: TYPE ID STRUCT LB opt_newlines struct_type_list opt_newlines RB (SEMI | NEWLINE);
 
-struct_type_list: struct_field newlines struct_type_list | struct_field newlines;
+struct_type_list: struct_field opt_newlines more_struct_fields;
+more_struct_fields: | struct_field opt_newlines more_struct_fields;
+opt_newlines: | NEWLINE opt_newlines;
 
 struct_field: ID more_ids type_name (SEMI | SEMI? NEWLINE);
 
@@ -154,9 +159,10 @@ struct_type: | struct_field struct_type;
 // Interface declaration
 
 interface_declared:
-	TYPE ID INTERFACE LB newlines interface_type_list newlines RB (SEMI | NEWLINE);
+	TYPE ID INTERFACE LB opt_newlines interface_type_list opt_newlines RB (SEMI | NEWLINE);
 
-interface_type_list: interface_method interface_type_list | interface_method;
+interface_type_list: interface_method more_interface_methods;
+more_interface_methods: | interface_method more_interface_methods;
 
 // Update interface_type rule Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 interface_type: | interface_method interface_type;
@@ -174,9 +180,8 @@ assign_statement: assign_lhs assign_op expression SEMI?;
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
 
-assign_lhs: ID assign_lhs_tail?;
-
-assign_lhs_tail: (field_access | element_access) assign_lhs_tail?;
+assign_lhs: ID more_access;
+more_access: | (field_access | element_access) more_access;
 
 if_statement:
 	IF LP expression RP not_null_block_statement (
@@ -212,9 +217,8 @@ call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
 // block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
-block_stmt: LB NEWLINE? block_stmt_body NEWLINE? RB;
-
-block_stmt_body: | statement block_stmt_body | NEWLINE block_stmt_body;
+block_stmt: LB NEWLINE? block_content NEWLINE? RB;
+block_content: | statement block_content | NEWLINE block_content;
 //not_null_block_statement: not null
 
 // Original: expr_list: expression (COMMA expression)*;
@@ -236,13 +240,14 @@ expression5: expression5 (MUL | DIV | MOD) expression6 | expression6;
 expression6: NOT expression6 | SUB expression6 | expression7;
 
 //-1.c -> failed, a.b -> passed
-expression7: operand expression7_tail?;
-
-expression7_tail: (element_access | field_access | call_expr) expression7_tail?;
+expression7: operand more_access_expr;
+more_access_expr: | (element_access | field_access | call_expr) more_access_expr;
 
 // Operands
 
 operand: literal | ID | LP expression RP;
+
+// Element access, field access, function calls
 
 element_access: LSB expression RSB;
 
@@ -286,15 +291,15 @@ literal_item:
 	| ID;
 
 // ex: [2][3]int;
-array_type: LSB INT_LIT RSB array_type_tail type_name;
-
-array_type_tail: | LSB INT_LIT RSB array_type_tail;
+array_type: LSB INT_LIT RSB more_dimensions type_name;
+more_dimensions: | LSB INT_LIT RSB more_dimensions;
 
 type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 
 // Struct literal
 
-struct_literal: ID LB (field_list)? RB;
+struct_literal: ID LB optional_field_list RB;
+optional_field_list: | field_list;
 
 // Original: field_list: field_init (COMMA field_init)*;
 field_list: field_init | field_init COMMA field_list;

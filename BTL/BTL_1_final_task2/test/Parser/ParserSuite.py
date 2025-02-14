@@ -397,3 +397,11 @@ class ParserSuite(unittest.TestCase):
                 };
             }
     ""","Error on line 3 col 12: func", inspect.stack()[0].function))
+
+    def test_012(self):
+            """declared function"""
+            self.assertTrue(TestParser.test("""
+                func VoTien(x int, y int) int {return;}
+                func VoTien1() [2][3] ID {return;};
+                func VoTien2() {return;}
+            ""","successful", inspect.stack()[0].function))
