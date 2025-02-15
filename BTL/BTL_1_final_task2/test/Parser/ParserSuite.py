@@ -923,5 +923,9 @@ class ParserSuite(unittest.TestCase):
 
     def test_008(self):
             self.assertTrue(TestParser.test("""
-                                                var a = {1, 2};
+                                            var a = {1, 2};
                                             ""","Error on line 2 col 52: {", inspect.stack()[0].function))
+
+    def test_009(self):
+            """expression"""
+            self.assertTrue(TestParser.test("const Votien = ca.foo(132) + b.c[2];","successful", inspect.stack()[0].function))

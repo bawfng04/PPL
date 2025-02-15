@@ -260,7 +260,6 @@ literal:
 	| FALSE
 	| NIL
 	| typed_array_literal
-	| untyped_array_literal
 	| struct_literal;
 
 // Array literal with type
