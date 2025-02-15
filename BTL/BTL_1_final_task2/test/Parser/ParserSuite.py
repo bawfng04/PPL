@@ -915,3 +915,8 @@ class ParserSuite(unittest.TestCase):
             self.assertTrue(TestParser.test("""
                                                 const a = [ID][2][VT]int{{{1}}, ID, a, {b}}
                                             ""","successful", inspect.stack()[0].function))
+
+    def test_007(self):
+            """array_literal"""
+            self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
+    ""","Error on line 1 col 17: [", inspect.stack()[0].function))
