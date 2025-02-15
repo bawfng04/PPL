@@ -286,8 +286,8 @@ literal_item:
 	| ID;
 
 // ex: [2][3]int;
-array_type: LSB INT_LIT RSB more_dimensions type_name;
-more_dimensions: | LSB INT_LIT RSB more_dimensions;
+array_type: LSB (INT_LIT | ID) RSB more_dimensions type_name;
+more_dimensions: | LSB (INT_LIT | ID) RSB more_dimensions;
 
 type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 

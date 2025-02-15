@@ -920,3 +920,8 @@ class ParserSuite(unittest.TestCase):
             """array_literal"""
             self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
     ""","Error on line 1 col 17: [", inspect.stack()[0].function))
+
+    def test_008(self):
+            self.assertTrue(TestParser.test("""
+                                                var a = {1, 2};
+                                            ""","Error on line 2 col 52: {", inspect.stack()[0].function))
