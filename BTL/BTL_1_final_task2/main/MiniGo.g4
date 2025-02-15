@@ -212,7 +212,7 @@ call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
 
 // block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
-block_stmt: LB NEWLINE? block_content NEWLINE? RB;
+block_stmt: LB NEWLINE? block_content NEWLINE? RB SEMI?;
 block_content: | statement block_content | NEWLINE block_content;
 //not_null_block_statement: not null
 
