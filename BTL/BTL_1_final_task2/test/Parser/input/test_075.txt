@@ -1,7 +1,7 @@
 
                 func (p Person) Greet() string {
                     if (1) {return;}
-                    else if (1)
+                else if (1)
                     {}
                 };
     

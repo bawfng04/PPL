@@ -551,7 +551,7 @@ class ParserSuite(unittest.TestCase):
             self.assertTrue(TestParser.test("""
                 func (p Person) Greet() string {
                     if (1) {return;}
-                    else if (1)
+                else if (1)
                     {}
                 };
     ""","Error on line 4 col 16: else", inspect.stack()[0].function))
