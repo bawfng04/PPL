@@ -643,112 +643,112 @@ class LexerSuite(unittest.TestCase):
                 """skip"""
                 self.assertTrue(TestLexer.test("// tesst //", "<EOF>", inspect.stack()[0].function))
 
-        def test_023(self):
+        def test_019(self):
                 """skip"""
                 self.assertTrue(TestLexer.test("/**///", "<EOF>", inspect.stack()[0].function))
 
-        def test_024(self):
+        def test_020(self):
                 """Identifiers"""
                 self.assertTrue(TestLexer.test("2_bA", "2,_bA,<EOF>", inspect.stack()[0].function))
 
-        def test_025(self):
+        def test_021(self):
                 """Identifiers"""
                 self.assertTrue(TestLexer.test("_", "_,<EOF>", inspect.stack()[0].function))
 
-        def test_026(self):
+        def test_022(self):
                 """Identifiers"""
                 self.assertTrue(TestLexer.test("2b", "2,b,<EOF>", inspect.stack()[0].function))
 
-        def test_031(self):
+        def test_023(self):
                 """INT_LIT"""
                 self.assertTrue(TestLexer.test("-0120", "-,0,120,<EOF>", inspect.stack()[0].function))
 
-        def test_036(self):
+        def test_024(self):
                 """INT_LIT"""
                 self.assertTrue(TestLexer.test("0b000", "0b000,<EOF>", inspect.stack()[0].function))
 
-        def test_037(self):
+        def test_025(self):
                 """INT_LIT"""
                 self.assertTrue(TestLexer.test("0b1e", "0b1,e,<EOF>", inspect.stack()[0].function))
 
-        def test_042(self):
+        def test_026(self):
                 """INT_LIT"""
                 self.assertTrue(TestLexer.test("-0O72", "-,0O72,<EOF>", inspect.stack()[0].function))
 
-        def test_048(self):
+        def test_027(self):
                 """INT_LIT"""
                 self.assertTrue(TestLexer.test("0xae2", "0xae2,<EOF>", inspect.stack()[0].function))
 
-        def test_050(self):
+        def test_028(self):
                 """FLOAT_LIT"""
                 self.assertTrue(TestLexer.test("010.010e-020", "010.010e-020,<EOF>", inspect.stack()[0].function))
 
-        def test_052(self):
+        def test_029(self):
                 """FLOAT_LIT"""
                 self.assertTrue(TestLexer.test("1.2Ee2", "1.2,Ee2,<EOF>", inspect.stack()[0].function))
 
-        def test_058(self):
+        def test_030(self):
                 """FLOAT_LIT"""
                 self.assertTrue(TestLexer.test("00.1e2", "00.1e2,<EOF>", inspect.stack()[0].function))
 
-        def test_061(self):
+        def test_031(self):
                 """STRING_LIT"""
                 self.assertTrue(TestLexer.test(""" "votien" """, "\"votien\",<EOF>", inspect.stack()[0].function))
 
-        def test_062(self):
+        def test_032(self):
                 """STRING_LIT"""
                 self.assertTrue(TestLexer.test(""" "\\r" """, "\"\\r\",<EOF>", inspect.stack()[0].function))
 
-        def test_067(self):
+        def test_033(self):
                 """STRING_LIT"""
                 self.assertTrue(TestLexer.test(""" "\\r \\r \\r" """, "\"\\r \\r \\r\",<EOF>", inspect.stack()[0].function))
 
-        def test_069(self):
+        def test_034(self):
                 """Keywords"""
                 self.assertTrue(TestLexer.test(""" ^ """, "ErrorToken ^", inspect.stack()[0].function))
 
-        def test_083(self):
+        def test_035(self):
                 """BOOL_LIT"""
                 self.assertTrue(TestLexer.test("true", "true,<EOF>", inspect.stack()[0].function))
 
-        def test_084(self):
+        def test_036(self):
                 """BOOL_LIT"""
                 self.assertTrue(TestLexer.test("false", "false,<EOF>", inspect.stack()[0].function))
 
-        def test_085(self):
+        def test_037(self):
                 """NIL_LIT"""
                 self.assertTrue(TestLexer.test("nil", "nil,<EOF>", inspect.stack()[0].function))
 
-        def test_086(self):
+        def test_038(self):
                 """ERROR_CHAR"""
                 self.assertTrue(TestLexer.test("?", "ErrorToken ?", inspect.stack()[0].function))
 
-        def test_087(self):
+        def test_039(self):
                 """ERROR_CHAR"""
                 self.assertTrue(TestLexer.test("@", "ErrorToken @", inspect.stack()[0].function))
 
-        def test_091(self):
+        def test_040(self):
                 """UNCLOSE_STRING"""
                 self.assertTrue(TestLexer.test(""" 123" """, "123,Unclosed string: \" ", inspect.stack()[0].function))
 
-        def test_094(self):
+        def test_041(self):
                 """UNCLOSE_STRING"""
                 self.assertTrue(TestLexer.test(""" "123
                 " """, "Unclosed string: \"123", inspect.stack()[0].function))
 
-        def test_097(self):
+        def test_042(self):
                 """ILLEGAL_ESCAPE"""
                 self.assertTrue(TestLexer.test(""" "&\\&" """, "Illegal escape in string: \"&\\&", inspect.stack()[0].function))
 
-        def test_098(self):
+        def test_043(self):
                 """ILLEGAL_ESCAPE"""
                 self.assertTrue(TestLexer.test(""" "\\z" """, "Illegal escape in string: \"\\z", inspect.stack()[0].function))
 
-        def test_099(self):
+        def test_044(self):
                 """Literals String"""
                 self.assertTrue(TestLexer.test(""" "VOTIEN \\r" ""","\"VOTIEN \\r\",<EOF>", inspect.stack()[0].function))
 
-        def test_100(self):
+        def test_045(self):
                 """UNCLOSE_STRING"""
                 self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: \"VOTIEN", inspect.stack()[0].function))
 

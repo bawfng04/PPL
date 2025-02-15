@@ -1,7 +1,1 @@
-
-                func (p Person) Greet() string {
-                    for i := 0; i < 10; i += 1 {
-    // loop body
-    }
-                };
-    
+const Votien = [1.]ID{1, 3};

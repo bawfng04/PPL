@@ -1,4 +1,1 @@
-
-                func Add() {
-                                            }
-    
+const Votien = 1;

@@ -1,7 +1,1 @@
-
-                func (p Person) Greet() string {
-                    for index, value := range STRUCT{} {
-    // loop body
-    };
-                };
-    
+const Votien = Person{name: "Alice", age: 30};

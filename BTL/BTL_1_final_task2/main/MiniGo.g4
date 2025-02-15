@@ -98,7 +98,7 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-not_null_block_statement: LB NEWLINE? statement more_statements NEWLINE? RB;
+// not_null_block_statement: LB NEWLINE? statement more_statements NEWLINE? RB;
 more_statements: | statement more_statements | NEWLINE more_statements;
 
 function_declared: FUNC ID LP params_list? RP return_type? NEWLINE? block_stmt SEMI?;

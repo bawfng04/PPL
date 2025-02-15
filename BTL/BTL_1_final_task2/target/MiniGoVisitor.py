@@ -79,11 +79,6 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#not_null_block_statement.
-    def visitNot_null_block_statement(self, ctx:MiniGoParser.Not_null_block_statementContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by MiniGoParser#more_statements.
     def visitMore_statements(self, ctx:MiniGoParser.More_statementsContext):
         return self.visitChildren(ctx)
