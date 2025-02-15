@@ -210,16 +210,16 @@ def serializedATN():
         509,511,3,134,67,0,510,508,1,0,0,0,510,509,1,0,0,0,511,512,1,0,0,
         0,512,513,3,90,45,0,513,515,1,0,0,0,514,507,1,0,0,0,514,510,1,0,
         0,0,515,91,1,0,0,0,516,517,5,1,0,0,517,518,5,45,0,0,518,519,3,114,
-        57,0,519,520,5,46,0,0,520,525,3,28,14,0,521,522,5,2,0,0,522,526,
-        3,92,46,0,523,524,5,2,0,0,524,526,3,28,14,0,525,521,1,0,0,0,525,
+        57,0,519,520,5,46,0,0,520,525,3,108,54,0,521,522,5,2,0,0,522,526,
+        3,92,46,0,523,524,5,2,0,0,524,526,3,108,54,0,525,521,1,0,0,0,525,
         523,1,0,0,0,525,526,1,0,0,0,526,93,1,0,0,0,527,546,5,3,0,0,528,529,
         7,3,0,0,529,530,5,51,0,0,530,531,7,3,0,0,531,532,5,43,0,0,532,533,
-        5,17,0,0,533,534,3,114,57,0,534,535,3,28,14,0,535,547,1,0,0,0,536,
+        5,17,0,0,533,534,3,114,57,0,534,535,3,108,54,0,535,547,1,0,0,0,536,
         537,3,96,48,0,537,538,7,0,0,0,538,539,3,114,57,0,539,540,7,0,0,0,
-        540,541,3,98,49,0,541,542,3,28,14,0,542,547,1,0,0,0,543,544,3,114,
-        57,0,544,545,3,28,14,0,545,547,1,0,0,0,546,528,1,0,0,0,546,536,1,
-        0,0,0,546,543,1,0,0,0,547,95,1,0,0,0,548,549,5,53,0,0,549,550,5,
-        43,0,0,550,563,3,114,57,0,551,552,5,53,0,0,552,553,3,86,43,0,553,
+        540,541,3,98,49,0,541,542,3,108,54,0,542,547,1,0,0,0,543,544,3,114,
+        57,0,544,545,3,108,54,0,545,547,1,0,0,0,546,528,1,0,0,0,546,536,
+        1,0,0,0,546,543,1,0,0,0,547,95,1,0,0,0,548,549,5,53,0,0,549,550,
+        5,43,0,0,550,563,3,114,57,0,551,552,5,53,0,0,552,553,3,86,43,0,553,
         554,3,114,57,0,554,563,1,0,0,0,555,556,5,14,0,0,556,558,5,53,0,0,
         557,559,3,156,78,0,558,557,1,0,0,0,558,559,1,0,0,0,559,560,1,0,0,
         0,560,561,5,35,0,0,561,563,3,114,57,0,562,548,1,0,0,0,562,551,1,
@@ -3483,11 +3483,11 @@ class MiniGoParser ( Parser ):
         def RP(self):
             return self.getToken(MiniGoParser.RP, 0)
 
-        def not_null_block_statement(self, i:int=None):
+        def block_stmt(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MiniGoParser.Not_null_block_statementContext)
+                return self.getTypedRuleContexts(MiniGoParser.Block_stmtContext)
             else:
-                return self.getTypedRuleContext(MiniGoParser.Not_null_block_statementContext,i)
+                return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,i)
 
 
         def ELSE(self):
@@ -3518,7 +3518,7 @@ class MiniGoParser ( Parser ):
             self.state = 519
             self.match(MiniGoParser.RP)
             self.state = 520
-            self.not_null_block_statement()
+            self.block_stmt()
             self.state = 525
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,48,self._ctx)
@@ -3532,7 +3532,7 @@ class MiniGoParser ( Parser ):
                 self.state = 523
                 self.match(MiniGoParser.ELSE)
                 self.state = 524
-                self.not_null_block_statement()
+                self.block_stmt()
 
 
         except RecognitionException as re:
@@ -3567,8 +3567,8 @@ class MiniGoParser ( Parser ):
             return self.getTypedRuleContext(MiniGoParser.ExpressionContext,0)
 
 
-        def not_null_block_statement(self):
-            return self.getTypedRuleContext(MiniGoParser.Not_null_block_statementContext,0)
+        def block_stmt(self):
+            return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,0)
 
 
         def for_init(self):
@@ -3645,7 +3645,7 @@ class MiniGoParser ( Parser ):
                 self.state = 533
                 self.expression(0)
                 self.state = 534
-                self.not_null_block_statement()
+                self.block_stmt()
                 pass
 
             elif la_ == 2:
@@ -3670,14 +3670,14 @@ class MiniGoParser ( Parser ):
                 self.state = 540
                 self.for_update()
                 self.state = 541
-                self.not_null_block_statement()
+                self.block_stmt()
                 pass
 
             elif la_ == 3:
                 self.state = 543
                 self.expression(0)
                 self.state = 544
-                self.not_null_block_statement()
+                self.block_stmt()
                 pass
 
 

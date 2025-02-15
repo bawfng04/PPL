@@ -182,19 +182,15 @@ assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSI
 assign_lhs: ID more_access;
 more_access: | (field_access | element_access) more_access;
 
-if_statement:
-	IF LP expression RP not_null_block_statement (
-		ELSE if_statement
-		| ELSE not_null_block_statement
-	)?;
+if_statement: IF LP expression RP block_stmt ( ELSE if_statement | ELSE block_stmt)?;
 
 // FOR STATEMENT
 
 for_statement:
 	FOR (
-		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression not_null_block_statement	// Range form
-		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update not_null_block_statement			// Three-part form
-		| expression not_null_block_statement
+		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
+		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update block_stmt		// Three-part form
+		| expression block_stmt
 	);
 
 for_init:

@@ -576,3 +576,5 @@ class LexerSuite(unittest.TestCase):
         def test_002(self):
                 """UNCLOSE_STRING"""
                 self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: \"VOTIEN", inspect.stack()[0].function))
+
+

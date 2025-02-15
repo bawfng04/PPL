@@ -263,82 +263,81 @@ def serializedATN():
         buf.write("\\/\2\u0203\u0205\3\2\2\2\u0204\u01fd\3\2\2\2\u0204\u0200")
         buf.write("\3\2\2\2\u0205]\3\2\2\2\u0206\u0207\7\3\2\2\u0207\u0208")
         buf.write("\7/\2\2\u0208\u0209\5t;\2\u0209\u020a\7\60\2\2\u020a\u020f")
-        buf.write("\5\36\20\2\u020b\u020c\7\4\2\2\u020c\u0210\5^\60\2\u020d")
-        buf.write("\u020e\7\4\2\2\u020e\u0210\5\36\20\2\u020f\u020b\3\2\2")
-        buf.write("\2\u020f\u020d\3\2\2\2\u020f\u0210\3\2\2\2\u0210_\3\2")
-        buf.write("\2\2\u0211\u0224\7\5\2\2\u0212\u0213\t\5\2\2\u0213\u0214")
-        buf.write("\7\65\2\2\u0214\u0215\t\5\2\2\u0215\u0216\7-\2\2\u0216")
-        buf.write("\u0217\7\23\2\2\u0217\u0218\5t;\2\u0218\u0219\5\36\20")
-        buf.write("\2\u0219\u0225\3\2\2\2\u021a\u021b\5b\62\2\u021b\u021c")
-        buf.write("\t\2\2\2\u021c\u021d\5t;\2\u021d\u021e\t\2\2\2\u021e\u021f")
-        buf.write("\5d\63\2\u021f\u0220\5\36\20\2\u0220\u0225\3\2\2\2\u0221")
-        buf.write("\u0222\5t;\2\u0222\u0223\5\36\20\2\u0223\u0225\3\2\2\2")
-        buf.write("\u0224\u0212\3\2\2\2\u0224\u021a\3\2\2\2\u0224\u0221\3")
-        buf.write("\2\2\2\u0225a\3\2\2\2\u0226\u0227\7\67\2\2\u0227\u0228")
-        buf.write("\7-\2\2\u0228\u0235\5t;\2\u0229\u022a\7\67\2\2\u022a\u022b")
-        buf.write("\5X-\2\u022b\u022c\5t;\2\u022c\u0235\3\2\2\2\u022d\u022e")
-        buf.write("\7\20\2\2\u022e\u0230\7\67\2\2\u022f\u0231\5\u009eP\2")
-        buf.write("\u0230\u022f\3\2\2\2\u0230\u0231\3\2\2\2\u0231\u0232\3")
-        buf.write("\2\2\2\u0232\u0233\7%\2\2\u0233\u0235\5t;\2\u0234\u0226")
-        buf.write("\3\2\2\2\u0234\u0229\3\2\2\2\u0234\u022d\3\2\2\2\u0235")
-        buf.write("c\3\2\2\2\u0236\u0237\7\67\2\2\u0237\u0238\5X-\2\u0238")
-        buf.write("\u0239\5t;\2\u0239e\3\2\2\2\u023a\u023b\7\22\2\2\u023b")
-        buf.write("\u023c\t\2\2\2\u023cg\3\2\2\2\u023d\u023e\7\21\2\2\u023e")
-        buf.write("\u023f\t\2\2\2\u023fi\3\2\2\2\u0240\u0249\7\6\2\2\u0241")
-        buf.write("\u0243\5t;\2\u0242\u0241\3\2\2\2\u0242\u0243\3\2\2\2\u0243")
-        buf.write("\u0244\3\2\2\2\u0244\u024a\7\66\2\2\u0245\u0247\5t;\2")
-        buf.write("\u0246\u0245\3\2\2\2\u0246\u0247\3\2\2\2\u0247\u0248\3")
-        buf.write("\2\2\2\u0248\u024a\7;\2\2\u0249\u0242\3\2\2\2\u0249\u0246")
-        buf.write("\3\2\2\2\u024ak\3\2\2\2\u024b\u024e\7\67\2\2\u024c\u024e")
-        buf.write("\5Z.\2\u024d\u024b\3\2\2\2\u024d\u024c\3\2\2\2\u024e\u024f")
-        buf.write("\3\2\2\2\u024f\u0251\7/\2\2\u0250\u0252\5\u00a8U\2\u0251")
-        buf.write("\u0250\3\2\2\2\u0251\u0252\3\2\2\2\u0252\u0253\3\2\2\2")
-        buf.write("\u0253\u0255\7\60\2\2\u0254\u0256\7\66\2\2\u0255\u0254")
-        buf.write("\3\2\2\2\u0255\u0256\3\2\2\2\u0256m\3\2\2\2\u0257\u0259")
-        buf.write("\7\61\2\2\u0258\u025a\7;\2\2\u0259\u0258\3\2\2\2\u0259")
-        buf.write("\u025a\3\2\2\2\u025a\u025b\3\2\2\2\u025b\u025d\5p9\2\u025c")
-        buf.write("\u025e\7;\2\2\u025d\u025c\3\2\2\2\u025d\u025e\3\2\2\2")
-        buf.write("\u025e\u025f\3\2\2\2\u025f\u0260\7\62\2\2\u0260o\3\2\2")
-        buf.write("\2\u0261\u0268\3\2\2\2\u0262\u0263\5\f\7\2\u0263\u0264")
-        buf.write("\5p9\2\u0264\u0268\3\2\2\2\u0265\u0266\7;\2\2\u0266\u0268")
-        buf.write("\5p9\2\u0267\u0261\3\2\2\2\u0267\u0262\3\2\2\2\u0267\u0265")
-        buf.write("\3\2\2\2\u0268q\3\2\2\2\u0269\u026f\5t;\2\u026a\u026b")
-        buf.write("\5t;\2\u026b\u026c\7\65\2\2\u026c\u026d\5r:\2\u026d\u026f")
-        buf.write("\3\2\2\2\u026e\u0269\3\2\2\2\u026e\u026a\3\2\2\2\u026f")
-        buf.write("s\3\2\2\2\u0270\u0271\b;\1\2\u0271\u0272\5v<\2\u0272\u0278")
-        buf.write("\3\2\2\2\u0273\u0274\f\4\2\2\u0274\u0275\7#\2\2\u0275")
-        buf.write("\u0277\5v<\2\u0276\u0273\3\2\2\2\u0277\u027a\3\2\2\2\u0278")
-        buf.write("\u0276\3\2\2\2\u0278\u0279\3\2\2\2\u0279u\3\2\2\2\u027a")
-        buf.write("\u0278\3\2\2\2\u027b\u027c\b<\1\2\u027c\u027d\5x=\2\u027d")
-        buf.write("\u0283\3\2\2\2\u027e\u027f\f\4\2\2\u027f\u0280\7\"\2\2")
-        buf.write("\u0280\u0282\5x=\2\u0281\u027e\3\2\2\2\u0282\u0285\3\2")
-        buf.write("\2\2\u0283\u0281\3\2\2\2\u0283\u0284\3\2\2\2\u0284w\3")
-        buf.write("\2\2\2\u0285\u0283\3\2\2\2\u0286\u0287\b=\1\2\u0287\u0288")
-        buf.write("\5z>\2\u0288\u028e\3\2\2\2\u0289\u028a\f\4\2\2\u028a\u028b")
-        buf.write("\t\6\2\2\u028b\u028d\5z>\2\u028c\u0289\3\2\2\2\u028d\u0290")
-        buf.write("\3\2\2\2\u028e\u028c\3\2\2\2\u028e\u028f\3\2\2\2\u028f")
-        buf.write("y\3\2\2\2\u0290\u028e\3\2\2\2\u0291\u0292\b>\1\2\u0292")
-        buf.write("\u0293\5|?\2\u0293\u0299\3\2\2\2\u0294\u0295\f\4\2\2\u0295")
-        buf.write("\u0296\t\7\2\2\u0296\u0298\5|?\2\u0297\u0294\3\2\2\2\u0298")
-        buf.write("\u029b\3\2\2\2\u0299\u0297\3\2\2\2\u0299\u029a\3\2\2\2")
-        buf.write("\u029a{\3\2\2\2\u029b\u0299\3\2\2\2\u029c\u029d\b?\1\2")
-        buf.write("\u029d\u029e\5~@\2\u029e\u02a4\3\2\2\2\u029f\u02a0\f\4")
-        buf.write("\2\2\u02a0\u02a1\t\b\2\2\u02a1\u02a3\5~@\2\u02a2\u029f")
-        buf.write("\3\2\2\2\u02a3\u02a6\3\2\2\2\u02a4\u02a2\3\2\2\2\u02a4")
-        buf.write("\u02a5\3\2\2\2\u02a5}\3\2\2\2\u02a6\u02a4\3\2\2\2\u02a7")
-        buf.write("\u02a8\b@\1\2\u02a8\u02a9\5\u0080A\2\u02a9\u02af\3\2\2")
-        buf.write("\2\u02aa\u02ab\f\4\2\2\u02ab\u02ac\t\t\2\2\u02ac\u02ae")
-        buf.write("\5\u0080A\2\u02ad\u02aa\3\2\2\2\u02ae\u02b1\3\2\2\2\u02af")
-        buf.write("\u02ad\3\2\2\2\u02af\u02b0\3\2\2\2\u02b0\177\3\2\2\2\u02b1")
-        buf.write("\u02af\3\2\2\2\u02b2\u02b3\7$\2\2\u02b3\u02b8\5\u0080")
-        buf.write("A\2\u02b4\u02b5\7\30\2\2\u02b5\u02b8\5\u0080A\2\u02b6")
-        buf.write("\u02b8\5\u0082B\2\u02b7\u02b2\3\2\2\2\u02b7\u02b4\3\2")
-        buf.write("\2\2\u02b7\u02b6\3\2\2\2\u02b8\u0081\3\2\2\2\u02b9\u02ba")
-        buf.write("\5\u0086D\2\u02ba\u02bb\5\u0084C\2\u02bb\u0083\3\2\2\2")
-        buf.write("\u02bc\u02c5\3\2\2\2\u02bd\u02c1\5\u0088E\2\u02be\u02c1")
-        buf.write("\5\u008aF\2\u02bf\u02c1\5\u008cG\2\u02c0\u02bd\3\2\2\2")
-        buf.write("\u02c0\u02be\3\2\2\2\u02c0\u02bf\3\2\2\2\u02c1\u02c2\3")
-        buf.write("\2\2\2\u02c2\u02c3\5\u0084C\2\u02c3\u02c5\3\2\2\2\u02c4")
+        buf.write("\5n8\2\u020b\u020c\7\4\2\2\u020c\u0210\5^\60\2\u020d\u020e")
+        buf.write("\7\4\2\2\u020e\u0210\5n8\2\u020f\u020b\3\2\2\2\u020f\u020d")
+        buf.write("\3\2\2\2\u020f\u0210\3\2\2\2\u0210_\3\2\2\2\u0211\u0224")
+        buf.write("\7\5\2\2\u0212\u0213\t\5\2\2\u0213\u0214\7\65\2\2\u0214")
+        buf.write("\u0215\t\5\2\2\u0215\u0216\7-\2\2\u0216\u0217\7\23\2\2")
+        buf.write("\u0217\u0218\5t;\2\u0218\u0219\5n8\2\u0219\u0225\3\2\2")
+        buf.write("\2\u021a\u021b\5b\62\2\u021b\u021c\t\2\2\2\u021c\u021d")
+        buf.write("\5t;\2\u021d\u021e\t\2\2\2\u021e\u021f\5d\63\2\u021f\u0220")
+        buf.write("\5n8\2\u0220\u0225\3\2\2\2\u0221\u0222\5t;\2\u0222\u0223")
+        buf.write("\5n8\2\u0223\u0225\3\2\2\2\u0224\u0212\3\2\2\2\u0224\u021a")
+        buf.write("\3\2\2\2\u0224\u0221\3\2\2\2\u0225a\3\2\2\2\u0226\u0227")
+        buf.write("\7\67\2\2\u0227\u0228\7-\2\2\u0228\u0235\5t;\2\u0229\u022a")
+        buf.write("\7\67\2\2\u022a\u022b\5X-\2\u022b\u022c\5t;\2\u022c\u0235")
+        buf.write("\3\2\2\2\u022d\u022e\7\20\2\2\u022e\u0230\7\67\2\2\u022f")
+        buf.write("\u0231\5\u009eP\2\u0230\u022f\3\2\2\2\u0230\u0231\3\2")
+        buf.write("\2\2\u0231\u0232\3\2\2\2\u0232\u0233\7%\2\2\u0233\u0235")
+        buf.write("\5t;\2\u0234\u0226\3\2\2\2\u0234\u0229\3\2\2\2\u0234\u022d")
+        buf.write("\3\2\2\2\u0235c\3\2\2\2\u0236\u0237\7\67\2\2\u0237\u0238")
+        buf.write("\5X-\2\u0238\u0239\5t;\2\u0239e\3\2\2\2\u023a\u023b\7")
+        buf.write("\22\2\2\u023b\u023c\t\2\2\2\u023cg\3\2\2\2\u023d\u023e")
+        buf.write("\7\21\2\2\u023e\u023f\t\2\2\2\u023fi\3\2\2\2\u0240\u0249")
+        buf.write("\7\6\2\2\u0241\u0243\5t;\2\u0242\u0241\3\2\2\2\u0242\u0243")
+        buf.write("\3\2\2\2\u0243\u0244\3\2\2\2\u0244\u024a\7\66\2\2\u0245")
+        buf.write("\u0247\5t;\2\u0246\u0245\3\2\2\2\u0246\u0247\3\2\2\2\u0247")
+        buf.write("\u0248\3\2\2\2\u0248\u024a\7;\2\2\u0249\u0242\3\2\2\2")
+        buf.write("\u0249\u0246\3\2\2\2\u024ak\3\2\2\2\u024b\u024e\7\67\2")
+        buf.write("\2\u024c\u024e\5Z.\2\u024d\u024b\3\2\2\2\u024d\u024c\3")
+        buf.write("\2\2\2\u024e\u024f\3\2\2\2\u024f\u0251\7/\2\2\u0250\u0252")
+        buf.write("\5\u00a8U\2\u0251\u0250\3\2\2\2\u0251\u0252\3\2\2\2\u0252")
+        buf.write("\u0253\3\2\2\2\u0253\u0255\7\60\2\2\u0254\u0256\7\66\2")
+        buf.write("\2\u0255\u0254\3\2\2\2\u0255\u0256\3\2\2\2\u0256m\3\2")
+        buf.write("\2\2\u0257\u0259\7\61\2\2\u0258\u025a\7;\2\2\u0259\u0258")
+        buf.write("\3\2\2\2\u0259\u025a\3\2\2\2\u025a\u025b\3\2\2\2\u025b")
+        buf.write("\u025d\5p9\2\u025c\u025e\7;\2\2\u025d\u025c\3\2\2\2\u025d")
+        buf.write("\u025e\3\2\2\2\u025e\u025f\3\2\2\2\u025f\u0260\7\62\2")
+        buf.write("\2\u0260o\3\2\2\2\u0261\u0268\3\2\2\2\u0262\u0263\5\f")
+        buf.write("\7\2\u0263\u0264\5p9\2\u0264\u0268\3\2\2\2\u0265\u0266")
+        buf.write("\7;\2\2\u0266\u0268\5p9\2\u0267\u0261\3\2\2\2\u0267\u0262")
+        buf.write("\3\2\2\2\u0267\u0265\3\2\2\2\u0268q\3\2\2\2\u0269\u026f")
+        buf.write("\5t;\2\u026a\u026b\5t;\2\u026b\u026c\7\65\2\2\u026c\u026d")
+        buf.write("\5r:\2\u026d\u026f\3\2\2\2\u026e\u0269\3\2\2\2\u026e\u026a")
+        buf.write("\3\2\2\2\u026fs\3\2\2\2\u0270\u0271\b;\1\2\u0271\u0272")
+        buf.write("\5v<\2\u0272\u0278\3\2\2\2\u0273\u0274\f\4\2\2\u0274\u0275")
+        buf.write("\7#\2\2\u0275\u0277\5v<\2\u0276\u0273\3\2\2\2\u0277\u027a")
+        buf.write("\3\2\2\2\u0278\u0276\3\2\2\2\u0278\u0279\3\2\2\2\u0279")
+        buf.write("u\3\2\2\2\u027a\u0278\3\2\2\2\u027b\u027c\b<\1\2\u027c")
+        buf.write("\u027d\5x=\2\u027d\u0283\3\2\2\2\u027e\u027f\f\4\2\2\u027f")
+        buf.write("\u0280\7\"\2\2\u0280\u0282\5x=\2\u0281\u027e\3\2\2\2\u0282")
+        buf.write("\u0285\3\2\2\2\u0283\u0281\3\2\2\2\u0283\u0284\3\2\2\2")
+        buf.write("\u0284w\3\2\2\2\u0285\u0283\3\2\2\2\u0286\u0287\b=\1\2")
+        buf.write("\u0287\u0288\5z>\2\u0288\u028e\3\2\2\2\u0289\u028a\f\4")
+        buf.write("\2\2\u028a\u028b\t\6\2\2\u028b\u028d\5z>\2\u028c\u0289")
+        buf.write("\3\2\2\2\u028d\u0290\3\2\2\2\u028e\u028c\3\2\2\2\u028e")
+        buf.write("\u028f\3\2\2\2\u028fy\3\2\2\2\u0290\u028e\3\2\2\2\u0291")
+        buf.write("\u0292\b>\1\2\u0292\u0293\5|?\2\u0293\u0299\3\2\2\2\u0294")
+        buf.write("\u0295\f\4\2\2\u0295\u0296\t\7\2\2\u0296\u0298\5|?\2\u0297")
+        buf.write("\u0294\3\2\2\2\u0298\u029b\3\2\2\2\u0299\u0297\3\2\2\2")
+        buf.write("\u0299\u029a\3\2\2\2\u029a{\3\2\2\2\u029b\u0299\3\2\2")
+        buf.write("\2\u029c\u029d\b?\1\2\u029d\u029e\5~@\2\u029e\u02a4\3")
+        buf.write("\2\2\2\u029f\u02a0\f\4\2\2\u02a0\u02a1\t\b\2\2\u02a1\u02a3")
+        buf.write("\5~@\2\u02a2\u029f\3\2\2\2\u02a3\u02a6\3\2\2\2\u02a4\u02a2")
+        buf.write("\3\2\2\2\u02a4\u02a5\3\2\2\2\u02a5}\3\2\2\2\u02a6\u02a4")
+        buf.write("\3\2\2\2\u02a7\u02a8\b@\1\2\u02a8\u02a9\5\u0080A\2\u02a9")
+        buf.write("\u02af\3\2\2\2\u02aa\u02ab\f\4\2\2\u02ab\u02ac\t\t\2\2")
+        buf.write("\u02ac\u02ae\5\u0080A\2\u02ad\u02aa\3\2\2\2\u02ae\u02b1")
+        buf.write("\3\2\2\2\u02af\u02ad\3\2\2\2\u02af\u02b0\3\2\2\2\u02b0")
+        buf.write("\177\3\2\2\2\u02b1\u02af\3\2\2\2\u02b2\u02b3\7$\2\2\u02b3")
+        buf.write("\u02b8\5\u0080A\2\u02b4\u02b5\7\30\2\2\u02b5\u02b8\5\u0080")
+        buf.write("A\2\u02b6\u02b8\5\u0082B\2\u02b7\u02b2\3\2\2\2\u02b7\u02b4")
+        buf.write("\3\2\2\2\u02b7\u02b6\3\2\2\2\u02b8\u0081\3\2\2\2\u02b9")
+        buf.write("\u02ba\5\u0086D\2\u02ba\u02bb\5\u0084C\2\u02bb\u0083\3")
+        buf.write("\2\2\2\u02bc\u02c5\3\2\2\2\u02bd\u02c1\5\u0088E\2\u02be")
+        buf.write("\u02c1\5\u008aF\2\u02bf\u02c1\5\u008cG\2\u02c0\u02bd\3")
+        buf.write("\2\2\2\u02c0\u02be\3\2\2\2\u02c0\u02bf\3\2\2\2\u02c1\u02c2")
+        buf.write("\3\2\2\2\u02c2\u02c3\5\u0084C\2\u02c3\u02c5\3\2\2\2\u02c4")
         buf.write("\u02bc\3\2\2\2\u02c4\u02c0\3\2\2\2\u02c5\u0085\3\2\2\2")
         buf.write("\u02c6\u02cd\5\u008eH\2\u02c7\u02cd\7\67\2\2\u02c8\u02c9")
         buf.write("\7/\2\2\u02c9\u02ca\5t;\2\u02ca\u02cb\7\60\2\2\u02cb\u02cd")
@@ -3854,11 +3853,11 @@ class MiniGoParser ( Parser ):
         def RP(self):
             return self.getToken(MiniGoParser.RP, 0)
 
-        def not_null_block_statement(self, i:int=None):
+        def block_stmt(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MiniGoParser.Not_null_block_statementContext)
+                return self.getTypedRuleContexts(MiniGoParser.Block_stmtContext)
             else:
-                return self.getTypedRuleContext(MiniGoParser.Not_null_block_statementContext,i)
+                return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,i)
 
 
         def ELSE(self):
@@ -3895,7 +3894,7 @@ class MiniGoParser ( Parser ):
             self.state = 519
             self.match(MiniGoParser.RP)
             self.state = 520
-            self.not_null_block_statement()
+            self.block_stmt()
             self.state = 525
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,48,self._ctx)
@@ -3909,7 +3908,7 @@ class MiniGoParser ( Parser ):
                 self.state = 523
                 self.match(MiniGoParser.ELSE)
                 self.state = 524
-                self.not_null_block_statement()
+                self.block_stmt()
 
 
         except RecognitionException as re:
@@ -3944,8 +3943,8 @@ class MiniGoParser ( Parser ):
             return self.getTypedRuleContext(MiniGoParser.ExpressionContext,0)
 
 
-        def not_null_block_statement(self):
-            return self.getTypedRuleContext(MiniGoParser.Not_null_block_statementContext,0)
+        def block_stmt(self):
+            return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,0)
 
 
         def for_init(self):
@@ -4028,7 +4027,7 @@ class MiniGoParser ( Parser ):
                 self.state = 533
                 self.expression(0)
                 self.state = 534
-                self.not_null_block_statement()
+                self.block_stmt()
                 pass
 
             elif la_ == 2:
@@ -4053,14 +4052,14 @@ class MiniGoParser ( Parser ):
                 self.state = 540
                 self.for_update()
                 self.state = 541
-                self.not_null_block_statement()
+                self.block_stmt()
                 pass
 
             elif la_ == 3:
                 self.state = 543
                 self.expression(0)
                 self.state = 544
-                self.not_null_block_statement()
+                self.block_stmt()
                 pass
 
 
