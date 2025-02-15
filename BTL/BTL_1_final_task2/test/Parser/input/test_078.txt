@@ -1,0 +1,5 @@
+
+        type s struct { a int; b b; c c; a a123;
+         b float; hello hello; arr [5]int; arr [1000][100]hello.hello
+        };
+        

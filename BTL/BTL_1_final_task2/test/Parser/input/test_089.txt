@@ -1,0 +1,4 @@
+func H() Person{
+        x := person.123;
+        }
+        

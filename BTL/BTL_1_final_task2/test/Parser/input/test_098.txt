@@ -1,0 +1,14 @@
+
+        var globalVar int = 10;
+        func main() {
+            var localVar = 20;
+            var x, y int = 5, 10;
+            var z float;
+            var a = "Hello";
+            var b int = globalVar + localVar;
+            var c = x + y;
+            var d = c * 2;
+            var e float = 3.14;
+            var f = e + 2.0;
+        }
+        

@@ -1,0 +1,14 @@
+
+        var arr [5]int;
+        var matrix [2][3]float;
+        var str string = "Hello";
+        var person = Person { name : "HELLO" , age : 97 };
+        var calc Calculator;
+        func main() {
+            var x = arr[0];
+            var y = matrix[1][2];
+            var z = person.name;
+            var w = calc.Add(1, 2);
+            var invalid = x + y;
+        }
+        

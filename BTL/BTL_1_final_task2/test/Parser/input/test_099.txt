@@ -1,0 +1,15 @@
+
+        var x int = 5;
+        func main() {
+            var x = 10;
+            {
+                var x = 15;
+                var y = x + 5;
+            }
+            var y = x + 1;
+        }
+        func foo(x int) {
+            var x = 20;
+            var y = x + 10;
+        }
+        

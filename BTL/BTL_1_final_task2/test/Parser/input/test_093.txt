@@ -1,0 +1,5 @@
+
+        type Test interface {
+            Add(x, y int, z);
+        }
+        

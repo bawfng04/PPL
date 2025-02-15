@@ -1,0 +1,9 @@
+func main(){
+        str1 := "Hello"
+        str2 := "World"
+        str3 := str1 + " " + str2 // str3 == "Hello World"
+        str4 := "apple"
+        str5 := "banana"
+        result := str4 == str5 // result == false
+}
+        

@@ -1,0 +1,5 @@
+
+        func H() Person{
+        result := (a + b * c) % d == e && !f || g;
+        }
+        

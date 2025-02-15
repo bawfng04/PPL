@@ -1,3 +1,5 @@
+// 2210298 - Nguyễn Đinh Bằng
+
 grammar MiniGo;
 
 @lexer::header {
@@ -71,10 +73,9 @@ statement:
 // Variable and constant declarations
 
 //khai báo biến - var + tên biến + type (optional) + giá trị (optional) + ";"
-variables_declared: VAR var_decl_list (SEMI | NEWLINE);
+variables_declared: VAR var_decl (SEMI | NEWLINE);
 
-// Original: var_decl_list: var_decl (COMMA var_decl)*;
-var_decl_list: var_decl | var_decl COMMA var_decl_list;
+// Original: var_decl_list: var_decl (COMMA var_decl)*; var_decl_list: var_decl | var_decl COMMA var_decl_list;
 
 // var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
 
@@ -98,21 +99,18 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-// not_null_block_statement: LB NEWLINE? statement more_statements NEWLINE? RB;
 more_statements: | statement more_statements | NEWLINE more_statements;
 
-function_declared: FUNC ID LP params_list? RP return_type? NEWLINE? block_stmt SEMI?;
+function_declared: FUNC ID LP params_list? RP return_type? NEWLINE? block_stmt (SEMI | NEWLINE);
 return_type: LP type_name more_types RP | type_name;
 more_types: | COMMA type_name more_types;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
 
-// method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
 method_declared:
 	FUNC LP receiver RP ID LP params_list? RP (type_name)? NEWLINE? block_stmt (SEMI | NEWLINE);
 
-// Original: method_params: method_param (COMMA method_param)*;
 method_params: method_param | method_param COMMA method_params;
 
 method_param: ID type_name;
@@ -139,23 +137,11 @@ struct_type_list: struct_field opt_newlines more_struct_fields;
 more_struct_fields: | struct_field opt_newlines more_struct_fields;
 opt_newlines: | NEWLINE opt_newlines;
 
-struct_field: ID more_ids type_name (SEMI | SEMI? NEWLINE);
+struct_field: ID more_ids type_name (SEMI | NEWLINE);
 
 more_ids: | COMMA ID more_ids;
 
-// struct_type: (ID type_name SEMI? NEWLINE*)*;
-
-//struct_type: (ID (COMMA ID)* type_name SEMI? NEWLINE*)*;
-
-//c Cal a int; -> wrong, c Calculator -> right;
-
-// struct_type: ((ID (COMMA ID)* type_name SEMI? NEWLINE) | (ID (COMMA ID)* type_name SEMI NEWLINE?))*;
-
-// Original: struct_type: (ID (COMMA ID)* type_name (SEMI | SEMI? NEWLINE))*;
 struct_type: | struct_field struct_type;
-// struct_field: ID more_ids type_name struct_end; more_ids: | COMMA ID more_ids; struct_end: SEMI | SEMI? NEWLINE;
-
-// Interface declaration
 
 interface_declared:
 	TYPE ID INTERFACE LB opt_newlines interface_type_list opt_newlines RB (SEMI | NEWLINE);
@@ -163,7 +149,6 @@ interface_declared:
 interface_type_list: interface_method more_interface_methods;
 more_interface_methods: | interface_method more_interface_methods;
 
-// Update interface_type rule Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 interface_type: | interface_method interface_type;
 interface_method:
 	ID LP params_list? RP (type_name)? (SEMI | NEWLINE)
@@ -175,7 +160,7 @@ optional_semi: | SEMI;
 // Statements
 declared_statement: variables_declared | constants_declared;
 
-assign_statement: assign_lhs assign_op expression SEMI?;
+assign_statement: assign_lhs assign_op expression (SEMI | NEWLINE);
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
 
@@ -208,11 +193,11 @@ continue_statement: CONTINUE (SEMI | NEWLINE);
 // semicolons /newlines Forces proper statement termination return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
 return_statement: RETURN (expression? SEMI | expression? NEWLINE);
 
-call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
+call_statement: (ID | assign_lhs) LP list_expression? RP (SEMI | NEWLINE);
 
 // block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
 
-block_stmt: LB NEWLINE? block_content NEWLINE? RB SEMI?;
+block_stmt: LB NEWLINE? block_content NEWLINE? RB (SEMI | NEWLINE)?;
 block_content: | statement block_content | NEWLINE block_content;
 //not_null_block_statement: not null
 
