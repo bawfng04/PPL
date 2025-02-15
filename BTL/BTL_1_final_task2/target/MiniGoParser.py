@@ -174,9 +174,9 @@ def serializedATN():
         buf.write("\u012d\u012f\7\60\2\2\u012e\u0130\5$\23\2\u012f\u012e")
         buf.write("\3\2\2\2\u012f\u0130\3\2\2\2\u0130\u0132\3\2\2\2\u0131")
         buf.write("\u0133\7;\2\2\u0132\u0131\3\2\2\2\u0132\u0133\3\2\2\2")
-        buf.write("\u0133\u0134\3\2\2\2\u0134\u0136\5\36\20\2\u0135\u0137")
-        buf.write("\7\66\2\2\u0136\u0135\3\2\2\2\u0136\u0137\3\2\2\2\u0137")
-        buf.write("#\3\2\2\2\u0138\u0139\7/\2\2\u0139\u013a\5\u009eP\2\u013a")
+        buf.write("\u0133\u0134\3\2\2\2\u0134\u0136\5n8\2\u0135\u0137\7\66")
+        buf.write("\2\2\u0136\u0135\3\2\2\2\u0136\u0137\3\2\2\2\u0137#\3")
+        buf.write("\2\2\2\u0138\u0139\7/\2\2\u0139\u013a\5\u009eP\2\u013a")
         buf.write("\u013b\5&\24\2\u013b\u013c\7\60\2\2\u013c\u013f\3\2\2")
         buf.write("\2\u013d\u013f\5\u009eP\2\u013e\u0138\3\2\2\2\u013e\u013d")
         buf.write("\3\2\2\2\u013f%\3\2\2\2\u0140\u0146\3\2\2\2\u0141\u0142")
@@ -1800,8 +1800,8 @@ class MiniGoParser ( Parser ):
         def RP(self):
             return self.getToken(MiniGoParser.RP, 0)
 
-        def not_null_block_statement(self):
-            return self.getTypedRuleContext(MiniGoParser.Not_null_block_statementContext,0)
+        def block_stmt(self):
+            return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,0)
 
 
         def params_list(self):
@@ -1870,7 +1870,7 @@ class MiniGoParser ( Parser ):
 
 
             self.state = 306
-            self.not_null_block_statement()
+            self.block_stmt()
             self.state = 308
             self._errHandler.sync(self)
             _la = self._input.LA(1)

@@ -370,44 +370,61 @@ class ParserSuite(unittest.TestCase):
     #             } c c;
     #         }
     # ""","Error on line 8 col 14: c", inspect.stack()[0].function))
+# test mới 13/02/2025
+#     def test_001(self):
+#             """Statement"""
+#             self.assertTrue(TestParser.test("""
+#                                         func Add() {
+#                                         for var i [2] int = 0; foo().a.b(); i[3] := 1 {
+#                                                 return;
+#                                             }
+#                                         };""","Error on line 3 col 77: [", inspect.stack()[0].function))
 
+#     def test_002(self):
+#             """Statement"""
+#             self.assertTrue(TestParser.test("""
+#                                         func Add() {
+#                                         for i[2] := 1; foo().a.b(); i := 1 {
+#                                                 return;
+#                                             }
+#                                         };""","Error on line 3 col 49: :=", inspect.stack()[0].function))
+
+#     def test_003(self):
+#             self.assertTrue(TestParser.test("""
+#             type Person struct {
+#             func (p Person) Greet() string {
+#                     return "Hello, " + p.name
+#                 };
+#             }
+#     ""","Error on line 3 col 12: func", inspect.stack()[0].function))
+
+#     def test_004(self):
+#             """declared function"""
+#             self.assertTrue(TestParser.test("""
+#                 func VoTien(x int, y int) int {return;}
+#                 func VoTien1() [2][3] ID {return;};
+#                 func VoTien2() {return;}
+#             ""","successful", inspect.stack()[0].function))
+
+#     def test_005(self):
+#         """array_literal"""
+#         self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
+# ""","Error on line 1 col 17: [", inspect.stack()[0].function))
+
+
+
+# test mới 15/02/2025
     def test_001(self):
             """Statement"""
             self.assertTrue(TestParser.test("""
-                                        func Add() {
-                                        for var i [2] int = 0; foo().a.b(); i[3] := 1 {
-                                                return;
+                func Add() {
                                             }
-                                        };""","Error on line 3 col 77: [", inspect.stack()[0].function))
+    ""","successful", inspect.stack()[0].function))
 
     def test_002(self):
-            """Statement"""
             self.assertTrue(TestParser.test("""
-                                        func Add() {
-                                        for i[2] := 1; foo().a.b(); i := 1 {
-                                                return;
-                                            }
-                                        };""","Error on line 3 col 49: :=", inspect.stack()[0].function))
-
-    def test_003(self):
-            self.assertTrue(TestParser.test("""
-            type Person struct {
-            func (p Person) Greet() string {
-                    return "Hello, " + p.name
+                func (p Person) Greet() string {
+                    if (1) {return;
+                    }else if (1) {}
                 };
-            }
-    ""","Error on line 3 col 12: func", inspect.stack()[0].function))
-
-    def test_004(self):
-            """declared function"""
-            self.assertTrue(TestParser.test("""
-                func VoTien(x int, y int) int {return;}
-                func VoTien1() [2][3] ID {return;};
-                func VoTien2() {return;}
-            ""","successful", inspect.stack()[0].function))
-
-    def test_005(self):
-        """array_literal"""
-        self.assertTrue(TestParser.test("""const a = [1]int{[1]int{1}}
-""","Error on line 1 col 17: [", inspect.stack()[0].function))
-
+    ""","successful", inspect.stack()[0].function))

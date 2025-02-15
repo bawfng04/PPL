@@ -101,8 +101,7 @@ const_decl: ID ASSIGN expression;
 not_null_block_statement: LB NEWLINE? statement more_statements NEWLINE? RB;
 more_statements: | statement more_statements | NEWLINE more_statements;
 
-function_declared:
-	FUNC ID LP params_list? RP return_type? NEWLINE? not_null_block_statement SEMI?;
+function_declared: FUNC ID LP params_list? RP return_type? NEWLINE? block_stmt SEMI?;
 return_type: LP type_name more_types RP | type_name;
 more_types: | COMMA type_name more_types;
 
