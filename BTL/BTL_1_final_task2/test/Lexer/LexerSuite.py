@@ -553,20 +553,25 @@ class LexerSuite(unittest.TestCase):
 
 
 #testcase mới 13/02/2025
+        # def test_001(self):
+        #         """UNCLOSE_STRING"""
+        #         self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: \"VOTIEN", inspect.stack()[0].function))
+
+        # def test_002(self):
+        #         """ILLEGAL_ESCAPE"""
+        #         self.assertTrue(TestLexer.test(""" "VOTIEN\\f" ""","Illegal escape in string: \"VOTIEN\\f", inspect.stack()[0].function))
+
+        # def test_003(self):
+        #         """ILLEGAL_ESCAPE"""
+        #         self.assertTrue(TestLexer.test(""" "\\" \\\\ \\q" """, "Illegal escape in string: \"\\\" \\\\ \\q", inspect.stack()[0].function))
+
+        # def test_004(self):
+        #         """NEW_LINE"""
+        #         self.assertTrue(TestLexer.test("""
+        #         nil
+        # """, "nil,;,<EOF>", inspect.stack()[0].function))
+
+# testcase mới 15/02/2025
         def test_001(self):
-                """UNCLOSE_STRING"""
-                self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: \"VOTIEN", inspect.stack()[0].function))
-
-        def test_002(self):
-                """ILLEGAL_ESCAPE"""
-                self.assertTrue(TestLexer.test(""" "VOTIEN\\f" ""","Illegal escape in string: \"VOTIEN\\f", inspect.stack()[0].function))
-
-        def test_003(self):
-                """ILLEGAL_ESCAPE"""
-                self.assertTrue(TestLexer.test(""" "\\" \\\\ \\q" """, "Illegal escape in string: \"\\\" \\\\ \\q", inspect.stack()[0].function))
-
-        def test_004(self):
-                """NEW_LINE"""
-                self.assertTrue(TestLexer.test("""
-                nil
-        """, "nil,;,<EOF>", inspect.stack()[0].function))
+                """Literals String"""
+                self.assertTrue(TestLexer.test(""" "VOTIEN \\r" ""","\"VOTIEN \\r\",<EOF>", inspect.stack()[0].function))
