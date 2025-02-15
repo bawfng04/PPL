@@ -390,7 +390,7 @@ INT_LIT: DECIMAL | HEX | OCTAL | BINARY;
 
 fragment ESC_CHAR: 'r' | 'n' | 't' | '"' | '\\';
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
-STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
+STRING_LIT: '"' STR_CHAR* '"';
 
 // Newline + comments
 

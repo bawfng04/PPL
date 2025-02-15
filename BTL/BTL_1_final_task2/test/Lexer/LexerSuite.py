@@ -553,9 +553,6 @@ class LexerSuite(unittest.TestCase):
 
 
 #testcase mới 13/02/2025
-        # def test_001(self):
-        #         """UNCLOSE_STRING"""
-        #         self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: \"VOTIEN", inspect.stack()[0].function))
 
         # def test_002(self):
         #         """ILLEGAL_ESCAPE"""
@@ -575,3 +572,7 @@ class LexerSuite(unittest.TestCase):
         def test_001(self):
                 """Literals String"""
                 self.assertTrue(TestLexer.test(""" "VOTIEN \\r" ""","\"VOTIEN \\r\",<EOF>", inspect.stack()[0].function))
+
+        def test_002(self):
+                """UNCLOSE_STRING"""
+                self.assertTrue(TestLexer.test(""" "VOTIEN\n" ""","Unclosed string: \"VOTIEN", inspect.stack()[0].function))
