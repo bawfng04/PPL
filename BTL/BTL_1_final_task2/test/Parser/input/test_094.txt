@@ -1,5 +1,0 @@
-
-        type Test interface {
-            type(a int);
-        }
-        

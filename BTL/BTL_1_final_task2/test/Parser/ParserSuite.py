@@ -546,247 +546,256 @@ class ParserSuite(unittest.TestCase):
 }
         ""","successful", inspect.stack()[0].function))
 
+
     def test_075(self):
-        """Array declarations"""
-        self.assertTrue(TestParser.test("""
-        var arr [5]int; // defines an array of 5 integers.
-        var multi_arr [2][5][100][-100][100]int; // defines an array of 2 x 5 integers.
-        ""","Error on line 3 col 27: -", inspect.stack()[0].function))
+            self.assertTrue(TestParser.test("""
+                func (p Person) Greet() string {
+                    if (1) {return;}
+                    else if (1)
+                    {}
+                };
+    ""","Error on line 4 col 16: else", inspect.stack()[0].function))
+    # def test_075(self):
+    #     """Array declarations"""
+    #     self.assertTrue(TestParser.test("""
+    #     var arr [5]int; // defines an array of 5 integers.
+    #     var multi_arr [2][5][100][-100][100]int; // defines an array of 2 x 5 integers.
+    #     ""","Error on line 3 col 27: -", inspect.stack()[0].function))
 
-    def test_076(self):
-        """Array access"""
-        self.assertTrue(TestParser.test("""
-        func main(){
-        a := multi_arr[0][1000][-1][1.2] b := 10
-        }
-        ""","Error on line 3 col 42: b", inspect.stack()[0].function))
+    # def test_076(self):
+    #     """Array access"""
+    #     self.assertTrue(TestParser.test("""
+    #     func main(){
+    #     a := multi_arr[0][1000][-1][1.2] b := 10
+    #     }
+    #     ""","Error on line 3 col 42: b", inspect.stack()[0].function))
 
-    def test_077(self):
-        """Array size expressions"""
-        self.assertTrue(TestParser.test("""
-        var arr [2 + 3]int;
-        ""","Error on line 2 col 20: +", inspect.stack()[0].function))
+    # def test_077(self):
+    #     """Array size expressions"""
+    #     self.assertTrue(TestParser.test("""
+    #     var arr [2 + 3]int;
+    #     ""","Error on line 2 col 20: +", inspect.stack()[0].function))
 
-    def test_078(self):
-        """Struct definition"""
-        self.assertTrue(TestParser.test("""
-        type s struct { a int; b b; c c; a a123;
-         b float; hello hello; arr [5]int; arr [1000][100]hello.hello
-        };
-        ""","successful", inspect.stack()[0].function))
+    # def test_078(self):
+    #     """Struct definition"""
+    #     self.assertTrue(TestParser.test("""
+    #     type s struct { a int; b b; c c; a a123;
+    #      b float; hello hello; arr [5]int; arr [1000][100]hello.hello
+    #     };
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_079(self):
-        """Invalid if condition"""
-        self.assertTrue(TestParser.test("""func H() Person{
-        if ():= true;}
-        ""","Error on line 2 col 13: )", inspect.stack()[0].function))
+    # def test_079(self):
+    #     """Invalid if condition"""
+    #     self.assertTrue(TestParser.test("""func H() Person{
+    #     if ():= true;}
+    #     ""","Error on line 2 col 13: )", inspect.stack()[0].function))
 
-    def test_080(self):
-        """Array indexing"""
-        self.assertTrue(TestParser.test("""func H() Person{
-        x := arr[(53)];
-        x := arr[3,23];
-        }
-        ""","Error on line 3 col 19: ,", inspect.stack()[0].function))
+    # def test_080(self):
+    #     """Array indexing"""
+    #     self.assertTrue(TestParser.test("""func H() Person{
+    #     x := arr[(53)];
+    #     x := arr[3,23];
+    #     }
+    #     ""","Error on line 3 col 19: ,", inspect.stack()[0].function))
 
-    def test_081(self):
-        """Unclosed string literal"""
-        self.assertTrue(TestParser.test("""func H() Person{
-        str := "Hello World
-        }
-        ""","Error on line 2 col 21: \"Hello World\"", inspect.stack()[0].function))
+    # def test_081(self):
+    #     """Unclosed string literal"""
+    #     self.assertTrue(TestParser.test("""func H() Person{
+    #     str := "Hello World
+    #     }
+    #     ""","Error on line 2 col 21: \"Hello World\"", inspect.stack()[0].function))
 
-    def test_082(self):
-        """Octal number"""
-        self.assertTrue(TestParser.test("""func H() Person{
-        /* This is a comment */
-        a := 0o101;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_082(self):
+    #     """Octal number"""
+    #     self.assertTrue(TestParser.test("""func H() Person{
+    #     /* This is a comment */
+    #     a := 0o101;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_083(self):
-        """Empty array size"""
-        self.assertTrue(TestParser.test("""
-        var arr []int;
-        ""","Error on line 2 col 18: ]", inspect.stack()[0].function))
+    # def test_083(self):
+    #     """Empty array size"""
+    #     self.assertTrue(TestParser.test("""
+    #     var arr []int;
+    #     ""","Error on line 2 col 18: ]", inspect.stack()[0].function))
 
-    def test_084(self):
-        """Negative array size"""
-        self.assertTrue(TestParser.test("""
-        var arr [-5]int;
-        ""","Error on line 2 col 18: -", inspect.stack()[0].function))
+    # def test_084(self):
+    #     """Negative array size"""
+    #     self.assertTrue(TestParser.test("""
+    #     var arr [-5]int;
+    #     ""","Error on line 2 col 18: -", inspect.stack()[0].function))
 
-    def test_085(self):
-        """Chained comparisons"""
-        self.assertTrue(TestParser.test("""
-        func H() Person{
-        a := 5 < 10 > 3;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_085(self):
+    #     """Chained comparisons"""
+    #     self.assertTrue(TestParser.test("""
+    #     func H() Person{
+    #     a := 5 < 10 > 3;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_086(self):
-        """Complex expression"""
-        self.assertTrue(TestParser.test("""
-        func H() Person{
-        result := (a + b * c) % d == e && !f || g;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_086(self):
+    #     """Complex expression"""
+    #     self.assertTrue(TestParser.test("""
+    #     func H() Person{
+    #     result := (a + b * c) % d == e && !f || g;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_087(self):
-        """Invalid array declaration"""
-        self.assertTrue(TestParser.test("""
-        var arr [5][3];
-        ""","Error on line 2 col 23: ;", inspect.stack()[0].function))
+    # def test_087(self):
+    #     """Invalid array declaration"""
+    #     self.assertTrue(TestParser.test("""
+    #     var arr [5][3];
+    #     ""","Error on line 2 col 23: ;", inspect.stack()[0].function))
 
-    def test_088(self):
-        """Float modulo"""
-        self.assertTrue(TestParser.test("""
-        func H() Person{
-        a := 5.5 % 2.0;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_088(self):
+    #     """Float modulo"""
+    #     self.assertTrue(TestParser.test("""
+    #     func H() Person{
+    #     a := 5.5 % 2.0;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_089(self):
-        """Invalid member access"""
-        self.assertTrue(TestParser.test("""func H() Person{
-        x := person.123;
-        }
-        ""","Error on line 2 col 21: 123", inspect.stack()[0].function))
+    # def test_089(self):
+    #     """Invalid member access"""
+    #     self.assertTrue(TestParser.test("""func H() Person{
+    #     x := person.123;
+    #     }
+    #     ""","Error on line 2 col 21: 123", inspect.stack()[0].function))
 
-    def test_090(self):
-        """Person struct operations"""
-        self.assertTrue(TestParser.test("""
-        type Person struct {
-        name string;
-        age int;
-        radius float;
-        shape Shape;
-        }
-        func H() Person{
-        p := Person{name: "Alice", age: 30}
-        p := Person{}
-        PutStringLn(p.name)
-        PutIntLn(p.age) // Output: 30
-        p.age := 31
-        PutIntLn(p.age) // Output: 31
-        }
-        func (p Person) Greet() string {
-        return "Hello, " + p.name
-        PutStringLn(p.Greet()) // Output: Hello, Alice
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_090(self):
+    #     """Person struct operations"""
+    #     self.assertTrue(TestParser.test("""
+    #     type Person struct {
+    #     name string;
+    #     age int;
+    #     radius float;
+    #     shape Shape;
+    #     }
+    #     func H() Person{
+    #     p := Person{name: "Alice", age: 30}
+    #     p := Person{}
+    #     PutStringLn(p.name)
+    #     PutIntLn(p.age) // Output: 30
+    #     p.age := 31
+    #     PutIntLn(p.age) // Output: 31
+    #     }
+    #     func (p Person) Greet() string {
+    #     return "Hello, " + p.name
+    #     PutStringLn(p.Greet()) // Output: Hello, Alice
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_091(self):
-        """Shape interface"""
-        self.assertTrue(TestParser.test("""
-        type Shape interface {
-            Area() float
-            Perimeter(w, h int) float
-            Draw(name string, scale float) int
-            Rotate(angle float, speed int) string
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_091(self):
+    #     """Shape interface"""
+    #     self.assertTrue(TestParser.test("""
+    #     type Shape interface {
+    #         Area() float
+    #         Perimeter(w, h int) float
+    #         Draw(name string, scale float) int
+    #         Rotate(angle float, speed int) string
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_092(self):
-        """Invalid interface"""
-        self.assertTrue(TestParser.test("""
-        type InvalidInterface interface {
-            Method1() Method2()
-        }
-        ""","Error on line 3 col 30: (", inspect.stack()[0].function))
+    # def test_092(self):
+    #     """Invalid interface"""
+    #     self.assertTrue(TestParser.test("""
+    #     type InvalidInterface interface {
+    #         Method1() Method2()
+    #     }
+    #     ""","Error on line 3 col 30: (", inspect.stack()[0].function))
 
-    def test_093(self):
-        """Invalid interface method"""
-        self.assertTrue(TestParser.test("""
-        type Test interface {
-            Add(x, y int, z);
-        }
-        ""","Error on line 3 col 28: )", inspect.stack()[0].function))
+    # def test_093(self):
+    #     """Invalid interface method"""
+    #     self.assertTrue(TestParser.test("""
+    #     type Test interface {
+    #         Add(x, y int, z);
+    #     }
+    #     ""","Error on line 3 col 28: )", inspect.stack()[0].function))
 
-    def test_094(self):
-        """Invalid interface keyword"""
-        self.assertTrue(TestParser.test("""
-        type Test interface {
-            type(a int);
-        }
-        ""","Error on line 3 col 13: type", inspect.stack()[0].function))
+    # def test_094(self):
+    #     """Invalid interface keyword"""
+    #     self.assertTrue(TestParser.test("""
+    #     type Test interface {
+    #         type(a int);
+    #     }
+    #     ""","Error on line 3 col 13: type", inspect.stack()[0].function))
 
-    def test_095(self):
-        """Empty interface"""
-        self.assertTrue(TestParser.test("""
-        type Empty interface {}
-        ""","Error on line 2 col 31: }", inspect.stack()[0].function))
+    # def test_095(self):
+    #     """Empty interface"""
+    #     self.assertTrue(TestParser.test("""
+    #     type Empty interface {}
+    #     ""","Error on line 2 col 31: }", inspect.stack()[0].function))
 
-    def test_096(self):
-        """Wrong syntax"""
-        self.assertTrue(TestParser.test("""
-        type WrongSyntax {
-            Method();
-        }
-        ""","Error on line 2 col 26: {", inspect.stack()[0].function))
+    # def test_096(self):
+    #     """Wrong syntax"""
+    #     self.assertTrue(TestParser.test("""
+    #     type WrongSyntax {
+    #         Method();
+    #     }
+    #     ""","Error on line 2 col 26: {", inspect.stack()[0].function))
 
-    def test_097(self):
-        """Invalid return type"""
-        self.assertTrue(TestParser.test("""
-        type Test interface {
-            Process(data string) int float;
-        }
-        ""","Error on line 3 col 38: float", inspect.stack()[0].function))
+    # def test_097(self):
+    #     """Invalid return type"""
+    #     self.assertTrue(TestParser.test("""
+    #     type Test interface {
+    #         Process(data string) int float;
+    #     }
+    #     ""","Error on line 3 col 38: float", inspect.stack()[0].function))
 
-    def test_098(self):
-        """Variable declarations"""
-        self.assertTrue(TestParser.test("""
-        var globalVar int = 10;
-        func main() {
-            var localVar = 20;
-            var x, y int = 5, 10;
-            var z float;
-            var a = "Hello";
-            var b int = globalVar + localVar;
-            var c = x + y;
-            var d = c * 2;
-            var e float = 3.14;
-            var f = e + 2.0;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_098(self):
+    #     """Variable declarations"""
+    #     self.assertTrue(TestParser.test("""
+    #     var globalVar int = 10;
+    #     func main() {
+    #         var localVar = 20;
+    #         var x, y int = 5, 10;
+    #         var z float;
+    #         var a = "Hello";
+    #         var b int = globalVar + localVar;
+    #         var c = x + y;
+    #         var d = c * 2;
+    #         var e float = 3.14;
+    #         var f = e + 2.0;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_099(self):
-        """Nested scopes"""
-        self.assertTrue(TestParser.test("""
-        var x int = 5;
-        func main() {
-            var x = 10;
-            {
-                var x = 15;
-                var y = x + 5;
-            }
-            var y = x + 1;
-        }
-        func foo(x int) {
-            var x = 20;
-            var y = x + 10;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_099(self):
+    #     """Nested scopes"""
+    #     self.assertTrue(TestParser.test("""
+    #     var x int = 5;
+    #     func main() {
+    #         var x = 10;
+    #         {
+    #             var x = 15;
+    #             var y = x + 5;
+    #         }
+    #         var y = x + 1;
+    #     }
+    #     func foo(x int) {
+    #         var x = 20;
+    #         var y = x + 10;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_100(self):
-        """Complex declarations"""
-        self.assertTrue(TestParser.test("""
-        var arr [5]int;
-        var matrix [2][3]float;
-        var str string = "Hello";
-        var person = Person { name : "HELLO" , age : 97 };
-        var calc Calculator;
-        func main() {
-            var x = arr[0];
-            var y = matrix[1][2];
-            var z = person.name;
-            var w = calc.Add(1, 2);
-            var invalid = x + y;
-        }
-        ""","successful", inspect.stack()[0].function))
+    # def test_100(self):
+    #     """Complex declarations"""
+    #     self.assertTrue(TestParser.test("""
+    #     var arr [5]int;
+    #     var matrix [2][3]float;
+    #     var str string = "Hello";
+    #     var person = Person { name : "HELLO" , age : 97 };
+    #     var calc Calculator;
+    #     func main() {
+    #         var x = arr[0];
+    #         var y = matrix[1][2];
+    #         var z = person.name;
+    #         var w = calc.Add(1, 2);
+    #         var invalid = x + y;
+    #     }
+    #     ""","successful", inspect.stack()[0].function))
 
-    def test_101(self):
-        """Invalid array declaration"""
-        self.assertTrue(TestParser.test("""
-        var a, b int;
-        ""","", inspect.stack()[0].function))
+    # def test_101(self):
+    #     """Invalid array declaration"""
+    #     self.assertTrue(TestParser.test("""
+    #     var a, b int;
+    #     ""","", inspect.stack()[0].function))

@@ -41,8 +41,6 @@ options{
 
 program: newlines declared more_declared newlines EOF;
 
-// program: list_expression;
-
 newlines: | NEWLINE newlines;
 
 more_declared: | newlines declared more_declared;
@@ -74,8 +72,6 @@ statement:
 
 //khai báo biến - var + tên biến + type (optional) + giá trị (optional) + ";"
 variables_declared: VAR var_decl (SEMI | NEWLINE);
-
-// Original: var_decl_list: var_decl (COMMA var_decl)*; var_decl_list: var_decl | var_decl COMMA var_decl_list;
 
 // var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
 
@@ -147,14 +143,19 @@ interface_declared:
 	TYPE ID INTERFACE LB opt_newlines interface_type_list opt_newlines RB (SEMI | NEWLINE);
 
 interface_type_list: interface_method more_interface_methods;
+
 more_interface_methods: | interface_method more_interface_methods;
 
 interface_type: | interface_method interface_type;
+
 interface_method:
 	ID LP params_list? RP (type_name)? (SEMI | NEWLINE)
 	| ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
+
 optional_params: | params_list;
+
 optional_type: | type_name;
+
 optional_semi: | SEMI;
 
 // Statements
@@ -195,11 +196,9 @@ return_statement: RETURN (expression? SEMI | expression? NEWLINE);
 
 call_statement: (ID | assign_lhs) LP list_expression? RP (SEMI | NEWLINE);
 
-// block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
+block_stmt: LB NEWLINE? block_content NEWLINE? RB SEMI?;
 
-block_stmt: LB NEWLINE? block_content NEWLINE? RB (SEMI | NEWLINE)?;
 block_content: | statement block_content | NEWLINE block_content;
-//not_null_block_statement: not null
 
 // Original: expr_list: expression (COMMA expression)*;
 expr_list: expression | expression COMMA expr_list;

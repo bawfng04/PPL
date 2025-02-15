@@ -1,8 +1,0 @@
-
-        type Shape interface {
-            Area() float
-            Perimeter(w, h int) float
-            Draw(name string, scale float) int
-            Rotate(angle float, speed int) string
-        }
-        

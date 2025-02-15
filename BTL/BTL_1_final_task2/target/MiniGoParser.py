@@ -282,7 +282,7 @@ def serializedATN():
         buf.write("\3\2\2\2\u023b\u023c\3\2\2\2\u023c\u023d\3\2\2\2\u023d")
         buf.write("\u023f\5l\67\2\u023e\u0240\7;\2\2\u023f\u023e\3\2\2\2")
         buf.write("\u023f\u0240\3\2\2\2\u0240\u0241\3\2\2\2\u0241\u0243\7")
-        buf.write("\62\2\2\u0242\u0244\t\2\2\2\u0243\u0242\3\2\2\2\u0243")
+        buf.write("\62\2\2\u0242\u0244\7\66\2\2\u0243\u0242\3\2\2\2\u0243")
         buf.write("\u0244\3\2\2\2\u0244k\3\2\2\2\u0245\u024c\3\2\2\2\u0246")
         buf.write("\u0247\5\f\7\2\u0247\u0248\5l\67\2\u0248\u024c\3\2\2\2")
         buf.write("\u0249\u024a\7;\2\2\u024a\u024c\5l\67\2\u024b\u0245\3")
@@ -4401,12 +4401,7 @@ class MiniGoParser ( Parser ):
             la_ = self._interp.adaptivePredict(self._input,52,self._ctx)
             if la_ == 1:
                 self.state = 576
-                _la = self._input.LA(1)
-                if not(_la==MiniGoParser.SEMI or _la==MiniGoParser.NEWLINE):
-                    self._errHandler.recoverInline(self)
-                else:
-                    self._errHandler.reportMatch(self)
-                    self.consume()
+                self.match(MiniGoParser.SEMI)
 
 
         except RecognitionException as re:

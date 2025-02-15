@@ -1,4 +1,7 @@
 
-        var arr [5]int; // defines an array of 5 integers.
-        var multi_arr [2][5][100][-100][100]int; // defines an array of 2 x 5 integers.
-        
+                func (p Person) Greet() string {
+                    if (1) {return;}
+                    else if (1)
+                    {}
+                };
+    

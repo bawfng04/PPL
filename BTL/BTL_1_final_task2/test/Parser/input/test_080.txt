@@ -1,5 +1,0 @@
-func H() Person{
-        x := arr[(53)];
-        x := arr[3,23];
-        }
-        

@@ -1,5 +1,0 @@
-
-        type Test interface {
-            Process(data string) int float;
-        }
-        

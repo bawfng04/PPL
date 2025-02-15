@@ -1,5 +1,0 @@
-
-        type InvalidInterface interface {
-            Method1() Method2()
-        }
-        

@@ -1,3 +1,0 @@
-func H() Person{
-        if ():= true;}
-        

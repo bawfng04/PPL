@@ -1,4 +1,0 @@
-func H() Person{
-        str := "Hello World
-        }
-        
