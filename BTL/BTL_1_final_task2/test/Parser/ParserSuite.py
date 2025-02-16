@@ -1888,7 +1888,7 @@ class ParserSuite(unittest.TestCase):
             func (c c) Add(x, y int, b float) {return ;}
             value int;
         }
-""","successful", inspect.stack()[0].function))
+""","Error on line 3 col 12: func", inspect.stack()[0].function))
 
     def test_258(self):
         self.assertTrue(TestParser.test("""
