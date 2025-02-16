@@ -5,7 +5,7 @@ grammar MiniGo;
 @lexer::header {
 from lexererr import *
 }
-
+//16 02 2025 - 16 45
 @lexer::members {
 def __init__(self, input=None, output:TextIO = sys.stdout):
     super().__init__(input, output)
@@ -41,8 +41,6 @@ options{
 
 program: newlines declared more_declared newlines EOF;
 
-// program: list_expression;
-
 newlines: | NEWLINE newlines;
 
 more_declared: | newlines declared more_declared;
@@ -73,17 +71,14 @@ statement:
 // Variable and constant declarations
 
 //khai báo biến - var + tên biến + type (optional) + giá trị (optional) + ";"
-variables_declared: VAR var_decl_list (SEMI | NEWLINE);
-
-// Original: var_decl_list: var_decl (COMMA var_decl)*;
-var_decl_list: var_decl | var_decl COMMA var_decl_list;
+variables_declared: VAR var_decl (SEMI | NEWLINE);
 
 // var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
 
 var_decl:
-	ID type_name (ASSIGN expression)?					// Single variable with type
-	| ID type_name_ids type_name (ASSIGN expr_list)?	// Multiple variables with type
-	| ID (ASSIGN expression)							// Single variable without type
+	ID type_name (ASSIGN expression)?					// Single variable with type, ex: var a int = 1;
+	| ID type_name_ids type_name (ASSIGN expr_list)?	// Multiple variables with type, ex: var a, b int = 1, 2;
+	| ID (ASSIGN expression)							// Single variable without type, ex: var a = 1;
 	| ID comma_ids (ASSIGN expr_list);					// Multiple variables without type
 
 // Helper rules for recursion
@@ -100,22 +95,18 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-not_null_block_statement: LB NEWLINE? statement more_statements NEWLINE? RB;
 more_statements: | statement more_statements | NEWLINE more_statements;
 
-function_declared:
-	FUNC ID LP params_list? RP return_type? NEWLINE? not_null_block_statement SEMI?;
+function_declared: FUNC ID LP params_list? RP return_type? NEWLINE? block_stmt (SEMI | NEWLINE);
 return_type: LP type_name more_types RP | type_name;
 more_types: | COMMA type_name more_types;
 
 //method
 receiver: ID (ID | STRUCT | INTERFACE);
 
-// method_declared: FUNC LP receiver RP ID LP params_list? RP (type_name)? block_stmt;
 method_declared:
 	FUNC LP receiver RP ID LP params_list? RP (type_name)? NEWLINE? block_stmt (SEMI | NEWLINE);
 
-// Original: method_params: method_param (COMMA method_param)*;
 method_params: method_param | method_param COMMA method_params;
 
 method_param: ID type_name;
@@ -137,67 +128,54 @@ comma_param_ids: COMMA ID | COMMA ID comma_param_ids;
 
 //ex: type Point struct {x, y int}
 struct_declared: TYPE ID STRUCT LB opt_newlines struct_type_list opt_newlines RB (SEMI | NEWLINE);
-
+//opt_newlines struct_type_list opt_newlines = list of field names along with their types
 struct_type_list: struct_field opt_newlines more_struct_fields;
 more_struct_fields: | struct_field opt_newlines more_struct_fields;
 opt_newlines: | NEWLINE opt_newlines;
-
-struct_field: ID more_ids type_name (SEMI | SEMI? NEWLINE);
+//struct is non-nullable
+struct_field: ID more_ids type_name (SEMI | NEWLINE);
 
 more_ids: | COMMA ID more_ids;
 
-// struct_type: (ID type_name SEMI? NEWLINE*)*;
-
-//struct_type: (ID (COMMA ID)* type_name SEMI? NEWLINE*)*;
-
-//c Cal a int; -> wrong, c Calculator -> right;
-
-// struct_type: ((ID (COMMA ID)* type_name SEMI? NEWLINE) | (ID (COMMA ID)* type_name SEMI NEWLINE?))*;
-
-// Original: struct_type: (ID (COMMA ID)* type_name (SEMI | SEMI? NEWLINE))*;
 struct_type: | struct_field struct_type;
-// struct_field: ID more_ids type_name struct_end; more_ids: | COMMA ID more_ids; struct_end: SEMI | SEMI? NEWLINE;
-
-// Interface declaration
 
 interface_declared:
 	TYPE ID INTERFACE LB opt_newlines interface_type_list opt_newlines RB (SEMI | NEWLINE);
 
 interface_type_list: interface_method more_interface_methods;
+
 more_interface_methods: | interface_method more_interface_methods;
 
-// Update interface_type rule Original: interface_type: (ID LP params_list? RP (type_name)? SEMI? NEWLINE*)*;
 interface_type: | interface_method interface_type;
-interface_method:
-	ID LP params_list? RP (type_name)? (SEMI | NEWLINE)
-	| ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
+
+interface_method: ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
+
 optional_params: | params_list;
+
 optional_type: | type_name;
+
 optional_semi: | SEMI;
 
 // Statements
 declared_statement: variables_declared | constants_declared;
 
-assign_statement: assign_lhs assign_op expression SEMI?;
+// Assignments:    lhs op expression
+assign_statement: assign_lhs assign_op expression (SEMI | NEWLINE);
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
 
 assign_lhs: ID more_access;
 more_access: | (field_access | element_access) more_access;
 
-if_statement:
-	IF LP expression RP not_null_block_statement (
-		ELSE if_statement
-		| ELSE not_null_block_statement
-	)?;
+if_statement: IF LP expression RP block_stmt ( ELSE if_statement | ELSE block_stmt)?;
 
 // FOR STATEMENT
 
 for_statement:
 	FOR (
-		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression not_null_block_statement	// Range form
-		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update not_null_block_statement			// Three-part form
-		| expression not_null_block_statement
+		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
+		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update block_stmt		// Three-part form
+		| expression block_stmt
 	);
 
 for_init:
@@ -215,13 +193,11 @@ continue_statement: CONTINUE (SEMI | NEWLINE);
 // semicolons /newlines Forces proper statement termination return_statement: RETURN ((expression? SEMI) | (expression? NEWLINE) | expression | SEMI);
 return_statement: RETURN (expression? SEMI | expression? NEWLINE);
 
-call_statement: (ID | assign_lhs) LP list_expression? RP SEMI?;
+call_statement: (ID | assign_lhs) LP list_expression? RP (SEMI | NEWLINE);
 
-// block_stmt: NEWLINE? LB NEWLINE statement (statement | NEWLINE)* NEWLINE? RB;
+block_stmt: LB NEWLINE? block_content NEWLINE? RB SEMI?;
 
-block_stmt: LB NEWLINE? block_content NEWLINE? RB;
 block_content: | statement block_content | NEWLINE block_content;
-//not_null_block_statement: not null
 
 // Original: expr_list: expression (COMMA expression)*;
 expr_list: expression | expression COMMA expr_list;
@@ -251,10 +227,13 @@ operand: literal | ID | LP expression RP;
 
 // Element access, field access, function calls
 
+//ex: a[1]
 element_access: LSB expression RSB;
 
+//ex: .x
 field_access: DOT ID;
 
+//ex call_expr: add(1,2,3);
 call_expr: LP list_expression? RP;
 
 // Literals
@@ -267,7 +246,6 @@ literal:
 	| FALSE
 	| NIL
 	| typed_array_literal
-	| untyped_array_literal
 	| struct_literal;
 
 // Array literal with type
@@ -293,8 +271,8 @@ literal_item:
 	| ID;
 
 // ex: [2][3]int;
-array_type: LSB INT_LIT RSB more_dimensions type_name;
-more_dimensions: | LSB INT_LIT RSB more_dimensions;
+array_type: LSB (INT_LIT | ID) RSB more_dimensions type_name;
+more_dimensions: | LSB (INT_LIT | ID) RSB more_dimensions;
 
 type_name: INT | FLOAT | STRING | BOOLEAN | ID | array_type;
 
@@ -314,6 +292,8 @@ field_init: ID COLON expression;
 list_expression: expression | expression COMMA list_expression;
 
 //========================================================== LEXER ========================================================== Keywords Keywords
+
+// Keywords
 IF: 'if';
 ELSE: 'else';
 FOR: 'for';
@@ -336,7 +316,6 @@ TRUE: 'true';
 FALSE: 'false';
 
 // Operators
-
 ADD: '+';
 SUB: '-';
 MUL: '*';
@@ -363,7 +342,6 @@ SHORT_ASSIGN: ':=';
 UNDERSCORE: '_';
 
 // Separators
-
 LP: '(';
 RP: ')';
 LB: '{';
@@ -374,7 +352,6 @@ COMMA: ',';
 SEMI: ';';
 
 // Identifiers
-
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 // Literals fragment DECIMAL: '0' | [1-9][0-9]*;
@@ -383,19 +360,23 @@ fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
 fragment OCTAL: ('0o' | '0O') [0-7]+;
 fragment BINARY: ('0b' | '0B') [0-1]+;
 
-// fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
 fragment FLOAT_DECIMAL: [0-9]+;
 fragment EXPONENT: [eE] [+-]? FLOAT_DECIMAL;
+
 FLOAT_LIT: FLOAT_DECIMAL '.' [0-9]* EXPONENT?;
 
 INT_LIT: DECIMAL | HEX | OCTAL | BINARY;
 
 fragment ESC_CHAR: 'r' | 'n' | 't' | '"' | '\\';
+
+//string char: any character except \r, \n, ", and \;
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
-STRING_LIT: '"' STR_CHAR* '"' { self.text = self.text[1:-1] };
 
-// Newline + comments
+STRING_LIT: '"' STR_CHAR* '"';
 
+// ============== Whitespace and comments
+
+// newline: '\r'? '\n'; if the previous token is an ID, INT_LIT, FLOAT_LIT, STRING_LIT, TRUE, FALSE, NIL, RETURN, CONTINUE, BREAK, RP, RB, RSB, then return a SEMI token;
 NEWLINE:
 	'\r'? '\n' {
         if self.preType in [self.ID, self.INT_LIT, self.FLOAT_LIT, self.STRING_LIT,
@@ -408,23 +389,15 @@ NEWLINE:
             self.skip()
     };
 
-// TAB: '\t';
-
+//whitespace: blankspace (' '), tab ('\t'), formfeed ('\f'), carriage return ('\r');
 WS: [ \t\f\r]+ -> skip;
 
-// Comments
+// ================== Comments
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
+
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
-// WS: [ \t\r\n\f]+ -> skip;
-
-// NEWLINE: '\r'? '\n' -> skip;
-
-// LINE_COMMENT: '//' ~[\r\n]* -> skip;
-
-// BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
-
-// Error handling
+// ================== Error tokens
 UNCLOSE_STRING:
 	'"' STR_CHAR* ([\r\n] | EOF) {
         if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng
