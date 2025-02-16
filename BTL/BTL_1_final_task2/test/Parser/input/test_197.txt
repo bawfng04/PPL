@@ -1,0 +1,3 @@
+
+
+            const MaxSize = 100 + 50; func (c c) Add() {return ;}

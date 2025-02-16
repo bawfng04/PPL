@@ -1,0 +1,3 @@
+
+            const k = ID {a : 2}.c[2] + 2[2] + true.foo() + (2).foo();
+        

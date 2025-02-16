@@ -1,0 +1,2 @@
+
+            func (c c) Add(x int) {return ;};

@@ -1,0 +1,5 @@
+
+                                    func Add() {
+                                        a.foo();
+                                        foo()
+                                    };

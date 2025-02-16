@@ -1,0 +1,4 @@
+
+                                    func Add() {
+                                        for true + 2 + foo().b {return; }
+                                    };

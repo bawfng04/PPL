@@ -1,0 +1,2 @@
+
+        func (c c) Add(x, y int, b float) {return ;}

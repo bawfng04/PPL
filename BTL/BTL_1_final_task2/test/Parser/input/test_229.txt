@@ -1,0 +1,8 @@
+
+                                    func Add() {
+                                        for index[2], value := range arr {
+                                        // index: 0, 1, 2
+                                        // value: 10, 20, 30
+                                        return;
+                                        }
+                                    };
