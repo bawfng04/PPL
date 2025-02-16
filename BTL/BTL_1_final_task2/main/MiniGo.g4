@@ -5,7 +5,7 @@ grammar MiniGo;
 @lexer::header {
 from lexererr import *
 }
-//15 02 2025 - 21 08
+//16 02 2025 - 16 45
 @lexer::members {
 def __init__(self, input=None, output:TextIO = sys.stdout):
     super().__init__(input, output)
