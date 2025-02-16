@@ -639,7 +639,41 @@ class ParserSuite(unittest.TestCase):
         }
         ""","successful", inspect.stack()[0].function))
 
+    def test_085(self):
+        """type and initialization"""
+        self.assertTrue(TestParser.test("""
+        var x int = 5;
+        ""","successful", inspect.stack()[0].function))
 
+    def test_086(self):
+        """type and initialization"""
+        self.assertTrue(TestParser.test("""
+        var y int = "Hello";
+        ""","successful", inspect.stack()[0].function))
+
+    def test_087(self):
+        """type and initialization"""
+        self.assertTrue(TestParser.test("""
+        var x int;
+        ""","successful", inspect.stack()[0].function))
+
+    def test_088(self):
+        """global constant"""
+        self.assertTrue(TestParser.test("""
+        const Pi = 3.14;
+        ""","successful", inspect.stack()[0].function))
+
+    def test_089(self):
+        """constant with literal string"""
+        self.assertTrue(TestParser.test("""
+            const message = "Hello, World!";
+        ""","successful", inspect.stack()[0].function))
+
+    def test_090(self):
+        """constant with expression"""
+        self.assertTrue(TestParser.test("""
+            const MaxSize = 100 + 50;
+        ""","successful", inspect.stack()[0].function))
     # def test_075(self):
     #     """Array declarations"""
     #     self.assertTrue(TestParser.test("""

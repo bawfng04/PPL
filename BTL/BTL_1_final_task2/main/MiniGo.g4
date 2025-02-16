@@ -76,9 +76,9 @@ variables_declared: VAR var_decl (SEMI | NEWLINE);
 // var_decl: ID type_name? (ASSIGN expression)? | ID (COMMA ID)* type_name? (ASSIGN expr_list)?;
 
 var_decl:
-	ID type_name (ASSIGN expression)?					// Single variable with type
-	| ID type_name_ids type_name (ASSIGN expr_list)?	// Multiple variables with type
-	| ID (ASSIGN expression)							// Single variable without type
+	ID type_name (ASSIGN expression)?					// Single variable with type, ex: var a int = 1;
+	| ID type_name_ids type_name (ASSIGN expr_list)?	// Multiple variables with type, ex: var a, b int = 1, 2;
+	| ID (ASSIGN expression)							// Single variable without type, ex: var a = 1;
 	| ID comma_ids (ASSIGN expr_list);					// Multiple variables without type
 
 // Helper rules for recursion
@@ -148,9 +148,7 @@ more_interface_methods: | interface_method more_interface_methods;
 
 interface_type: | interface_method interface_type;
 
-interface_method:
-	ID LP params_list? RP (type_name)? (SEMI | NEWLINE)
-	| ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
+interface_method: ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
 
 optional_params: | params_list;
 
