@@ -674,6 +674,28 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test("""
             const MaxSize = 100 + 50;
         ""","successful", inspect.stack()[0].function))
+
+    def test_091(self):
+        """basic function"""
+        self.assertTrue(TestParser.test("""
+            func Add(x int, y int) int {
+                return x + y;
+            }
+        ""","successful", inspect.stack()[0].function))
+
+
+    def test_092(self):
+        """basic method"""
+        self.assertTrue(TestParser.test("""
+            type Calculator struct {
+                value int;
+            }
+                func (c Calculator) Add(x int) int {
+                c.value += x;
+                return c.value;
+            }
+        ""","successful", inspect.stack()[0].function))
+
     # def test_075(self):
     #     """Array declarations"""
     #     self.assertTrue(TestParser.test("""
