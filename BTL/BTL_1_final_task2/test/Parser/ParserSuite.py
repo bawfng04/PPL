@@ -555,6 +555,22 @@ class ParserSuite(unittest.TestCase):
                     {}
                 };
     ""","Error on line 4 col 16: else", inspect.stack()[0].function))
+
+    def test_076(self):
+        """Null struct"""
+        self.assertTrue(TestParser.test("""
+        type Null struct {}
+        var n Null;
+        ""","Error on line 2 col 26: }", inspect.stack()[0].function))
+
+
+    def test_077(self):
+        """Null Interface"""
+        self.assertTrue(TestParser.test("""
+        type Null interface {}
+        var n Null;
+        ""","Error on line 2 col 29: }", inspect.stack()[0].function))
+
     # def test_075(self):
     #     """Array declarations"""
     #     self.assertTrue(TestParser.test("""
