@@ -128,11 +128,11 @@ comma_param_ids: COMMA ID | COMMA ID comma_param_ids;
 
 //ex: type Point struct {x, y int}
 struct_declared: TYPE ID STRUCT LB opt_newlines struct_type_list opt_newlines RB (SEMI | NEWLINE);
-
+//opt_newlines struct_type_list opt_newlines = list of field names along with their types
 struct_type_list: struct_field opt_newlines more_struct_fields;
 more_struct_fields: | struct_field opt_newlines more_struct_fields;
 opt_newlines: | NEWLINE opt_newlines;
-
+//struct is non-nullable
 struct_field: ID more_ids type_name (SEMI | NEWLINE);
 
 more_ids: | COMMA ID more_ids;
@@ -232,6 +232,7 @@ element_access: LSB expression RSB;
 
 field_access: DOT ID;
 
+//ex call_expr: add(1,2,3);
 call_expr: LP list_expression? RP;
 
 // Literals
@@ -290,6 +291,8 @@ field_init: ID COLON expression;
 list_expression: expression | expression COMMA list_expression;
 
 //========================================================== LEXER ========================================================== Keywords Keywords
+
+// Keywords
 IF: 'if';
 ELSE: 'else';
 FOR: 'for';
@@ -312,7 +315,6 @@ TRUE: 'true';
 FALSE: 'false';
 
 // Operators
-
 ADD: '+';
 SUB: '-';
 MUL: '*';
@@ -339,7 +341,6 @@ SHORT_ASSIGN: ':=';
 UNDERSCORE: '_';
 
 // Separators
-
 LP: '(';
 RP: ')';
 LB: '{';
@@ -350,7 +351,6 @@ COMMA: ',';
 SEMI: ';';
 
 // Identifiers
-
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 // Literals fragment DECIMAL: '0' | [1-9][0-9]*;
@@ -359,19 +359,23 @@ fragment HEX: ('0x' | '0X') [0-9a-fA-F]+;
 fragment OCTAL: ('0o' | '0O') [0-7]+;
 fragment BINARY: ('0b' | '0B') [0-1]+;
 
-// fragment FLOAT_DECIMAL: '0' | [1-9][0-9]*;
 fragment FLOAT_DECIMAL: [0-9]+;
 fragment EXPONENT: [eE] [+-]? FLOAT_DECIMAL;
+
 FLOAT_LIT: FLOAT_DECIMAL '.' [0-9]* EXPONENT?;
 
 INT_LIT: DECIMAL | HEX | OCTAL | BINARY;
 
 fragment ESC_CHAR: 'r' | 'n' | 't' | '"' | '\\';
+
+//string char: any character except \r, \n, ", and \;
 fragment STR_CHAR: ~[\r\n"\\] | '\\' ESC_CHAR;
+
 STRING_LIT: '"' STR_CHAR* '"';
 
-// Newline + comments
+// ============== Whitespace and comments
 
+// newline: '\r'? '\n'; if the previous token is an ID, INT_LIT, FLOAT_LIT, STRING_LIT, TRUE, FALSE, NIL, RETURN, CONTINUE, BREAK, RP, RB, RSB, then return a SEMI token;
 NEWLINE:
 	'\r'? '\n' {
         if self.preType in [self.ID, self.INT_LIT, self.FLOAT_LIT, self.STRING_LIT,
@@ -384,15 +388,15 @@ NEWLINE:
             self.skip()
     };
 
-// TAB: '\t';
-
+//whitespace: blankspace (' '), tab ('\t'), formfeed ('\f'), carriage return ('\r');
 WS: [ \t\f\r]+ -> skip;
 
-// Comments
+// ================== Comments
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
+
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
-// Error handling
+// ================== Error tokens
 UNCLOSE_STRING:
 	'"' STR_CHAR* ([\r\n] | EOF) {
         if self.text[-1] in ['\r','\n']: #nếu kết thúc bằng dấu xuống dòng thì cắt dấu xuống dòng

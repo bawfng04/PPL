@@ -613,6 +613,33 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test("""
                                     return;
                                     ""","Error on line 2 col 36: return", inspect.stack()[0].function))
+
+    def test_082(self):
+        """struct initialization"""
+        self.assertTrue(TestParser.test("""
+        func main() {
+            p := Person{name: "Alice", age: 30}
+        }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_083(self):
+        """zero-value instance"""
+        self.assertTrue(TestParser.test("""
+        func main() {
+            p := Person{}
+        }
+        ""","successful", inspect.stack()[0].function))
+
+
+    def test_084(self):
+        """defined method"""
+        self.assertTrue(TestParser.test("""
+        func (p Person) Greet() string {
+            return "Hello, " + p.name
+        }
+        ""","successful", inspect.stack()[0].function))
+
+
     # def test_075(self):
     #     """Array declarations"""
     #     self.assertTrue(TestParser.test("""
