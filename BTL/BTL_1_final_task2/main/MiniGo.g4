@@ -159,6 +159,7 @@ optional_semi: | SEMI;
 // Statements
 declared_statement: variables_declared | constants_declared;
 
+// Assignments:    lhs op expression
 assign_statement: assign_lhs assign_op expression (SEMI | NEWLINE);
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
@@ -226,8 +227,10 @@ operand: literal | ID | LP expression RP;
 
 // Element access, field access, function calls
 
+//ex: a[1]
 element_access: LSB expression RSB;
 
+//ex: .x
 field_access: DOT ID;
 
 //ex call_expr: add(1,2,3);

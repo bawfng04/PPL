@@ -696,6 +696,41 @@ class ParserSuite(unittest.TestCase):
             }
         ""","successful", inspect.stack()[0].function))
 
+    def test_093(self):
+        """basic array litteral"""
+        self.assertTrue(TestParser.test("""
+        func main() {
+            arr := [3]int{10, 20, 30}  // Valid
+        }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_094(self):
+        """basic array litteral"""
+        self.assertTrue(TestParser.test("""
+        func main() {
+            marr := [2][3]int{{1, 2, 3}, {4, 5, 6}}
+        }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_095(self):
+        """method access"""
+        self.assertTrue(TestParser.test("""
+        func main() {
+            calculator.add(3, 4)
+        }
+        ""","successful", inspect.stack()[0].function))
+
+    def test_096(self):
+        """basic for loop"""
+        self.assertTrue(TestParser.test("""
+        func main() {
+            for i < 10 {
+                // loop body
+            }
+        }
+        ""","successful", inspect.stack()[0].function))
+
+
     # def test_075(self):
     #     """Array declarations"""
     #     self.assertTrue(TestParser.test("""
