@@ -730,6 +730,18 @@ class ParserSuite(unittest.TestCase):
         }
         ""","successful", inspect.stack()[0].function))
 
+    def test_097(self):
+        self.assertTrue(TestParser.test("""
+        type Person struct {
+            func (p Person) Greet() string {
+                return "Hello, " + p.name
+            }
+        c c
+        func (c c) Add(x, y int, b float) {return ;}
+        value int;
+        }
+        """, "Error on line 3 col 12: func", inspect.stack()[0].function))
+
 
     # def test_075(self):
     #     """Array declarations"""
