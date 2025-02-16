@@ -392,14 +392,6 @@ WS: [ \t\f\r]+ -> skip;
 BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
-// WS: [ \t\r\n\f]+ -> skip;
-
-// NEWLINE: '\r'? '\n' -> skip;
-
-// LINE_COMMENT: '//' ~[\r\n]* -> skip;
-
-// BLOCK_COMMENT: '/*' (BLOCK_COMMENT | .)*? '*/' -> skip;
-
 // Error handling
 UNCLOSE_STRING:
 	'"' STR_CHAR* ([\r\n] | EOF) {

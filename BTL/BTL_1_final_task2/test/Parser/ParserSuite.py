@@ -571,6 +571,48 @@ class ParserSuite(unittest.TestCase):
         var n Null;
         ""","Error on line 2 col 29: }", inspect.stack()[0].function))
 
+
+    def test_078(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    func Add() {
+                                        for var b [2]ID = 1 + 2 / 4; foo().a.b(); i := 1 {
+                                            return;
+                                        }
+                                    };""","successful", inspect.stack()[0].function))
+
+    def test_079(self):
+        self.assertTrue(
+            TestParser.test(
+                """
+            func (p Person) Greet() string {
+                for index, value := range STRUCT{} {
+// loop body
+};
+            };
+""",
+                "successful",
+                inspect.stack()[0].function,
+            )
+        )
+
+    def test_080(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    if (x > 10) {
+                                        return;
+                                    } else if (x == 10) {
+                                        var z str;
+                                    } else {
+                                        var z ID;
+                                    }
+                                    ""","Error on line 2 col 36: if", inspect.stack()[0].function))
+
+    def test_081(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+                                    return;
+                                    ""","Error on line 2 col 36: return", inspect.stack()[0].function))
     # def test_075(self):
     #     """Array declarations"""
     #     self.assertTrue(TestParser.test("""
