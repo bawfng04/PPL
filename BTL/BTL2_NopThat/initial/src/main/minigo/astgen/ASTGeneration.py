@@ -2,17 +2,19 @@ from MiniGoVisitor import MiniGoVisitor
 from MiniGoParser import MiniGoParser
 from AST import *
 
+# Class ASTGeneration kế thừa từ MiniGoVisitor
+# Định nghĩa các phương thức duyệt Parse Tree -> Tạo ra cây AST
 class ASTGeneration(MiniGoVisitor):
+    # Xử lý nút gốc của Parse Tree, tạo ra đối tượng Program chứa danh sách các khai báo.
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
         """Convert parse tree to AST for program rule"""
-        # Get all declarations through more_declared rule
-        decl_list = []
-        if ctx.declared():
-            decl_list.append(self.visit(ctx.declared()))
-            if ctx.more_declared():
-                more_decls = self.visit(ctx.more_declared())
-                if more_decls:
-                    decl_list.extend(more_decls)
+        decl_list = [] # Danh sách khai báo (một program có thể chứa nhiều khai báo)
+        if ctx.declared(): # Nếu có khai báo
+            decl_list.append(self.visit(ctx.declared())) # Thì thêm khai báo đó vào danh sách
+            if ctx.more_declared(): # Nếu còn khai báo khác
+                more_decls = self.visit(ctx.more_declared()) # Gọi hàm visit cho more_declared để lấy danh sách các khai báo còn lại
+                if more_decls: # Nếu danh sách khai báo còn lại không rỗng
+                    decl_list.extend(more_decls) # Thêm các khai báo còn lại vào danh sách khai báo
         return Program(decl_list)
 
     def visitMore_declared(self, ctx: MiniGoParser.More_declaredContext):
@@ -109,3 +111,36 @@ class ASTGeneration(MiniGoVisitor):
                     stmt_list.extend(more_stmts)
             return stmt_list
         return []
+
+    def visitIf_statement(self, ctx: MiniGoParser.If_statementContext):
+        """Process if statements"""
+        expr = self.visit(ctx.expression())
+        thenStmt = self.visit(ctx.block_stmt(0))
+        elseStmt = None
+        if ctx.ELSE():
+            if ctx.if_statement():  # else if case
+                elseStmt = self.visit(ctx.if_statement())
+            else:  # else case
+                elseStmt = self.visit(ctx.block_stmt(1))
+        return If(expr, thenStmt, elseStmt)
+
+    def visitExpression(self, ctx: MiniGoParser.ExpressionContext):
+        """Process expressions with OR operator"""
+        if ctx.getChildCount() == 1:
+            return self.visit(ctx.expression1())
+        left = self.visit(ctx.expression())
+        right = self.visit(ctx.expression1())
+        op = "||"
+        return BinaryOp(op, left, right)
+
+    def visitConstants_declared(self, ctx: MiniGoParser.Constants_declaredContext):
+        """Process constant declarations"""
+        return self.visit(ctx.const_decl_list())
+
+    def visitStruct_declared(self, ctx: MiniGoParser.Struct_declaredContext):
+        """Process struct declarations"""
+        name = ctx.ID().getText()
+        decl_list = []
+        if ctx.struct_type_list():
+            decl_list = self.visit(ctx.struct_type_list())
+        return ClassDecl(name, decl_list)
