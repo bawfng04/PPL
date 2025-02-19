@@ -35,7 +35,9 @@ python3 run.py test CodeGenSuite [test_case]   # Run CodeGenSuite tests
 If a specific [test_case] is provided (e.g., test_1), only that test runs; otherwise, all tests in the suite are executed.
 
 ## Docker Usage
+
 Dockerfiles are provided in temp/Task0/Docker-Ubuntu and temp/Task0/temp. For example:
+
 ```sh
 # Build the Docker image
 docker build -t my-ubuntu-app .
@@ -47,7 +49,47 @@ docker run my-ubuntu-app
 Refer to the comments in each Dockerfile for additional instructions (like installing dependencies or sending emails).
 
 ## Additional Notes
+
 - Various assignment instructions are found in text files like assignment1.txt.
 - The ANTLR grammar for the MiniGo language (e.g., MiniGo.g4) defines tokens and structures for parsing and lexing MiniGo code.
 - Tests are organized by suites (LexerSuite, ParserSuite, ASTGenSuite, CheckerSuite, CodeGenSuite).
 - For questions about contributing or building, see the run.py scripts or the comments within each directory.
+
+## Ex
+
+Giả sử chúng ta có một chương trình MiniGo đơn giản như sau:
+
+```
+    var x = 10;
+    func main() {
+        var y = 20;
+    }
+```
+
+Cây phân tích cú pháp (parse tree) cho chương trình này sẽ trông như sau:
+
+```
+    program
+    ├── newlines
+    ├── declared (variables_declared)
+    │   └── var_decl (x, 10)
+    ├── more_declared
+    │   └── declared (function_declared)
+    │       └── func_decl (main, [], Block)
+    │           └── block_stmt
+    │               └── block_content
+    │                   └── statement (variables_declared)
+    │                       └── var_decl (y, 20)
+    ├── newlines
+    └── EOF
+```
+
+Hàm visitProgram sẽ chuyển đổi cây phân tích cú pháp này thành cây cú pháp trừu tượng (AST) như sau:
+
+```
+Program
+  ├── VarDecl (x, IntType, 10)
+  └── FuncDecl (main, [], VoidType, Block
+        └── VarDecl (y, IntType, 20)
+      )
+```
