@@ -1,4 +1,0 @@
-
-            func votien() {
-                a += 1;
-            }

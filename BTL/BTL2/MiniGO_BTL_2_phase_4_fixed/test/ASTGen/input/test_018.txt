@@ -1,5 +1,0 @@
-
-            func votien() {
-                var a int;
-                const a = nil;
-            }
