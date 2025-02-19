@@ -5,7 +5,7 @@ grammar MiniGo;
 @lexer::header {
 from lexererr import *
 }
-//16 02 2025 - 16 45
+//16 02 2025 - 18 04 - remove some rule
 @lexer::members {
 def __init__(self, input=None, output:TextIO = sys.stdout):
     super().__init__(input, output)
@@ -95,8 +95,6 @@ const_decl_list: const_decl | const_decl COMMA const_decl_list;
 const_decl: ID ASSIGN expression;
 
 // khai báo hàm - func + tên hàm + (danh sách tham số - type) + (type trả về) + block_stmt ví dụ: func add(a int, b int) int { return a + b; }
-more_statements: | statement more_statements | NEWLINE more_statements;
-
 function_declared: FUNC ID LP params_list? RP return_type? NEWLINE? block_stmt (SEMI | NEWLINE);
 return_type: LP type_name more_types RP | type_name;
 more_types: | COMMA type_name more_types;
@@ -106,10 +104,6 @@ receiver: ID (ID | STRUCT | INTERFACE);
 
 method_declared:
 	FUNC LP receiver RP ID LP params_list? RP (type_name)? NEWLINE? block_stmt (SEMI | NEWLINE);
-
-method_params: method_param | method_param COMMA method_params;
-
-method_param: ID type_name;
 
 // Block statement Original: params_list: param (COMMA param)*; Block statement
 params_list:
@@ -137,8 +131,6 @@ struct_field: ID more_ids type_name (SEMI | NEWLINE);
 
 more_ids: | COMMA ID more_ids;
 
-struct_type: | struct_field struct_type;
-
 interface_declared:
 	TYPE ID INTERFACE LB opt_newlines interface_type_list opt_newlines RB (SEMI | NEWLINE);
 
@@ -146,15 +138,7 @@ interface_type_list: interface_method more_interface_methods;
 
 more_interface_methods: | interface_method more_interface_methods;
 
-interface_type: | interface_method interface_type;
-
 interface_method: ID LP params_list? RP (type_name)? (SEMI | NEWLINE);
-
-optional_params: | params_list;
-
-optional_type: | type_name;
-
-optional_semi: | SEMI;
 
 // Statements
 declared_statement: variables_declared | constants_declared;
@@ -253,9 +237,8 @@ literal:
 // ex: [2][3]int{{1,2,3},{4,5,6}};
 
 typed_array_literal: array_type LB literal_list RB;
-untyped_array_literal: LB literal_list RB;
 
-array_literal: array_type LB literal_list RB | LB literal_list RB;
+untyped_array_literal: LB literal_list RB;
 
 literal_list: literal_item | literal_item COMMA literal_list;
 
