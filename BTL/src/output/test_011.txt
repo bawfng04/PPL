@@ -1,1 +1,1 @@
-ConstDecl("VoTien", None, NilLiteral())
+ConstDecl("VoTien", None, StructLiteral("STRUCT",[("a",IntLiteral(1)),("b",BooleanLiteral(false))]))
