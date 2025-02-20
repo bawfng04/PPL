@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug run.py with args (test ASTGenSuite)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/run.py",
+      "args": ["test", "ASTGenSuite", "test_001"],
+      "console": "integratedTerminal"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+ConstDecl("VoTien", None, FloatLiteral(0.1))

@@ -1,0 +1,1 @@
+ConstDecl("VoTien", None, MethCall(FieldAccess(MethCall(FieldAccess(Id("a"),"b"),"call",[]),"c"),"call",[IntLiteral(1),IntLiteral(2)]))
