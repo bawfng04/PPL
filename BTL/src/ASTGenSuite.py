@@ -61,7 +61,7 @@ class ASTGenSuite(unittest.TestCase):
         input = """const VoTien = nil; """
         expect = ConstDecl("VoTien", None, NilLiteral())
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
-    
+
     def test_010(self):
         input = """const VoTien = STRUCT {}; """
         expect = ConstDecl("VoTien", None, StructLiteral("STRUCT",[]))
@@ -103,7 +103,7 @@ class ASTGenSuite(unittest.TestCase):
         input = """const VoTien = 1 >= 2 <= 3 > 4 < 5 == 6 != 7; """
         expect = ConstDecl("VoTien", None, BinaryOp("!=", BinaryOp("==", BinaryOp("<", BinaryOp(">", BinaryOp("<=", BinaryOp(">=", IntLiteral(1), IntLiteral(2)), IntLiteral(3)), IntLiteral(4)), IntLiteral(5)), IntLiteral(6)), IntLiteral(7)))
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
-    
+
     def test_018(self):
         input = """const VoTien = 1 + 2 - 3; """
         expect = ConstDecl("VoTien", None, BinaryOp("-", BinaryOp("+", IntLiteral(1), IntLiteral(2)), IntLiteral(3)))

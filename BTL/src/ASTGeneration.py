@@ -7,7 +7,7 @@ class ASTGeneration(MiniGoVisitor):
         const_name = ctx.ID().getText()
         expr = self.visit(ctx.expression())
         decl = ConstDecl(const_name, None, expr)
-        return decl  # Return just the ConstDecl instead of Program([decl])
+        return decl
 
     def visitExpression(self, ctx: MiniGoParser.ExpressionContext):
         if ctx.getChildCount() == 1:
@@ -87,14 +87,19 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.field_access():
             field = ctx.field_access().ID().getText()
             left = FieldAccess(left, field)
-        else: # call_expr
+        elif ctx.call_expr(): # Modified this part
             args = []
             if ctx.call_expr().list_expression():
                 args = self.visit(ctx.call_expr().list_expression())
             if isinstance(left, Id):
                 left = FuncCall(left.name, args)
             else:
-                left = MethCall(left, "call", args)
+                method = "call"
+                # Extract method name for method calls
+                if isinstance(left, FieldAccess):
+                    method = left.fieldname
+                    left = left.obj
+                left = MethCall(left, method, args)
 
         if ctx.more_access_expr():
             return self.visitMore_access_expr(ctx.more_access_expr(), left)
@@ -116,7 +121,6 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitLiteral(self, ctx: MiniGoParser.LiteralContext):
         if ctx.INT_LIT():
-            # Convert different number bases to decimal
             text = ctx.INT_LIT().getText()
             if text.startswith('0b') or text.startswith('0B'):
                 val = int(text[2:], 2)
@@ -127,7 +131,6 @@ class ASTGeneration(MiniGoVisitor):
             else:
                 val = int(text)
             return IntLiteral(val)
-
         elif ctx.FLOAT_LIT():
             return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
         elif ctx.STRING_LIT():

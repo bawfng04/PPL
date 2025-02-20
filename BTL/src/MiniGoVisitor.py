@@ -79,13 +79,68 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#list_expression.
-    def visitList_expression(self, ctx:MiniGoParser.List_expressionContext):
+    # Visit a parse tree produced by MiniGoParser#literal.
+    def visitLiteral(self, ctx:MiniGoParser.LiteralContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#literal.
-    def visitLiteral(self, ctx:MiniGoParser.LiteralContext):
+    # Visit a parse tree produced by MiniGoParser#typed_array_literal.
+    def visitTyped_array_literal(self, ctx:MiniGoParser.Typed_array_literalContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#untyped_array_literal.
+    def visitUntyped_array_literal(self, ctx:MiniGoParser.Untyped_array_literalContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#literal_list.
+    def visitLiteral_list(self, ctx:MiniGoParser.Literal_listContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#literal_item.
+    def visitLiteral_item(self, ctx:MiniGoParser.Literal_itemContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#array_type.
+    def visitArray_type(self, ctx:MiniGoParser.Array_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#more_dimensions.
+    def visitMore_dimensions(self, ctx:MiniGoParser.More_dimensionsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#type_name.
+    def visitType_name(self, ctx:MiniGoParser.Type_nameContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#struct_literal.
+    def visitStruct_literal(self, ctx:MiniGoParser.Struct_literalContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#optional_field_list.
+    def visitOptional_field_list(self, ctx:MiniGoParser.Optional_field_listContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#field_list.
+    def visitField_list(self, ctx:MiniGoParser.Field_listContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#field_init.
+    def visitField_init(self, ctx:MiniGoParser.Field_initContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#list_expression.
+    def visitList_expression(self, ctx:MiniGoParser.List_expressionContext):
         return self.visitChildren(ctx)
 
 
