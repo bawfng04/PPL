@@ -87,31 +87,29 @@ class ASTGeneration(MiniGoVisitor):
             return self.visitMore_access_expr(ctx.more_access_expr(), operand)
         return operand
 
+
     def visitMore_access_expr(self, ctx: MiniGoParser.More_access_exprContext, left):
         result = left
-        current = ctx
-        while current is not None and current.getChildCount() > 0:
-            if current.element_access():
-                expr = self.visit(current.element_access().expression())
-                result = ArrayCell(result, [expr])
-            elif current.field_access():
-                field = current.field_access().ID().getText()
-                result = FieldAccess(result, field)
-            elif current.call_expr():
-                args = []
-                if current.call_expr().list_expression():
-                    args = self.visit(current.call_expr().list_expression())
-                if isinstance(result, FieldAccess):
-                    result = MethCall(result.obj, result.field, args)
-                elif isinstance(result, Id):
-                    result = FuncCall(result.name, args)
-                else:
-                    result = MethCall(result, "call", args)
-            # Proceed to the next access (if any)
-            if current.more_access_expr():
-                current = current.more_access_expr()
+        # Process the current more_access_expr node:
+        if ctx.field_access():
+            field = ctx.field_access().ID().getText()
+            result = FieldAccess(result, field)
+        if ctx.call_expr():
+            args = []
+            if ctx.call_expr().list_expression():
+                args = self.visit(ctx.call_expr().list_expression())
+            if isinstance(result, FieldAccess):
+                result = MethCall(result.receiver, result.field, args)
+            elif isinstance(result, Id):
+                result = FuncCall(result.name, args)
             else:
-                break
+                result = MethCall(result, "call", args)
+        if ctx.element_access():
+            expr = self.visit(ctx.element_access().expression())
+            result = ArrayCell(result, [expr])
+        # Recurse if there is another access in the chain
+        if ctx.more_access_expr():
+            return self.visitMore_access_expr(ctx.more_access_expr(), result)
         return result
 
     def visitList_expression(self, ctx: MiniGoParser.List_expressionContext):
