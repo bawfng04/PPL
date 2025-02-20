@@ -3,6 +3,16 @@ from MiniGoParser import MiniGoParser
 from AST import *
 
 class ASTGeneration(MiniGoVisitor):
+    def getIntValue(self, text):
+        if text.startswith('0b') or text.startswith('0B'):
+            return int(text[2:], 2)
+        elif text.startswith('0o') or text.startswith('0O'):
+            return int(text[2:], 8)
+        elif text.startswith('0x') or text.startswith('0X'):
+            return int(text[2:], 16)
+        else:
+            return int(text)
+
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
         const_name = ctx.ID().getText()
         expr = self.visit(ctx.expression())
@@ -78,33 +88,31 @@ class ASTGeneration(MiniGoVisitor):
         return operand
 
     def visitMore_access_expr(self, ctx: MiniGoParser.More_access_exprContext, left):
-        if ctx.getChildCount() == 0:
-            return left
-
-        if ctx.element_access():
-            expr = self.visit(ctx.element_access().expression())
-            left = ArrayCell(left, [expr])
-        elif ctx.field_access():
-            field = ctx.field_access().ID().getText()
-            left = FieldAccess(left, field)
-        elif ctx.call_expr():
-            args = []
-            if ctx.call_expr().list_expression():
-                args = self.visit(ctx.call_expr().list_expression())
-            if isinstance(left, Id):
-                left = FuncCall(left.name, args)
+        result = left
+        current = ctx
+        while current is not None and current.getChildCount() > 0:
+            if current.element_access():
+                expr = self.visit(current.element_access().expression())
+                result = ArrayCell(result, [expr])
+            elif current.field_access():
+                field = current.field_access().ID().getText()
+                result = FieldAccess(result, field)
+            elif current.call_expr():
+                args = []
+                if current.call_expr().list_expression():
+                    args = self.visit(current.call_expr().list_expression())
+                if isinstance(result, FieldAccess):
+                    result = MethCall(result.obj, result.field, args)
+                elif isinstance(result, Id):
+                    result = FuncCall(result.name, args)
+                else:
+                    result = MethCall(result, "call", args)
+            # Proceed to the next access (if any)
+            if current.more_access_expr():
+                current = current.more_access_expr()
             else:
-                method = "call"
-                # Extract method name for method calls
-                if isinstance(left, FieldAccess):
-                    method = left.field
-                    left = left.obj
-                left = MethCall(left, method, args)
-
-        if ctx.more_access_expr():
-            return self.visitMore_access_expr(ctx.more_access_expr(), left)
-
-        return left
+                break
+        return result
 
     def visitList_expression(self, ctx: MiniGoParser.List_expressionContext):
         if ctx.getChildCount() == 1:
@@ -172,26 +180,18 @@ class ASTGeneration(MiniGoVisitor):
         return ArrayLiteral(dimensions, base_type, elements)
 
     def visitArray_type(self, ctx: MiniGoParser.Array_typeContext):
-        # First dimension
         if ctx.INT_LIT():
             first_dim = IntLiteral(int(ctx.INT_LIT().getText()))
         else:
             first_dim = Id(ctx.ID().getText())
-
-        # Additional dimensions
         more_dims = []
         if ctx.more_dimensions():
             more_dims = self.visitMore_dimensions(ctx.more_dimensions())
-
-        # Base type (could be a normal type or another array_type)
         base_type = self.visit(ctx.type_name())
-
-        # If base_type is also (dimensions, type), flatten it
         dims = [first_dim] + more_dims
-        if isinstance(base_type, tuple):  # Means it's another (dims, type)
+        if isinstance(base_type, tuple):
             dims += base_type[0]
             base_type = base_type[1]
-
         return (dims, base_type)
 
     def visitMore_dimensions(self, ctx: MiniGoParser.More_dimensionsContext):
