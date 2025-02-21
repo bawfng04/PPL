@@ -1,1 +1,8 @@
-const VoTien = (1+2)*3; 
+
+            func votien() {
+                if(1) {
+                    a := 1;
+                } else {
+                    a := 1;
+                }
+            }

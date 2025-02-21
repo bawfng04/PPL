@@ -603,40 +603,43 @@ class ASTGeneration(MiniGoVisitor):
         return If(expr, thenStmt, elifStmt, elseStmt)
 
     def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
-        if ctx.RANGE():  # For range
+        if ctx.RANGE():  # For range case
             idx = Id(ctx.ID(0).getText()) if ctx.ID(0) else None
             val = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
             expr = self.visit(ctx.expression())
             block = self.visit(ctx.block_stmt())
             return ForEach(idx, val, expr, block)
         elif ctx.for_init():  # For with 3 parts
-            init = self.visit(ctx.for_init())  # Get initialization
-            cond = self.visit(ctx.expression()) # Get condition
-            update = self.visit(ctx.for_update()) # Get update
-            block = self.visit(ctx.block_stmt())  # Get loop body
+            init = self.visit(ctx.for_init())
+            cond = self.visit(ctx.expression())
+            update = self.visit(ctx.for_update())
+            block = self.visit(ctx.block_stmt())
             return ForStep(init, cond, update, block)
-        else:  # Simple for
+        else:  # Basic for case with just condition
             expr = self.visit(ctx.expression())
             block = self.visit(ctx.block_stmt())
             return ForBasic(expr, block)
 
     def visitFor_init(self, ctx: MiniGoParser.For_initContext):
-        if ctx.VAR():  # Case: var ID type? ASSIGN expression
+        if ctx.VAR():  # var ID type? ASSIGN expression
             name = ctx.ID().getText()
             typ = self.visit(ctx.type_name()) if ctx.type_name() else None
             init = self.visit(ctx.expression())
             return VarDecl(name, typ, init)
-        else:  # Case: ID assign_op expression
+        else:  # ID assign_op expression
             lhs = Id(ctx.ID().getText())
-            op = ctx.assign_op().getText()
-            rhs = self.visit(ctx.expression())
-            if op == ':=':
-                return Assign(lhs, rhs)
-            elif op in ['+=', '-=', '*=', '/=', '%=']:
-                binOp = BinaryOp(op[0], lhs, rhs)
-                return Assign(lhs, binOp)
-            else:  # op == '='
-                return Assign(lhs, rhs)
+            expr = self.visit(ctx.expression())
+            if ctx.assign_op():
+                op = ctx.assign_op().getText()
+                if op == ':=':
+                    return Assign(lhs, expr)
+                elif op in ['+=', '-=', '*=', '/=', '%=']:
+                    binOp = BinaryOp(op[0], lhs, expr)
+                    return Assign(lhs, binOp)
+                else:  # op == '='
+                    return Assign(lhs, expr)
+            else:
+                return Assign(lhs, expr)
 
     def visitFor_update(self, ctx: MiniGoParser.For_updateContext):
         lhs = Id(ctx.ID().getText())

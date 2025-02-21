@@ -1,7 +1,2 @@
 
-    func foo () {
-        continue;
-        break;
-        return;
-        return 1;
-    }
+            const a = 0 && 1 && 2;

@@ -1,0 +1,2 @@
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,FloatLiteral(1.0))]))
+		])

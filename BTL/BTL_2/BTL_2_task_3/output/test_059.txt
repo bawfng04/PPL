@@ -1,0 +1,2 @@
+Program([VarDecl("a", None,IntLiteral(1))
+		])

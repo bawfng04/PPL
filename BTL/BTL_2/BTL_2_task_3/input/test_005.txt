@@ -1,1 +1,1 @@
-const VoTien = 01.e-1; 
+const VoTien = foo( a > b <= c ); 

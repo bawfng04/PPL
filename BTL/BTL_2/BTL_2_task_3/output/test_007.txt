@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,BooleanLiteral(false))
+Program([ConstDecl("VoTien",None,FuncCall("foo",[FieldAccess(FieldAccess(Id("a"),"b"),"c")]))
 		])

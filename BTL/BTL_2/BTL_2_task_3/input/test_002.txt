@@ -1,1 +1,1 @@
-const VoTien = 0b11; 
+const VoTien = foo( 1.0,true,false,nil,"votien" ); 

@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([If(Id("a"), Block([Return(None)]), None, None),If(Id("b"), Block([Return(None)]), None, Block([Return(None)]))]))
+Program([ConstDecl("a",None,BinaryOp("||", BinaryOp("&&", IntLiteral(1), IntLiteral(2)), BinaryOp(">=", IntLiteral(3), BinaryOp("+", IntLiteral(4), BinaryOp("*", IntLiteral(5), UnaryOp("-",IntLiteral(6)))))))
 		])

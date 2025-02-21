@@ -1,1 +1,5 @@
-const VoTien = foo(1, 2); 
+
+            func votien() {
+                for i < 10 {return;}
+                for var i = 0; i < 10; i += 1  {return;}
+            }

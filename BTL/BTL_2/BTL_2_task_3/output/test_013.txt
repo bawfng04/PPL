@@ -1,2 +1,3 @@
-Program([ConstDecl("VoTien",None,ArrayLiteral([IntLiteral(1),IntLiteral(2)],IntType(),[FloatLiteral(1.0),StructLiteral("STRUCT",[]),NilLiteral()]))
+Program([FuncDecl("foo",[],IntType(),Block([Return(None)])),
+			FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([Return(None)]))
 		])

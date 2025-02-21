@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,UnaryOp("!",UnaryOp("-",IntLiteral(1))))
+Program([FuncDecl("votien",[],VoidType(),Block([FuncCall("foo",[IntLiteral(1),IntLiteral(2)]),MethCall(ArrayCell(Id("a"),[IntLiteral(2)]),"foo",[IntLiteral(1),IntLiteral(3)])]))
 		])
