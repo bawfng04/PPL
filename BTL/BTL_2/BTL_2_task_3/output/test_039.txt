@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([None,None,None,None,None,None]))
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("a"),IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Assign(Id("a"),BinaryOp("-", Id("a"), IntLiteral(1))),Assign(Id("a"),BinaryOp("*", Id("a"), IntLiteral(1))),Assign(Id("a"),BinaryOp("/", Id("a"), IntLiteral(1))),Assign(Id("a"),BinaryOp("%", Id("a"), IntLiteral(1)))]))
 		])

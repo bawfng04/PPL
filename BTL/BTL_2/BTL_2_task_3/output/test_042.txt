@@ -1,2 +1,0 @@
-Program([FuncDecl("foo",[],VoidType(),Block([Block([None]),Block([None])]))
-		])

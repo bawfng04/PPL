@@ -513,3 +513,120 @@ class ASTGeneration(MiniGoVisitor):
             dimensions, base_type = self.visit(ctx.array_type())
             return ArrayType(dimensions, base_type)
 
+    def visitStatement(self, ctx: MiniGoParser.StatementContext):
+        if ctx.declared_statement():
+            return self.visit(ctx.declared_statement())
+        elif ctx.assign_statement():
+            return self.visit(ctx.assign_statement())
+        elif ctx.if_statement():
+            return self.visit(ctx.if_statement())
+        elif ctx.for_statement():
+            return self.visit(ctx.for_statement())
+        elif ctx.break_statement():
+            return Break()
+        elif ctx.continue_statement():
+            return Continue()
+        elif ctx.return_statement():
+            return self.visit(ctx.return_statement())
+        elif ctx.call_statement():
+            return self.visit(ctx.call_statement())
+
+    def visitAssign_statement(self, ctx: MiniGoParser.Assign_statementContext):
+        lhs = self.visit(ctx.assign_lhs())
+        expr = self.visit(ctx.expression())
+        op = ctx.assign_op().getText()
+
+        if op == ':=':
+            return Assign(lhs, expr)
+        elif op in ['+=', '-=', '*=', '/=', '%=']:
+            binOp = BinaryOp(op[0], lhs, expr)
+            return Assign(lhs, binOp)
+        else:  # op == '='
+            return Assign(lhs, expr)
+
+    def visitAssign_lhs(self, ctx: MiniGoParser.Assign_lhsContext):
+        result = Id(ctx.ID().getText())
+        if ctx.more_access():
+            return self.visitMore_access(ctx.more_access(), result)
+        return result
+
+    def visitMore_access(self, ctx: MiniGoParser.More_accessContext, left):
+        if not ctx:
+            return left
+
+        result = left
+        if ctx.field_access():
+            field = ctx.field_access().ID().getText()
+            result = FieldAccess(result, field)
+        if ctx.element_access():
+            expr = self.visit(ctx.element_access().expression())
+            result = ArrayCell(result, [expr])
+
+        if ctx.more_access():
+            return self.visitMore_access(ctx.more_access(), result)
+        return result
+
+    def visitIf_statement(self, ctx: MiniGoParser.If_statementContext):
+        expr = self.visit(ctx.expression())
+        thenStmt = self.visit(ctx.block_stmt())
+
+        elifStmt = []
+        elseStmt = None
+
+        if ctx.ELSE():
+            if ctx.if_statement():  # else if case
+                elif_if = ctx.if_statement()
+                while elif_if:
+                    elif_expr = self.visit(elif_if.expression())
+                    elif_block = self.visit(elif_if.block_stmt())
+                    elifStmt.append((elif_expr, elif_block))
+
+                    if elif_if.ELSE() and elif_if.if_statement():
+                        elif_if = elif_if.if_statement()
+                    else:
+                        if elif_if.ELSE():
+                            elseStmt = self.visit(elif_if.block_stmt(1))
+                        break
+            else:  # simple else case
+                elseStmt = self.visit(ctx.block_stmt(1))
+
+        return If(expr, thenStmt, elifStmt, elseStmt)
+
+    def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
+        if ctx.RANGE():  # For range
+            idx = Id(ctx.ID(0).getText()) if ctx.ID(0) else None
+            val = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
+            expr = self.visit(ctx.expression())
+            block = self.visit(ctx.block_stmt())
+            return ForEach(idx, val, expr, block)
+        elif ctx.for_init():  # For with 3 parts
+            init = self.visit(ctx.for_init())
+            cond = self.visit(ctx.expression())
+            update = self.visit(ctx.for_update())
+            block = self.visit(ctx.block_stmt())
+            return ForStep(init, cond, update, block)
+        else:  # Simple for
+            expr = self.visit(ctx.expression())
+            block = self.visit(ctx.block_stmt())
+            return ForBasic(expr, block)
+
+    def visitReturn_statement(self, ctx: MiniGoParser.Return_statementContext):
+        if ctx.expression():
+            return Return(self.visit(ctx.expression()))
+        return Return(None)
+
+    def visitCall_statement(self, ctx: MiniGoParser.Call_statementContext):
+        if ctx.ID():  # Direct function call
+            name = ctx.ID().getText()
+            args = []
+            if ctx.list_expression():
+                args = self.visit(ctx.list_expression())
+            return FuncCall(name, args)
+        else:  # Method call through assign_lhs
+            obj = self.visit(ctx.assign_lhs())
+            args = []
+            if ctx.list_expression():
+                args = self.visit(ctx.list_expression())
+            if isinstance(obj, FieldAccess):
+                return MethCall(obj.receiver, obj.field, args)
+            return MethCall(obj, "call", args)

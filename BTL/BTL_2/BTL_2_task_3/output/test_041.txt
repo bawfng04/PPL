@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([None,None,None,None,None,None]))
+Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("a",[]),FuncCall("a",[IntLiteral(1),IntLiteral(2)]),FuncCall("a",[IntLiteral(1)]),MethCall(FieldAccess(Id("b"),"a"),"a",[]),MethCall(FieldAccess(Id("b"),"a"),"a",[IntLiteral(1),IntLiteral(2)]),MethCall(FieldAccess(Id("b"),"a"),"a",[IntLiteral(1)])]))
 		])
