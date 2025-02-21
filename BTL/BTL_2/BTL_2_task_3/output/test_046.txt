@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([ForStep(IntLiteral(1),BinaryOp("<", Id("a"), IntLiteral(10)),IntLiteral(1),Block([Return(None)])),ForStep(IntLiteral(1),BinaryOp("<", Id("a"), IntLiteral(10)),IntLiteral(1),Block([Return(None)]))]))
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("a"),IntLiteral(1)),Block([Return(None)])),ForStep(Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("a"),BinaryOp("-", Id("a"), IntLiteral(1))),Block([Return(None)]))]))
 		])
