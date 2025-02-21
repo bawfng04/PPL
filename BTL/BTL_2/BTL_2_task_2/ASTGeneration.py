@@ -1,11 +1,3 @@
-"""
- * Initial code for Assignment 1, 2
- * Programming Language Principles
- * Author: Võ Tiến
- * Link FB : https://www.facebook.com/Shiba.Vo.Tien
- * Link Group : https://www.facebook.com/groups/khmt.ktmt.cse.bku
- * Date: 07.01.2025
-"""
 from MiniGoVisitor import MiniGoVisitor
 from MiniGoParser import MiniGoParser
 from AST import *
@@ -26,25 +18,46 @@ class ASTGeneration(MiniGoVisitor):
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
         # Create list to store all declarations
         decl = []
-
-        # Visit all declarations through the more_declared rule
+        # Visit the first declaration if exists
         if ctx.declared():
             decl_ctx = ctx.declared()
-            if decl_ctx.constants_declared():
-                # Add constant declarations to the list
+            if decl_ctx.variables_declared():
+                decl.append(self.visit(decl_ctx.variables_declared()))
+            elif decl_ctx.constants_declared():
                 decl.append(self.visit(decl_ctx.constants_declared()))
-
         # Visit remaining declarations
         if ctx.more_declared():
             more_decl = ctx.more_declared()
             while more_decl:
                 if more_decl.declared():
                     decl_ctx = more_decl.declared()
-                    if decl_ctx.constants_declared():
+                    if decl_ctx.variables_declared():
+                        decl.append(self.visit(decl_ctx.variables_declared()))
+                    elif decl_ctx.constants_declared():
                         decl.append(self.visit(decl_ctx.constants_declared()))
                 more_decl = more_decl.more_declared()
-
         return Program(decl)
+
+    def visitVariables_declared(self, ctx: MiniGoParser.Variables_declaredContext):
+        # Visit the variable declaration inside variables_declared rule
+        return self.visit(ctx.var_decl())
+
+    def visitVar_decl(self, ctx: MiniGoParser.Var_declContext):
+        # Get the variable name
+        name = ctx.ID().getText()
+        varType = None
+        varInit = None
+        # Check if there is an explicit type attached
+        if ctx.type_name():
+            varType = self.visit(ctx.type_name())
+            # If varType is a tuple (from array_type), convert it to ArrayType
+            if isinstance(varType, tuple):
+                dimensions, base_type = varType
+                varType = ArrayType(dimensions, base_type)
+        # Check for an assignment expression
+        if ctx.ASSIGN():
+            varInit = self.visit(ctx.expression())
+        return VarDecl(name, varType, varInit)
 
     def visitConstants_declared(self, ctx: MiniGoParser.Constants_declaredContext):
         # Visit the constant declaration list and return the first declaration
@@ -127,7 +140,6 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.more_access_expr():
             return self.visitMore_access_expr(ctx.more_access_expr(), operand)
         return operand
-
 
     def visitMore_access_expr(self, ctx: MiniGoParser.More_access_exprContext, left):
         result = left
@@ -282,7 +294,8 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.STRING():
             return StringType()
         elif ctx.BOOLEAN():
-            return BooleanType()
+            # Return BoolType() as expected in test case 29
+            return BoolType()
         elif ctx.ID():
             return Id(ctx.ID().getText())
         else:
