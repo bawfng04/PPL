@@ -25,6 +25,8 @@ class ASTGeneration(MiniGoVisitor):
                 decl.append(self.visit(decl_ctx.variables_declared()))
             elif decl_ctx.constants_declared():
                 decl.append(self.visit(decl_ctx.constants_declared()))
+            elif decl_ctx.struct_declared():  # Add this condition
+                decl.append(self.visit(decl_ctx.struct_declared()))
         # Visit remaining declarations
         if ctx.more_declared():
             more_decl = ctx.more_declared()
@@ -35,6 +37,8 @@ class ASTGeneration(MiniGoVisitor):
                         decl.append(self.visit(decl_ctx.variables_declared()))
                     elif decl_ctx.constants_declared():
                         decl.append(self.visit(decl_ctx.constants_declared()))
+                    elif decl_ctx.struct_declared():  # Add this condition
+                        decl.append(self.visit(decl_ctx.struct_declared()))
                 more_decl = more_decl.more_declared()
         return Program(decl)
 
@@ -215,6 +219,58 @@ class ASTGeneration(MiniGoVisitor):
                 fields = self.visit(ctx.optional_field_list().field_list())
         return StructLiteral(name, fields)
 
+    def visitStruct_declared(self, ctx: MiniGoParser.Struct_declaredContext):
+        # Get struct name
+        name = ctx.ID().getText()
+        elements = []
+        methods = []
+
+        # Visit struct type list if it exists
+        if ctx.struct_type_list():
+            elements = self.visit(ctx.struct_type_list())
+
+        return StructType(name, elements, methods)
+
+
+    def visitStruct_type_list(self, ctx: MiniGoParser.Struct_type_listContext):
+        elements = []
+
+        # Visit first struct field
+        if ctx.struct_field():
+            elements.extend(self.visit(ctx.struct_field()))
+
+        # Visit remaining struct fields
+        if ctx.more_struct_fields():
+            more_fields = ctx.more_struct_fields()
+            while more_fields:
+                if more_fields.struct_field():
+                    elements.extend(self.visit(more_fields.struct_field()))
+                more_fields = more_fields.more_struct_fields()
+
+        return elements
+
+    def visitStruct_field(self, ctx: MiniGoParser.Struct_fieldContext):
+        # Get field names
+        names = [ctx.ID().getText()]
+
+        # Get additional field names if they exist
+        if ctx.more_ids():
+            names.extend(self.visitMore_ids(ctx.more_ids()))
+
+        # Get field type
+        field_type = self.visit(ctx.type_name())
+
+        # Create list of (name, type) tuples
+        return [(name, field_type) for name in names]
+
+    def visitMore_ids(self, ctx: MiniGoParser.More_idsContext):
+        names = []
+        if ctx.ID():
+            names.append(ctx.ID().getText())
+            if ctx.more_ids():
+                names.extend(self.visitMore_ids(ctx.more_ids()))
+        return names
+
     def visitField_list(self, ctx: MiniGoParser.Field_listContext):
         if ctx.getChildCount() == 1:
             return [self.visit(ctx.field_init())]
@@ -235,15 +291,20 @@ class ASTGeneration(MiniGoVisitor):
             first_dim = IntLiteral(int(ctx.INT_LIT().getText()))
         else:
             first_dim = Id(ctx.ID().getText())
+
         more_dims = []
         if ctx.more_dimensions():
-            more_dims = self.visitMore_dimensions(ctx.more_dimensions())
+            more_dims = self.visit(ctx.more_dimensions())
+
         base_type = self.visit(ctx.type_name())
         dims = [first_dim] + more_dims
-        if isinstance(base_type, tuple):
-            dims += base_type[0]
-            base_type = base_type[1]
-        return (dims, base_type)
+
+        if isinstance(base_type, ArrayType):
+            # If base_type is an ArrayType, merge its dimensions with current dimensions
+            dims.extend(base_type.dimens)
+            base_type = base_type.eleType
+
+        return dims, base_type
 
     def visitMore_dimensions(self, ctx: MiniGoParser.More_dimensionsContext):
         if ctx.getChildCount() == 0:
@@ -294,9 +355,9 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.STRING():
             return StringType()
         elif ctx.BOOLEAN():
-            # Return BoolType() as expected in test case 29
             return BoolType()
         elif ctx.ID():
             return Id(ctx.ID().getText())
-        else:
-            return self.visit(ctx.array_type())
+        elif ctx.array_type():
+            dimensions, base_type = self.visit(ctx.array_type())
+            return ArrayType(dimensions, base_type)
