@@ -16,7 +16,6 @@ class ASTGeneration(MiniGoVisitor):
             return int(text)
 
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
-        # Create list to store all declarations
         decl = []
         # Visit the first declaration if exists
         if ctx.declared():
@@ -25,8 +24,15 @@ class ASTGeneration(MiniGoVisitor):
                 decl.append(self.visit(decl_ctx.variables_declared()))
             elif decl_ctx.constants_declared():
                 decl.append(self.visit(decl_ctx.constants_declared()))
-            elif decl_ctx.struct_declared():  # Add this condition
+            elif decl_ctx.struct_declared():
                 decl.append(self.visit(decl_ctx.struct_declared()))
+            elif decl_ctx.function_declared():
+                decl.append(self.visit(decl_ctx.function_declared()))
+            elif decl_ctx.method_declared():
+                decl.append(self.visit(decl_ctx.method_declared()))
+            elif decl_ctx.interface_declared():
+                decl.append(self.visit(decl_ctx.interface_declared()))
+
         # Visit remaining declarations
         if ctx.more_declared():
             more_decl = ctx.more_declared()
@@ -37,10 +43,131 @@ class ASTGeneration(MiniGoVisitor):
                         decl.append(self.visit(decl_ctx.variables_declared()))
                     elif decl_ctx.constants_declared():
                         decl.append(self.visit(decl_ctx.constants_declared()))
-                    elif decl_ctx.struct_declared():  # Add this condition
+                    elif decl_ctx.struct_declared():
                         decl.append(self.visit(decl_ctx.struct_declared()))
+                    elif decl_ctx.function_declared():
+                        decl.append(self.visit(decl_ctx.function_declared()))
+                    elif decl_ctx.method_declared():
+                        decl.append(self.visit(decl_ctx.method_declared()))
+                    elif decl_ctx.interface_declared():
+                        decl.append(self.visit(decl_ctx.interface_declared()))
                 more_decl = more_decl.more_declared()
+
         return Program(decl)
+
+    def visitFunction_declared(self, ctx: MiniGoParser.Function_declaredContext):
+        name = ctx.ID().getText()
+        params = []
+        if ctx.params_list():
+            params = self.visit(ctx.params_list())
+
+        returnType = VoidType()
+        if ctx.return_type():
+            returnType = self.visit(ctx.return_type())
+
+        body = self.visit(ctx.block_stmt())
+        return FuncDecl(name, params, returnType, body)
+
+    def visitParams_list(self, ctx: MiniGoParser.Params_listContext):
+        if ctx.type_name():
+            # Case: ID type_name or ID comma_ids type_name
+            typ = self.visit(ctx.type_name())
+            params = [ParamDecl(ctx.ID().getText(), typ)]
+            if ctx.comma_ids():
+                more_ids = self.visit(ctx.comma_ids())
+                params.extend([ParamDecl(id, typ) for id in more_ids])
+            return params
+        elif ctx.param():
+            # Case: param or param COMMA params_list
+            params = self.visit(ctx.param())
+            if ctx.params_list():
+                params.extend(self.visit(ctx.params_list()))
+            return params
+        return []
+
+    def visitParam(self, ctx: MiniGoParser.ParamContext):
+        typ = self.visit(ctx.type_name())
+        params = [ParamDecl(ctx.ID().getText(), typ)]
+        if ctx.comma_param_ids():
+            more_ids = self.visit(ctx.comma_param_ids())
+            params.extend([ParamDecl(id, typ) for id in more_ids])
+        return params
+
+    def visitComma_param_ids(self, ctx: MiniGoParser.Comma_param_idsContext):
+        ids = [ctx.ID().getText()]
+        if ctx.comma_param_ids():
+            ids.extend(self.visit(ctx.comma_param_ids()))
+        return ids
+
+    def visitReturn_type(self, ctx: MiniGoParser.Return_typeContext):
+        if ctx.type_name():
+            return self.visit(ctx.type_name())
+        return None
+
+    def visitMethod_declared(self, ctx: MiniGoParser.Method_declaredContext):
+        receiver_name = ctx.receiver().ID(0).getText()
+        receiver_type = Id(ctx.receiver().ID(1).getText()) if ctx.receiver().ID(1) else None
+
+        name = ctx.ID().getText()
+        params = []
+        if ctx.params_list():
+            params = self.visit(ctx.params_list())
+
+        returnType = VoidType()
+        if ctx.type_name():
+            returnType = self.visit(ctx.type_name())
+
+        body = self.visit(ctx.block_stmt())
+        func_decl = FuncDecl(name, params, returnType, body)
+        return MethodDecl(receiver_name, receiver_type, func_decl)
+
+    def visitInterface_declared(self, ctx: MiniGoParser.Interface_declaredContext):
+        name = ctx.ID().getText()
+        methods = []
+        if ctx.interface_type_list():
+            methods = self.visit(ctx.interface_type_list())
+        return InterfaceType(name, methods)
+
+    def visitInterface_type_list(self, ctx: MiniGoParser.Interface_type_listContext):
+        methods = []
+        if ctx.interface_method():
+            methods.append(self.visit(ctx.interface_method()))
+        if ctx.more_interface_methods():
+            more_methods = ctx.more_interface_methods()
+            while more_methods:
+                if more_methods.interface_method():
+                    methods.append(self.visit(more_methods.interface_method()))
+                more_methods = more_methods.more_interface_methods()
+        return methods
+
+    def visitInterface_method(self, ctx: MiniGoParser.Interface_methodContext):
+        name = ctx.ID().getText()
+        params = []
+        if ctx.params_list():
+            param_types = []
+            for param in self.visit(ctx.params_list()):
+                param_types.append(param.parType)
+            params = param_types
+
+        returnType = VoidType()
+        if ctx.type_name():
+            returnType = self.visit(ctx.type_name())
+
+        return Prototype(name, params, returnType)
+
+    def visitBlock_stmt(self, ctx: MiniGoParser.Block_stmtContext):
+        stmts = []
+        if ctx.block_content():
+            content = ctx.block_content()
+            while content:
+                if content.statement():
+                    stmt = self.visit(content.statement())
+                    if isinstance(stmt, list):
+                        stmts.extend(stmt)
+                    else:
+                        stmts.append(stmt)
+                content = content.block_content()
+        return Block(stmts)
 
     def visitVariables_declared(self, ctx: MiniGoParser.Variables_declaredContext):
         # Visit the variable declaration inside variables_declared rule
@@ -361,3 +488,4 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.array_type():
             dimensions, base_type = self.visit(ctx.array_type())
             return ArrayType(dimensions, base_type)
+

@@ -225,7 +225,7 @@ class ASTGenSuite(unittest.TestCase):
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
 
-    def test_033(self):
+    def test_034(self):
         input = """
     func (ID ID) foo () {var a = 1;}
     func (ID ID) foo () int {var a = 1;}
@@ -237,7 +237,7 @@ class ASTGenSuite(unittest.TestCase):
 		])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
-    def test_034(self):
+    def test_035(self):
         input = """
     func (ID ID) foo (a int) {var a = 1;}
     func (ID ID) foo (a int, b ID) {var a = 1;}
@@ -249,7 +249,7 @@ class ASTGenSuite(unittest.TestCase):
 		])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
-    def test_035(self):
+    def test_036(self):
         input = """
         type INTERFACE interface {
             foo();
