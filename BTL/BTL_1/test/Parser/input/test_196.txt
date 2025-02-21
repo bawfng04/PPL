@@ -1,3 +1,0 @@
-
-
-            const a = 2 func (c c) Add(x int) {return ;}

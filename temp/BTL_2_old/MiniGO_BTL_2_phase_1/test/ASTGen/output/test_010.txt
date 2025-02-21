@@ -1,0 +1,1 @@
+Program([StructLiteral(Id("Votien"), []),StructLiteral(Id("Votien"), [(Id("a"),IntLiteral(1))])])

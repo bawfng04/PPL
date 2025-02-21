@@ -1,9 +1,0 @@
-
-                                    func Add() {
-                                        if (x.foo().b[2]) {return;
-                                        } else if(1){return;
-                                        }else if(1){return;
-                                        }else if(2){return
-                                        }else {return;
-                                        }
-                                    };

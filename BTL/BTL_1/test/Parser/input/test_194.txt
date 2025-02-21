@@ -1,7 +1,0 @@
-
-
-            func (c c) Add(x int) {return ;}
-
-            func Add(x int) {return ;}; var c int;
-
-            var c int; type Calculator struct{c int;}; type Calculator struct{c int;} var c int;

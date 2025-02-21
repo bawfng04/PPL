@@ -1,4 +1,0 @@
-
-        type Null interface {}
-        var n Null;
-        

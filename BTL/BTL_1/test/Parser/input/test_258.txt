@@ -1,4 +1,0 @@
-
-        type Person struct {
-            c int  c int;
-        }

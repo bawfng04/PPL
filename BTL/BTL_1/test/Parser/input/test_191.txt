@@ -1,2 +1,0 @@
-
-            func (c [2]c) Add(x int) {return ;}

@@ -1,4 +1,0 @@
-
-            type Calculator struct {
-                a int = 2;
-            }

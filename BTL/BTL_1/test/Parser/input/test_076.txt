@@ -1,4 +1,0 @@
-
-        type Null struct {}
-        var n Null;
-        

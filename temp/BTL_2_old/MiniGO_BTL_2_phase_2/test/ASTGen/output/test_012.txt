@@ -1,0 +1,5 @@
+Program([
+			VariablesDecl(Id("Votien"), None, IntLiteral(1)),
+			VariablesDecl(Id("Votien"), IntType(), None),
+			VariablesDecl(Id("Votine"), IntType(), IntLiteral(1))
+		])

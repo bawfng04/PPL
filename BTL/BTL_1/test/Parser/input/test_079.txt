@@ -1,6 +1,0 @@
-
-            func (p Person) Greet() string {
-                for index, value := range STRUCT{} {
-// loop body
-};
-            };

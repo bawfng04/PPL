@@ -1,2 +1,0 @@
-
-            type Calculator struct {value int;}

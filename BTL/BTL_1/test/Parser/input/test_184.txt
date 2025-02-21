@@ -1,2 +1,0 @@
-
-            type Calculator interface {Reset();} type Person struct{value int;}

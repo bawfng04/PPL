@@ -1,4 +1,0 @@
-
-                                    func Add() {
-                                         var a = a[2].b;
-                                    };

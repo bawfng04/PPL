@@ -1,0 +1,2 @@
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a",IntType(),IntLiteral(1)),VarDecl("a",FloatType(),IntLiteral(1)),VarDecl("a",BoolType(), None),VarDecl("a",StringType(),IntLiteral(1)),VarDecl("a", None,IntLiteral(1)),VarDecl("a",Id("ID"),IntLiteral(1)),VarDecl("a",ArrayType([Id("ID"),IntLiteral(1)],IntType()),IntLiteral(1)),ConstDecl("a",None,IntLiteral(1))]))
+		])

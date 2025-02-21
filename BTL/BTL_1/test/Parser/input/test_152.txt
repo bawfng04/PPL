@@ -1,3 +1,0 @@
-
-            const k = foo() + foo(a{a:2}) + foo(2, 3,4);
-        
