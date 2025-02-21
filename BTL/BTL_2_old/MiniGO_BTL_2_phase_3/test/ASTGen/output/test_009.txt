@@ -1,3 +1,0 @@
-Program([
-			ConstDecl(Id("VoTien"),CallExpr(None,Id("foo"),[BinaryOp("*",Id("a"),BinaryOp("+",IntLiteral(1),IntLiteral(2)))]))
-		])

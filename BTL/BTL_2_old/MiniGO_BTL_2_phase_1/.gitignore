@@ -1,6 +1,0 @@
-*/__pycache__
-*/.antlr
-target/main
-# test/*/input/
-# test/*/output/
-test/*/__pycache__

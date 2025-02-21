@@ -1,4 +1,0 @@
-
-            func votien() {
-                if(1) {}
-            }

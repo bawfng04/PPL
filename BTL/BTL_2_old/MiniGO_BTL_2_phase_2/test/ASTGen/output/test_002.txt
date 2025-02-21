@@ -1,3 +1,0 @@
-Program([
-			ConstDecl(Id("VoTien"),CallExpr(None,Id("foo"),[FloatLiteral(1.0),BooleanLiteral(True),BooleanLiteral(False),NilLiteral(),StringLiteral("votien")]))
-		])

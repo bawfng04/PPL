@@ -1,1 +1,0 @@
-Program([BinaryOp("*",Id("a"),BinaryOp("+",IntLiteral(1),IntLiteral(2)))])

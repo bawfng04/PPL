@@ -1,1 +1,0 @@
-const VoTien = [1][2] int {1., STRUCT{}, nil}; 

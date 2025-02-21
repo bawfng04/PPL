@@ -1,3 +1,0 @@
-const VoTien = STRUCT {
-            a : 1,
-            b : false}; 

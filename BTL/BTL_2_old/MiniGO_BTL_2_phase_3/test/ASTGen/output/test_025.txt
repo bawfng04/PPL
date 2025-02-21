@@ -1,3 +1,0 @@
-Program([
-			FunctionDecl(Id("votien"), VoidType(), None,[],[For(Id("index"),Id("value"),ArrayCell(Id("array"),IntLiteral(2)),[])])
-		])

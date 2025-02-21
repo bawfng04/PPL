@@ -1,3 +1,0 @@
-Program([
-			FunctionDecl(Id("votien"), VoidType(), None,[],[Break(), Continue()])
-		])
