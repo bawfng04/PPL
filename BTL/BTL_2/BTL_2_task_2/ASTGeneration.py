@@ -75,15 +75,32 @@ class ASTGeneration(MiniGoVisitor):
             params = [ParamDecl(ctx.ID().getText(), typ)]
             if ctx.comma_ids():
                 more_ids = self.visit(ctx.comma_ids())
-                params.extend([ParamDecl(id, typ) for id in more_ids])
+                if more_ids:  # Add null check
+                    params.extend([ParamDecl(id, typ) for id in more_ids])
             return params
         elif ctx.param():
             # Case: param or param COMMA params_list
             params = self.visit(ctx.param())
             if ctx.params_list():
-                params.extend(self.visit(ctx.params_list()))
+                more_params = self.visit(ctx.params_list())
+                if more_params:  # Add null check
+                    params.extend(more_params)
             return params
         return []
+
+    def visitComma_ids(self, ctx: MiniGoParser.Comma_idsContext):
+        if not ctx:
+            return []
+        ids = []
+        if ctx.ID():
+            ids.append(ctx.ID().getText())
+            if ctx.comma_ids():
+                more_ids = self.visit(ctx.comma_ids())
+                if more_ids:  # Add null check
+                    ids.extend(more_ids)
+        return ids
+
+
 
     def visitParam(self, ctx: MiniGoParser.ParamContext):
         typ = self.visit(ctx.type_name())
@@ -105,19 +122,27 @@ class ASTGeneration(MiniGoVisitor):
         return None
 
     def visitMethod_declared(self, ctx: MiniGoParser.Method_declaredContext):
+        # Get receiver name and type from receiver() rule
         receiver_name = ctx.receiver().ID(0).getText()
         receiver_type = Id(ctx.receiver().ID(1).getText()) if ctx.receiver().ID(1) else None
 
+        # Get method name
         name = ctx.ID().getText()
+
+        # Get parameters
         params = []
         if ctx.params_list():
             params = self.visit(ctx.params_list())
 
+        # Get return type (default to VoidType if not specified)
         returnType = VoidType()
         if ctx.type_name():
             returnType = self.visit(ctx.type_name())
 
+        # Get method body
         body = self.visit(ctx.block_stmt())
+
+        # Create FuncDecl and wrap in MethodDecl
         func_decl = FuncDecl(name, params, returnType, body)
         return MethodDecl(receiver_name, receiver_type, func_decl)
 
@@ -144,10 +169,9 @@ class ASTGeneration(MiniGoVisitor):
         name = ctx.ID().getText()
         params = []
         if ctx.params_list():
-            param_types = []
-            for param in self.visit(ctx.params_list()):
-                param_types.append(param.parType)
-            params = param_types
+            param_list = self.visit(ctx.params_list())
+            if param_list:  # Add null check
+                params = [param.parType for param in param_list]
 
         returnType = VoidType()
         if ctx.type_name():
