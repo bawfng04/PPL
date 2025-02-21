@@ -567,27 +567,37 @@ class ASTGeneration(MiniGoVisitor):
         return result
 
     def visitIf_statement(self, ctx: MiniGoParser.If_statementContext):
+        # Get condition
         expr = self.visit(ctx.expression())
-        thenStmt = self.visit(ctx.block_stmt())
+
+        # Get then statement
+        thenStmt = self.visit(ctx.block_stmt(0))
 
         elifStmt = []
         elseStmt = None
 
+        # Handle else clause if it exists
         if ctx.ELSE():
             if ctx.if_statement():  # else if case
                 elif_if = ctx.if_statement()
                 while elif_if:
+                    # Add each elif condition and block
                     elif_expr = self.visit(elif_if.expression())
-                    elif_block = self.visit(elif_if.block_stmt())
+                    elif_block = self.visit(elif_if.block_stmt(0))
                     elifStmt.append((elif_expr, elif_block))
 
-                    if elif_if.ELSE() and elif_if.if_statement():
-                        elif_if = elif_if.if_statement()
-                    else:
-                        if elif_if.ELSE():
+                    # Check for more elif or else
+                    if elif_if.ELSE():
+                        if elif_if.if_statement():
+                            elif_if = elif_if.if_statement()
+                        else:
+                            # Final else block
                             elseStmt = self.visit(elif_if.block_stmt(1))
+                            break
+                    else:
                         break
-            else:  # simple else case
+
+            else:  # Simple else case
                 elseStmt = self.visit(ctx.block_stmt(1))
 
         return If(expr, thenStmt, elifStmt, elseStmt)
