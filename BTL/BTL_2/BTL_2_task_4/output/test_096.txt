@@ -1,0 +1,2 @@
+Program([FuncDecl("foo",[],VoidType(),Block([If(IntLiteral(1), Block([Return(IntLiteral(1))]), [(IntLiteral(2),Block([Return(IntLiteral(2))])), (IntLiteral(3),Block([Return(IntLiteral(3))])), (IntLiteral(4),Block([Return(IntLiteral(4))]))], None)]))
+		])

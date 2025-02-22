@@ -1,0 +1,5 @@
+
+            type Votien interface {
+                Add() [2]string;
+                Add() ID;
+            }

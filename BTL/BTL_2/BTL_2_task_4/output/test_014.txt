@@ -1,0 +1,2 @@
+Program([ConstDecl("VoTien",None,ArrayLiteral([IntLiteral(1),IntLiteral(2)],Id("STRUCT"),[[IntLiteral(1),[IntLiteral(3)]],[IntLiteral(2)]]))
+		])
