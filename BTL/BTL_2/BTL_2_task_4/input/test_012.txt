@@ -1,1 +1,4 @@
-const VoTien = [ID] int {1}; 
+
+            var Votien = 1;
+            var Votien int;
+            var Votine int = 1;

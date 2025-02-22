@@ -1,1 +1,2 @@
-const VoTien = a.b.c; 
+
+            const a = true + false - true;

@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([ForEach(Id("a"),Id("b"),IntLiteral(2),Block([Return(None)]))]))
+Program([ConstDecl("a",None,ArrayCell(ArrayCell(ArrayCell(ArrayCell(Id("a"),[IntLiteral(1)]),[IntLiteral(2)]),[IntLiteral(3)]),[IntLiteral(4)]))
 		])

@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,ArrayCell(ArrayCell(Id("a"),[IntLiteral(2)]),[IntLiteral(3)]))
+Program([FuncDecl("votien",[],VoidType(),Block([ForEach(Id("index"),Id("value"),ArrayCell(Id("array"),[IntLiteral(2)]),Block([Return(None)]))]))
 		])

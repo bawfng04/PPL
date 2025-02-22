@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,Id("a"))
+Program([FuncDecl("votien",[],VoidType(),Block([If(IntLiteral(1), Block([Return(None)]), None)]))
 		])

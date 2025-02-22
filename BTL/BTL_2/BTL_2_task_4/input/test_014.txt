@@ -1,1 +1,2 @@
-const VoTien = [1][2] STRUCT {{1, {3}}, {2}}; 
+
+            func (Votien v) foo(Votien int) {return;}

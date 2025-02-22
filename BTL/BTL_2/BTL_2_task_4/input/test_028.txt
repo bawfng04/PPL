@@ -1,1 +1,2 @@
-const VoTien = a.b[2].c.d(); 
+
+            const a = 1 + 2 && 3;

@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,FieldAccess(FieldAccess(Id("a"),"b"),"c"))
+Program([ConstDecl("a",None,BinaryOp("-", BinaryOp("+", BooleanLiteral(true), BooleanLiteral(false)), BooleanLiteral(true)))
 		])

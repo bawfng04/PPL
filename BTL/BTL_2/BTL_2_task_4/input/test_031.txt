@@ -1,6 +1,2 @@
 
-    type ID struct {
-        a int;
-        b ID;
-        c [2]int;
-    }
+            const a = [1]ID{Votien{}};
