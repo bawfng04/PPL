@@ -198,21 +198,51 @@ class ASTGeneration(MiniGoVisitor):
         return self.visit(ctx.var_decl())
 
     def visitVar_decl(self, ctx: MiniGoParser.Var_declContext):
-        # Get the variable name
-        name = ctx.ID().getText()
-        varType = None
-        varInit = None
-        # Check if there is an explicit type attached
-        if ctx.type_name():
+        # Case 1: ID type_name (ASSIGN expression)?
+        if ctx.type_name() and not ctx.type_name_ids() and not ctx.comma_ids():
+            name = ctx.ID().getText()
             varType = self.visit(ctx.type_name())
-            # If varType is a tuple (from array_type), convert it to ArrayType
-            if isinstance(varType, tuple):
-                dimensions, base_type = varType
-                varType = ArrayType(dimensions, base_type)
-        # Check for an assignment expression
-        if ctx.ASSIGN():
-            varInit = self.visit(ctx.expression())
-        return VarDecl(name, varType, varInit)
+            varInit = self.visit(ctx.expression()) if ctx.ASSIGN() else None
+            return VarDecl(name, varType, varInit)
+
+        # Case 2: ID type_name_ids type_name (ASSIGN expr_list)?
+        elif ctx.type_name() and ctx.type_name_ids():
+            varType = self.visit(ctx.type_name())
+            names = [ctx.ID().getText()]
+            if ctx.type_name_ids():
+                names.extend(self.visit(ctx.type_name_ids()))
+
+            varInits = []
+            if ctx.ASSIGN():
+                varInits = self.visit(ctx.expr_list())
+
+            # Pad varInits with None if not enough initializers
+            while len(varInits) < len(names):
+                varInits.append(None)
+
+            return [VarDecl(name, varType, init) for name, init in zip(names, varInits)]
+
+        # Case 3: ID (ASSIGN expression)
+        elif not ctx.type_name() and not ctx.comma_ids():
+            name = ctx.ID().getText()
+            varInit = self.visit(ctx.expression()) if ctx.ASSIGN() else None
+            return VarDecl(name, None, varInit)
+
+        # Case 4: ID comma_ids (ASSIGN expr_list)
+        else:
+            names = [ctx.ID().getText()]
+            if ctx.comma_ids():
+                names.extend(self.visit(ctx.comma_ids()))
+
+            varInits = []
+            if ctx.ASSIGN():
+                varInits = self.visit(ctx.expr_list())
+
+            # Pad varInits with None if not enough initializers
+            while len(varInits) < len(names):
+                varInits.append(None)
+
+            return [VarDecl(name, None, init) for name, init in zip(names, varInits)]
 
     def visitConstants_declared(self, ctx: MiniGoParser.Constants_declaredContext):
         # Visit the constant declaration list and return the first declaration
@@ -748,3 +778,9 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.list_expression():
             args = self.visit(ctx.list_expression())
         return args
+
+    def visitMore_types(self, ctx: MiniGoParser.More_typesContext):
+        return self.visitChildren(ctx)
+
+    def visitReceiver(self, ctx: MiniGoParser.ReceiverContext):
+        return self.visitChildren(ctx)
