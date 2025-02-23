@@ -1,0 +1,6 @@
+
+                                    func Add() {
+                                        for var b [2]ID = 1 + 2 / 4; foo().a.b(); i := 1 {
+                                            return;
+                                        }
+                                    };

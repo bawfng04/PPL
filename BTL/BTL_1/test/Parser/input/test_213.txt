@@ -1,0 +1,10 @@
+
+                                    func Add() {
+                                        if (x.foo().b[2]) {
+                                            a := 2;
+                                        } else if (a && b) {
+                                            return;
+                                        } else {
+                                            a := 2;
+                                        }
+                                    };

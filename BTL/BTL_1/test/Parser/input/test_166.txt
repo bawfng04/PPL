@@ -1,0 +1,10 @@
+
+
+            var a int; var d = 2;
+
+            var d = 2;
+
+            const a = 2; var d int = 3;
+
+
+            var d = 2;

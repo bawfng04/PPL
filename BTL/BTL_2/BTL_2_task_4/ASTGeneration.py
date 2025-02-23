@@ -656,3 +656,33 @@ class ASTGeneration(MiniGoVisitor):
             if isinstance(obj, FieldAccess):
                 return MethCall(obj.receiver, obj.field, args)
             return MethCall(obj, "call", args)
+
+
+    # Missing visitor methods:
+    def visitList_statement(self, ctx: MiniGoParser.List_statementContext):
+        """Used for handling sequences of statements"""
+        if ctx.statement():
+            if ctx.list_statement():
+                return [self.visit(ctx.statement())] + self.visit(ctx.list_statement())
+            return [self.visit(ctx.statement())]
+        return []
+
+    def visitDeclared_statement(self, ctx: MiniGoParser.Declared_statementContext):
+        """Handles declarations that can appear as statements"""
+        if ctx.variables_declared():
+            return self.visit(ctx.variables_declared())
+        elif ctx.constants_declared():
+            return self.visit(ctx.constants_declared())
+        return None
+
+    def visitOptional_field_list(self, ctx: MiniGoParser.Optional_field_listContext):
+        """Handles optional field lists in struct literals"""
+        if ctx.field_list():
+            return self.visit(ctx.field_list())
+        return []
+
+    def visitExpr_list(self, ctx: MiniGoParser.Expr_listContext):
+        """Handles lists of expressions"""
+        if ctx.getChildCount() == 1:
+            return [self.visit(ctx.expression())]
+        return [self.visit(ctx.expression())] + self.visit(ctx.expr_list())

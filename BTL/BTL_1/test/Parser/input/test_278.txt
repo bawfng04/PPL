@@ -1,0 +1,6 @@
+
+                                    func Add() {
+                                        for var b int; foo().a.b(); i := 1 {
+                                            return;
+                                        }
+                                    };

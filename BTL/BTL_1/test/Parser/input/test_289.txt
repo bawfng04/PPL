@@ -1,0 +1,5 @@
+
+                                    func Add() {
+                                            const a = a[2].b;
+                                            var x = x.y.z;
+                                        };
