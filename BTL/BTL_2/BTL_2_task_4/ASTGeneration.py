@@ -697,7 +697,7 @@ class ASTGeneration(MiniGoVisitor):
 
     #OK
     def visitNewlines(self, ctx: MiniGoParser.NewlinesContext):
-        return self.visitChildren(ctx)
+        return None
 
     def visitMore_declared(self, ctx: MiniGoParser.More_declaredContext):
         return self.visitChildren(ctx)
@@ -718,19 +718,33 @@ class ASTGeneration(MiniGoVisitor):
         return self.visitChildren(ctx)
 
     def visitBreak_statement(self, ctx: MiniGoParser.Break_statementContext):
-        return self.visitChildren(ctx)
+        return Break()
 
     def visitContinue_statement(self, ctx: MiniGoParser.Continue_statementContext):
-        return self.visitChildren(ctx)
+        return Continue()
 
     def visitBlock_content(self, ctx: MiniGoParser.Block_contentContext):
-        return self.visitChildren(ctx)
+        statements = []
+        if ctx.statement():
+            stmt = self.visit(ctx.statement())
+            if isinstance(stmt, list):
+                statements.extend(stmt)
+            else:
+                statements.append(stmt)
+        if ctx.block_content():
+            next_content = self.visit(ctx.block_content())
+            if next_content:
+                statements.extend(next_content)
+        return statements
 
     def visitElement_access(self, ctx: MiniGoParser.Element_accessContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.expression())
 
     def visitField_access(self, ctx: MiniGoParser.Field_accessContext):
-        return self.visitChildren(ctx)
+        return ctx.ID().getText()
 
     def visitCall_expr(self, ctx: MiniGoParser.Call_exprContext):
-        return self.visitChildren(ctx)
+        args = []
+        if ctx.list_expression():
+            args = self.visit(ctx.list_expression())
+        return args
