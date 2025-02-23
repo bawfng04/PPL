@@ -1,0 +1,11 @@
+
+            func votien() {
+                for a.i[8] {
+                    return;
+                    return 1;
+                }
+                for i := 0; i[1] < 10; i *= 2+3  {
+                    return;
+                    return 1;
+                }
+            }

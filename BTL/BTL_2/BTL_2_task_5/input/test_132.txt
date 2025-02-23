@@ -1,0 +1,4 @@
+
+    func foo () {var a = 1;}
+    func foo () int {var a = 1;}
+    func foo () [2] ID {var a = 1;}

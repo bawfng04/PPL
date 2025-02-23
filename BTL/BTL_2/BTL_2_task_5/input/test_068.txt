@@ -1,0 +1,4 @@
+
+            type Votien interface {
+                Add(a, c int, b int) [2]string;
+            }

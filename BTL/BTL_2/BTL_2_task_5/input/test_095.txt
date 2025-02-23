@@ -1,0 +1,15 @@
+
+            func foo(){
+                if(1) { return;
+                }else if(1) {
+                    return 1;
+                    return ;
+                } else {return;}
+
+                if(1) {return;
+                }  else {
+                    return 1;
+                    return ;
+                }
+
+            }

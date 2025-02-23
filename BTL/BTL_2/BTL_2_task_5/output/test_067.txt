@@ -1,0 +1,2 @@
+Program([InterfaceType("Votien",[Prototype("Add",[IntType(),IntType(),IntType()],VoidType())])
+		])

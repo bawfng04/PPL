@@ -1,0 +1,2 @@
+Program([ConstDecl("a",None,StructLiteral("ID",[("a",IntLiteral(1)),("b",BooleanLiteral(true))]))
+		])

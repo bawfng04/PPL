@@ -1,0 +1,7 @@
+
+            var a = 1;
+            const b = 2;
+            type a struct{a float;}
+            type b interface {foo();}
+            func foo(){return;}
+            func  (Cat c) foo() [2]int {return;}

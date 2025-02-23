@@ -1,0 +1,2 @@
+Program([ConstDecl("VoTien",None,ArrayLiteral([Id("ID")],IntType(),[IntLiteral(1)]))
+		])

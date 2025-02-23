@@ -1,0 +1,7 @@
+
+            func votien() {
+                for index, value := range [2]int{1,2} {
+                     return;
+                    return 1;
+                }
+            }
