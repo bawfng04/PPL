@@ -14,9 +14,9 @@ class ASTGeneration(MiniGoVisitor):
             return int(text[2:], 16)
         else:
             return int(text)
-
+    # OK
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
-        decl = []
+        decl = [] # khai báo mảng decl = mảng các khai báo
         # Visit the first declaration if exists
         if ctx.declared():
             decl_ctx = ctx.declared()
@@ -224,18 +224,18 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitConst_decl(self, ctx: MiniGoParser.Const_declContext):
         # Create a constant declaration with name, type (None), and value
-        name = ctx.ID().getText()
-        value = self.visit(ctx.expression())
-        return ConstDecl(name, None, value)
+        name = ctx.ID().getText() # lấy tên biến
+        value = self.visit(ctx.expression()) # lấy giá trị
+        return ConstDecl(name, None, value) # trả về một hằng số
 
     def visitExpression(self, ctx: MiniGoParser.ExpressionContext):
-        if ctx.getChildCount() == 1:
-            return self.visit(ctx.expression1())
+        if ctx.getChildCount() == 1: # nếu có 1 phần tử
+            return self.visit(ctx.expression1()) # trả về phần tử đó
         else:
-            left = self.visit(ctx.expression())
-            right = self.visit(ctx.expression1())
-            op = "||"
-            return BinaryOp(op, left, right)
+            left = self.visit(ctx.expression()) # lấy phần tử bên trái
+            right = self.visit(ctx.expression1()) # lấy phần tử bên phải
+            op = "||" # lấy toán tử
+            return BinaryOp(op, left, right) # trả về một BinaryOp với toán tử và 2 phần tử
 
     def visitExpression1(self, ctx: MiniGoParser.Expression1Context):
         if ctx.getChildCount() == 1:
@@ -250,9 +250,9 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.expression3())
         else:
-            left = self.visit(ctx.expression2())
-            right = self.visit(ctx.expression3())
-            op = ctx.getChild(1).getText()
+            left = self.visit(ctx.expression2()) # lấy phần tử bên trái
+            right = self.visit(ctx.expression3()) # lấy phần tử bên phải
+            op = ctx.getChild(1).getText() # lấy toán tử
             return BinaryOp(op, left, right)
 
     def visitExpression3(self, ctx: MiniGoParser.Expression3Context):
@@ -673,6 +673,14 @@ class ASTGeneration(MiniGoVisitor):
             return self.visit(ctx.variables_declared())
         elif ctx.constants_declared():
             return self.visit(ctx.constants_declared())
+        elif ctx.struct_declared():
+            return self.visit(ctx.struct_declared())
+        elif ctx.function_declared():
+            return self.visit(ctx.function_declared())
+        elif ctx.method_declared():
+            return self.visit(ctx.method_declared())
+        elif ctx.interface_declared():
+            return self.visit(ctx.interface_declared())
         return None
 
     def visitOptional_field_list(self, ctx: MiniGoParser.Optional_field_listContext):
@@ -686,3 +694,43 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.getChildCount() == 1:
             return [self.visit(ctx.expression())]
         return [self.visit(ctx.expression())] + self.visit(ctx.expr_list())
+
+    #OK
+    def visitNewlines(self, ctx: MiniGoParser.NewlinesContext):
+        return self.visitChildren(ctx)
+
+    def visitMore_declared(self, ctx: MiniGoParser.More_declaredContext):
+        return self.visitChildren(ctx)
+
+    def visitType_name_ids(self, ctx: MiniGoParser.Type_name_idsContext):
+        return self.visitChildren(ctx)
+
+    def visitMore_struct_fields(self, ctx: MiniGoParser.More_struct_fieldsContext):
+        return self.visitChildren(ctx)
+
+    def visitOpt_newlines(self, ctx: MiniGoParser.Opt_newlinesContext):
+        return self.visitChildren(ctx)
+
+    def visitMore_interface_methods(self, ctx: MiniGoParser.More_interface_methodsContext):
+        return self.visitChildren(ctx)
+
+    def visitAssign_op(self, ctx: MiniGoParser.Assign_opContext):
+        return self.visitChildren(ctx)
+
+    def visitBreak_statement(self, ctx: MiniGoParser.Break_statementContext):
+        return self.visitChildren(ctx)
+
+    def visitContinue_statement(self, ctx: MiniGoParser.Continue_statementContext):
+        return self.visitChildren(ctx)
+
+    def visitBlock_content(self, ctx: MiniGoParser.Block_contentContext):
+        return self.visitChildren(ctx)
+
+    def visitElement_access(self, ctx: MiniGoParser.Element_accessContext):
+        return self.visitChildren(ctx)
+
+    def visitField_access(self, ctx: MiniGoParser.Field_accessContext):
+        return self.visitChildren(ctx)
+
+    def visitCall_expr(self, ctx: MiniGoParser.Call_exprContext):
+        return self.visitChildren(ctx)
