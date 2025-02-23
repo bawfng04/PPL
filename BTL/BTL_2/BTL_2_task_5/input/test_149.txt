@@ -1,1 +1,5 @@
-const VoTien = 0b11; 
+
+        func foo () {
+            if (1){return;} else if (2){return;} else if (3){return;} else {return;}
+            if (1){return;} else if (2){return;} else if (3){return;}
+        }

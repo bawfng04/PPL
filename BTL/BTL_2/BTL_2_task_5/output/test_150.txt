@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,IntLiteral(56))
+Program([FuncDecl("foo",[],VoidType(),Block([Return(ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3),IntLiteral(4)]))]))
 		])

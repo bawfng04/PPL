@@ -1,7 +1,9 @@
 from MiniGoVisitor import MiniGoVisitor
 from MiniGoParser import MiniGoParser
 from AST import *
+from functools import reduce
 
+##! continue update
 class ASTGeneration(MiniGoVisitor):
     def getIntValue(self, text):
         if text.startswith('0b') or text.startswith('0B'):
@@ -12,9 +14,9 @@ class ASTGeneration(MiniGoVisitor):
             return int(text[2:], 16)
         else:
             return int(text)
-
+    # OK
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
-        decl = []
+        decl = [] # khai báo mảng decl = mảng các khai báo
         # Visit the first declaration if exists
         if ctx.declared():
             decl_ctx = ctx.declared()
@@ -196,21 +198,51 @@ class ASTGeneration(MiniGoVisitor):
         return self.visit(ctx.var_decl())
 
     def visitVar_decl(self, ctx: MiniGoParser.Var_declContext):
-        # Get the variable name
-        name = ctx.ID().getText()
-        varType = None
-        varInit = None
-        # Check if there is an explicit type attached
-        if ctx.type_name():
+        # Case 1: ID type_name (ASSIGN expression)?
+        if ctx.type_name() and not ctx.type_name_ids() and not ctx.comma_ids():
+            name = ctx.ID().getText()
             varType = self.visit(ctx.type_name())
-            # If varType is a tuple (from array_type), convert it to ArrayType
-            if isinstance(varType, tuple):
-                dimensions, base_type = varType
-                varType = ArrayType(dimensions, base_type)
-        # Check for an assignment expression
-        if ctx.ASSIGN():
-            varInit = self.visit(ctx.expression())
-        return VarDecl(name, varType, varInit)
+            varInit = self.visit(ctx.expression()) if ctx.ASSIGN() else None
+            return VarDecl(name, varType, varInit)
+
+        # Case 2: ID type_name_ids type_name (ASSIGN expr_list)?
+        elif ctx.type_name() and ctx.type_name_ids():
+            varType = self.visit(ctx.type_name())
+            names = [ctx.ID().getText()]
+            if ctx.type_name_ids():
+                names.extend(self.visit(ctx.type_name_ids()))
+
+            varInits = []
+            if ctx.ASSIGN():
+                varInits = self.visit(ctx.expr_list())
+
+            # Pad varInits with None if not enough initializers
+            while len(varInits) < len(names):
+                varInits.append(None)
+
+            return [VarDecl(name, varType, init) for name, init in zip(names, varInits)]
+
+        # Case 3: ID (ASSIGN expression)
+        elif not ctx.type_name() and not ctx.comma_ids():
+            name = ctx.ID().getText()
+            varInit = self.visit(ctx.expression()) if ctx.ASSIGN() else None
+            return VarDecl(name, None, varInit)
+
+        # Case 4: ID comma_ids (ASSIGN expr_list)
+        else:
+            names = [ctx.ID().getText()]
+            if ctx.comma_ids():
+                names.extend(self.visit(ctx.comma_ids()))
+
+            varInits = []
+            if ctx.ASSIGN():
+                varInits = self.visit(ctx.expr_list())
+
+            # Pad varInits with None if not enough initializers
+            while len(varInits) < len(names):
+                varInits.append(None)
+
+            return [VarDecl(name, None, init) for name, init in zip(names, varInits)]
 
     def visitConstants_declared(self, ctx: MiniGoParser.Constants_declaredContext):
         # Visit the constant declaration list and return the first declaration
@@ -222,18 +254,18 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitConst_decl(self, ctx: MiniGoParser.Const_declContext):
         # Create a constant declaration with name, type (None), and value
-        name = ctx.ID().getText()
-        value = self.visit(ctx.expression())
-        return ConstDecl(name, None, value)
+        name = ctx.ID().getText() # lấy tên biến
+        value = self.visit(ctx.expression()) # lấy giá trị
+        return ConstDecl(name, None, value) # trả về một hằng số
 
     def visitExpression(self, ctx: MiniGoParser.ExpressionContext):
-        if ctx.getChildCount() == 1:
-            return self.visit(ctx.expression1())
+        if ctx.getChildCount() == 1: # nếu có 1 phần tử
+            return self.visit(ctx.expression1()) # trả về phần tử đó
         else:
-            left = self.visit(ctx.expression())
-            right = self.visit(ctx.expression1())
-            op = "||"
-            return BinaryOp(op, left, right)
+            left = self.visit(ctx.expression()) # lấy phần tử bên trái
+            right = self.visit(ctx.expression1()) # lấy phần tử bên phải
+            op = "||" # lấy toán tử
+            return BinaryOp(op, left, right) # trả về một BinaryOp với toán tử và 2 phần tử
 
     def visitExpression1(self, ctx: MiniGoParser.Expression1Context):
         if ctx.getChildCount() == 1:
@@ -248,9 +280,9 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.expression3())
         else:
-            left = self.visit(ctx.expression2())
-            right = self.visit(ctx.expression3())
-            op = ctx.getChild(1).getText()
+            left = self.visit(ctx.expression2()) # lấy phần tử bên trái
+            right = self.visit(ctx.expression3()) # lấy phần tử bên phải
+            op = ctx.getChild(1).getText() # lấy toán tử
             return BinaryOp(op, left, right)
 
     def visitExpression3(self, ctx: MiniGoParser.Expression3Context):
@@ -671,6 +703,14 @@ class ASTGeneration(MiniGoVisitor):
             return self.visit(ctx.variables_declared())
         elif ctx.constants_declared():
             return self.visit(ctx.constants_declared())
+        elif ctx.struct_declared():
+            return self.visit(ctx.struct_declared())
+        elif ctx.function_declared():
+            return self.visit(ctx.function_declared())
+        elif ctx.method_declared():
+            return self.visit(ctx.method_declared())
+        elif ctx.interface_declared():
+            return self.visit(ctx.interface_declared())
         return None
 
     def visitOptional_field_list(self, ctx: MiniGoParser.Optional_field_listContext):
@@ -685,3 +725,62 @@ class ASTGeneration(MiniGoVisitor):
             return [self.visit(ctx.expression())]
         return [self.visit(ctx.expression())] + self.visit(ctx.expr_list())
 
+    #OK
+    def visitNewlines(self, ctx: MiniGoParser.NewlinesContext):
+        return None
+
+    def visitMore_declared(self, ctx: MiniGoParser.More_declaredContext):
+        return self.visitChildren(ctx)
+
+    def visitType_name_ids(self, ctx: MiniGoParser.Type_name_idsContext):
+        return self.visitChildren(ctx)
+
+    def visitMore_struct_fields(self, ctx: MiniGoParser.More_struct_fieldsContext):
+        return self.visitChildren(ctx)
+
+    def visitOpt_newlines(self, ctx: MiniGoParser.Opt_newlinesContext):
+        return self.visitChildren(ctx)
+
+    def visitMore_interface_methods(self, ctx: MiniGoParser.More_interface_methodsContext):
+        return self.visitChildren(ctx)
+
+    def visitAssign_op(self, ctx: MiniGoParser.Assign_opContext):
+        return self.visitChildren(ctx)
+
+    def visitBreak_statement(self, ctx: MiniGoParser.Break_statementContext):
+        return Break()
+
+    def visitContinue_statement(self, ctx: MiniGoParser.Continue_statementContext):
+        return Continue()
+
+    def visitBlock_content(self, ctx: MiniGoParser.Block_contentContext):
+        statements = []
+        if ctx.statement():
+            stmt = self.visit(ctx.statement())
+            if isinstance(stmt, list):
+                statements.extend(stmt)
+            else:
+                statements.append(stmt)
+        if ctx.block_content():
+            next_content = self.visit(ctx.block_content())
+            if next_content:
+                statements.extend(next_content)
+        return statements
+
+    def visitElement_access(self, ctx: MiniGoParser.Element_accessContext):
+        return self.visit(ctx.expression())
+
+    def visitField_access(self, ctx: MiniGoParser.Field_accessContext):
+        return ctx.ID().getText()
+
+    def visitCall_expr(self, ctx: MiniGoParser.Call_exprContext):
+        args = []
+        if ctx.list_expression():
+            args = self.visit(ctx.list_expression())
+        return args
+
+    def visitMore_types(self, ctx: MiniGoParser.More_typesContext):
+        return self.visitChildren(ctx)
+
+    def visitReceiver(self, ctx: MiniGoParser.ReceiverContext):
+        return self.visitChildren(ctx)

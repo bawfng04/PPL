@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,IntLiteral(161))
+Program([ConstDecl("VoTien",None,IntLiteral(56))
 		])

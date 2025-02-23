@@ -1,4 +1,4 @@
 
         func foo () {
-            for a, b := range 2 {return;}
+            for(1) {return;}
         }

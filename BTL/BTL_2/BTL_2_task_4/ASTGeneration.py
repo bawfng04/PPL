@@ -326,13 +326,17 @@ class ASTGeneration(MiniGoVisitor):
             return self.visitMore_access_expr(ctx.more_access_expr(), operand)
         return operand
 
+
     def visitMore_access_expr(self, ctx: MiniGoParser.More_access_exprContext, left):
+        if not ctx:
+            return left
+
         result = left
         # Process the current more_access_expr node:
         if ctx.field_access():
             field = ctx.field_access().ID().getText()
             result = FieldAccess(result, field)
-        if ctx.call_expr():
+        elif ctx.call_expr():
             args = []
             if ctx.call_expr().list_expression():
                 args = self.visit(ctx.call_expr().list_expression())
@@ -342,13 +346,24 @@ class ASTGeneration(MiniGoVisitor):
                 result = FuncCall(result.name, args)
             else:
                 result = MethCall(result, "call", args)
-        if ctx.element_access():
-            expr = self.visit(ctx.element_access().expression())
-            result = ArrayCell(result, [expr])
+        elif ctx.element_access():
+            # Collect all dimensions
+            dimensions = [self.visit(ctx.element_access().expression())]
+            # Check for additional array accesses in the chain
+            next_access = ctx.more_access_expr()
+            while next_access and next_access.element_access():
+                dimensions.append(self.visit(next_access.element_access().expression()))
+                next_access = next_access.more_access_expr()
+            result = ArrayCell(result, dimensions)
+            # If there are more non-array accesses, continue processing from last position
+            if next_access:
+                return self.visitMore_access_expr(next_access, result)
+
         # Recurse if there is another access in the chain
         if ctx.more_access_expr():
             return self.visitMore_access_expr(ctx.more_access_expr(), result)
         return result
+
 
     def visitList_expression(self, ctx: MiniGoParser.List_expressionContext):
         if ctx.getChildCount() == 1:
@@ -588,9 +603,16 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.field_access():
             field = ctx.field_access().ID().getText()
             result = FieldAccess(result, field)
-        if ctx.element_access():
-            expr = self.visit(ctx.element_access().expression())
-            result = ArrayCell(result, [expr])
+        elif ctx.element_access():
+            # Collect all dimensions
+            dimensions = [self.visit(ctx.element_access().expression())]
+            next_access = ctx.more_access()
+            while next_access and next_access.element_access():
+                dimensions.append(self.visit(next_access.element_access().expression()))
+                next_access = next_access.more_access()
+            result = ArrayCell(result, dimensions)
+            if next_access:
+                return self.visitMore_access(next_access, result)
 
         if ctx.more_access():
             return self.visitMore_access(ctx.more_access(), result)

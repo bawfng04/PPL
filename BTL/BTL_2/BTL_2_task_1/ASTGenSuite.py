@@ -141,7 +141,7 @@ class ASTGenSuite(unittest.TestCase):
 
     def test_025(self):
         input = """const VoTien = a[2][3]; """
-        expect = ConstDecl("VoTien", None, ArrayCell(ArrayCell(Id("a"),[IntLiteral(2)]),[IntLiteral(3)]))
+        expect = ConstDecl("VoTien",None,ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)]))
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
     def test_026(self):

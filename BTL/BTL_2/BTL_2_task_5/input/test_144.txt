@@ -1,4 +1,5 @@
 
         func foo () {
-            for(1) {return;}
+            if (a) {return;}
+            if (b) {return;} else {return;}
         }

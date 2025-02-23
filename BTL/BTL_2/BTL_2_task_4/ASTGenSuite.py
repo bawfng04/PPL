@@ -1122,9 +1122,9 @@ class ASTGenSuite(unittest.TestCase):
         expect = Program([ConstDecl("VoTien", None, FuncCall("foo",[IntLiteral(1),IntLiteral(2)]))])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
-    def test_125(self):  # was test_025
+    def test_125(self):
         input = """const VoTien = a[2][3]; """
-        expect = Program([ConstDecl("VoTien", None, ArrayCell(ArrayCell(Id("a"),[IntLiteral(2)]),[IntLiteral(3)]))])
+        expect = Program([ConstDecl("VoTien",None,ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)]))])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
     def test_126(self):  # was test_026
@@ -1562,9 +1562,9 @@ class ASTGenSuite(unittest.TestCase):
         expect = Program([ConstDecl("VoTien", None, FuncCall("foo",[IntLiteral(1),IntLiteral(2)]))])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
-    def test_172(self):  # was test_025
+    def test_172(self):
         input = """const VoTien = a[2][3]; """
-        expect = Program([ConstDecl("VoTien", None, ArrayCell(ArrayCell(Id("a"),[IntLiteral(2)]),[IntLiteral(3)]))])
+        expect = Program([ConstDecl("VoTien",None,ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)]))])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
     def test_173(self):  # was test_026

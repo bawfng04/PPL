@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([Assign(ArrayCell(ArrayCell(Id("a"),[StringLiteral("s")]),[FuncCall("foo",[])]),IntLiteral(1))]))
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(ArrayCell(Id("a"),[StringLiteral("s"),FuncCall("foo",[])]),IntLiteral(1))]))
 		])

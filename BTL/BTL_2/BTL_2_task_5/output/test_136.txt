@@ -1,2 +1,4 @@
-Program([InterfaceType("INTERFACE",[Prototype("foo",[],VoidType()),Prototype("foo",[],IntType()),Prototype("foo",[],ArrayType([IntLiteral(2)],Id("ID"))),Prototype("foo",[IntType()],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])
+Program([MethodDecl("ID",Id("ID"),FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))),
+			MethodDecl("ID",Id("ID"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",Id("ID"))],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))),
+			MethodDecl("ID",Id("ID"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))
 		])

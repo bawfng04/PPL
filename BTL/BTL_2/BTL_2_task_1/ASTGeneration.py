@@ -90,11 +90,18 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitMore_access_expr(self, ctx: MiniGoParser.More_access_exprContext, left):
         result = left
-        # Process the current more_access_expr node:
-        if ctx.field_access():
+
+        # Process the current access first
+        if ctx.element_access():
+            # Handle array access
+            dim = self.visit(ctx.element_access().expression())
+            result = ArrayCell(result, [dim])
+        elif ctx.field_access():
+            # Handle field access
             field = ctx.field_access().ID().getText()
             result = FieldAccess(result, field)
-        if ctx.call_expr():
+        elif ctx.call_expr():
+            # Handle method/function call
             args = []
             if ctx.call_expr().list_expression():
                 args = self.visit(ctx.call_expr().list_expression())
@@ -104,12 +111,11 @@ class ASTGeneration(MiniGoVisitor):
                 result = FuncCall(result.name, args)
             else:
                 result = MethCall(result, "call", args)
-        if ctx.element_access():
-            expr = self.visit(ctx.element_access().expression())
-            result = ArrayCell(result, [expr])
-        # Recurse if there is another access in the chain
+
+        # Recursively process remaining accesses
         if ctx.more_access_expr():
             return self.visitMore_access_expr(ctx.more_access_expr(), result)
+
         return result
 
     def visitList_expression(self, ctx: MiniGoParser.List_expressionContext):

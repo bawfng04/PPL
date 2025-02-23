@@ -1,1 +1,3 @@
-const VoTien = [ID] int {1}; 
+const VoTien = STRUCT {
+            a : 1,
+            b : false}; 
