@@ -16,8 +16,8 @@ public class MiniPHPLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ARRAY=1, VARNAME=2, PAIRNAME=3, INTLIT=4, FLOATLIT=5, STRINGLIT=6, DSTAR=7, 
-		DOT=8, MUL=9, DIV=10, MOD=11, ADD=12, SUB=13, DQUES=14, EQ=15, ARROW=16, 
+		ARRAY=1, VARNAME=2, PAIRNAME=3, INTLIT=4, FLOATLIT=5, STRINGLIT=6, DSTAR=7,
+		DOT=8, MUL=9, DIV=10, MOD=11, ADD=12, SUB=13, DQUES=14, EQ=15, ARROW=16,
 		LP=17, RP=18, COMMA=19, SEMI=20, WS=21;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
@@ -29,8 +29,8 @@ public class MiniPHPLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"ARRAY", "VARNAME", "PAIRNAME", "INTLIT", "FLOATLIT", "STRINGLIT", "DSTAR", 
-			"DOT", "MUL", "DIV", "MOD", "ADD", "SUB", "DQUES", "EQ", "ARROW", "LP", 
+			"ARRAY", "VARNAME", "PAIRNAME", "INTLIT", "FLOATLIT", "STRINGLIT", "DSTAR",
+			"DOT", "MUL", "DIV", "MOD", "ADD", "SUB", "DQUES", "EQ", "ARROW", "LP",
 			"RP", "COMMA", "SEMI", "WS"
 		};
 	}
@@ -38,16 +38,16 @@ public class MiniPHPLexer extends Lexer {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'array'", null, null, null, null, null, "'**'", "'.'", "'*'", 
-			"'/'", "'%'", "'+'", "'-'", "'??'", "'='", "'=>'", "'('", "')'", "','", 
+			null, "'array'", null, null, null, null, null, "'**'", "'.'", "'*'",
+			"'/'", "'%'", "'+'", "'-'", "'??'", "'='", "'=>'", "'('", "')'", "','",
 			"';'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "ARRAY", "VARNAME", "PAIRNAME", "INTLIT", "FLOATLIT", "STRINGLIT", 
-			"DSTAR", "DOT", "MUL", "DIV", "MOD", "ADD", "SUB", "DQUES", "EQ", "ARROW", 
+			null, "ARRAY", "VARNAME", "PAIRNAME", "INTLIT", "FLOATLIT", "STRINGLIT",
+			"DSTAR", "DOT", "MUL", "DIV", "MOD", "ADD", "SUB", "DQUES", "EQ", "ARROW",
 			"LP", "RP", "COMMA", "SEMI", "WS"
 		};
 	}
