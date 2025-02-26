@@ -16,7 +16,7 @@ class ASTGeneration(MiniGoVisitor):
             return int(text)
     # OK
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
-        decl = [] # khai báo mảng decl = mảng các khai báo
+        decl = []  # khai báo mảng decl = mảng các khai báo
         # Visit the first declaration if exists
         if ctx.declared():
             decl_ctx = ctx.declared()
@@ -815,89 +815,3 @@ class ASTGeneration(MiniGoVisitor):
         return self.visitChildren(ctx)
 
 
-def visitAssign_lhs(self, ctx: MiniGoParser.Assign_lhsContext):
-    left = Id(ctx.ID().getText())
-    if ctx.more_access():
-        left = self.visitMore_access(ctx.more_access(), left)
-    return left
-
-def visitMore_access(self, ctx: MiniGoParser.More_accessContext, left):
-    if not ctx.getChildCount():
-        return left
-
-    if ctx.field_access():
-        fieldName = ctx.field_access().ID().getText()
-        left = FieldAccess(left, fieldName)
-    elif ctx.element_access():
-        idx = self.visit(ctx.element_access())
-        left = ArrayCell(left, idx)
-
-    if ctx.more_access():
-        return self.visitMore_access(ctx.more_access(), left)
-
-    return left
-
-    def visitIf_statement(self, ctx: MiniGoParser.If_statementContext):
-        expr = self.visit(ctx.expression())
-        thenStmt = self.visit(ctx.block_stmt(0))
-
-        elseStmt = None
-        if len(ctx.block_stmt()) > 1:  # Has else block
-            elseStmt = self.visit(ctx.block_stmt(1))
-        elif ctx.if_statement():  # Has else-if
-            elseStmt = self.visit(ctx.if_statement())
-
-        return If(expr, thenStmt, elseStmt)
-
-    def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
-        # Check which type of for loop this is
-        if ctx.expression() and not ctx.for_init() and not ctx.for_update():
-            # This is a while-style loop: for expr { ... }
-            return ForBasic(self.visit(ctx.expression()), self.visit(ctx.block_stmt()))
-
-        if ctx.for_init() and ctx.expression() and ctx.for_update():
-            # This is a traditional for loop: for init; expr; update { ... }
-            return ForStep(
-                self.visit(ctx.for_init()),
-                self.visit(ctx.expression()),
-                self.visit(ctx.for_update()),
-                self.visit(ctx.block_stmt())
-            )
-
-        # Handle other forms as needed
-        return None
-
-    def visitList_statement(self, ctx: MiniGoParser.List_statementContext):
-        """Used for handling sequences of statements"""
-        if ctx.statement():
-            statement = self.visit(ctx.statement())
-            if ctx.list_statement():
-                next_statements = self.visit(ctx.list_statement())
-                if isinstance(statement, list):
-                    return statement + next_statements
-                else:
-                    return [statement] + next_statements
-            return [statement] if not isinstance(statement, list) else statement
-        return []
-
-    def visitDeclared_statement(self, ctx: MiniGoParser.Declared_statementContext):
-        """Handles declarations that can appear as statements"""
-        if ctx.variables_declared():
-            return self.visit(ctx.variables_declared())
-        elif ctx.constants_declared():
-            return self.visit(ctx.constants_declared())
-        elif ctx.struct_declared():
-            return self.visit(ctx.struct_declared())
-        elif ctx.function_declared():
-            return self.visit(ctx.function_declared())
-        elif ctx.method_declared():
-            return self.visit(ctx.method_declared())
-        elif ctx.interface_declared():
-            return self.visit(ctx.interface_declared())
-        return None
-
-    def visitOptional_field_list(self, ctx: MiniGoParser.Optional_field_listContext):
-        """Handles optional field lists in struct literals"""
-        if ctx.field_list():
-            return self.visit(ctx.field_list())
-        return []
