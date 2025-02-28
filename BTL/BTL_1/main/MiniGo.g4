@@ -148,26 +148,31 @@ assign_statement: assign_lhs assign_op expression (SEMI | NEWLINE);
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
 
-assign_lhs: ID more_access;
+assign_lhs: ID | assign_lhs field_access | assign_lhs element_access;
+
 more_access: | (field_access | element_access) more_access;
 
-if_statement: IF LP expression RP block_stmt ( ELSE if_statement | ELSE block_stmt)?;
+if_statement: IF LP expression RP block_stmt else_if_list? else_part?;
+else_if_list: else_if | else_if else_if_list;
+else_if: ELSE IF LP expression RP block_stmt;
+else_part: ELSE block_stmt;
 
 // FOR STATEMENT
 
-for_statement:
-	FOR (
-		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
-		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update block_stmt		// Three-part form
-		| expression block_stmt
-	);
+for_statement: basic_for | for_loop | for_array;
 
-for_init:
-	ID SHORT_ASSIGN expression				// Short declaration
-	| ID assign_op expression				// Assignment
-	| VAR ID type_name? ASSIGN expression;	// Variable declaration
+basic_for: FOR expression block_stmt;
 
-for_update: ID assign_op expression;
+for_loop:
+	FOR (assign_for | variables_for) (SEMI | NEWLINE) expression (SEMI | NEWLINE) assign_for block_stmt;
+
+for_array: FOR (ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt;
+
+variables_for: VAR ID type_name? ASSIGN expression;
+
+assign_for: ID assign_op expression;
+
+
 
 break_statement: BREAK (SEMI | NEWLINE);
 
