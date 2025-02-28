@@ -6,7 +6,9 @@ grammar MiniGo;
 from lexererr import *
 }
 //16 02 2025 - 18 04 - remove some rule
-//28 02 2025 - update after assignment 1's grade
+//28 02 2025 - update after assignment 1's grade (MiniGo_example.g4)
+
+
 @lexer::members {
 def __init__(self, input=None, output:TextIO = sys.stdout):
     super().__init__(input, output)

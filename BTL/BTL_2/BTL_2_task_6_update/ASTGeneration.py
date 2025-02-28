@@ -654,27 +654,54 @@ class ASTGeneration(MiniGoVisitor):
         # Get then statement
         thenStmt = self.visit(ctx.block_stmt())
 
-        # Handle else-if list if it exists
+        # Handle else-if list and else part
         elseStmt = None
+
         if ctx.else_if_list():
-            elseStmt = self.visit(ctx.else_if_list())
-        # Handle else part if it exists
+            if_chain = ctx.else_if_list()
+            current_if = None
+            last_if = None
+
+            while if_chain:
+                if if_chain.else_if():
+                    cond = self.visit(if_chain.else_if().expression())
+                    then_block = self.visit(if_chain.else_if().block_stmt())
+                    current_if = If(cond, then_block, None)
+
+                    # If this is the first else-if in the chain, store it as the elseStmt
+                    if elseStmt is None:
+                        elseStmt = current_if
+                    # Otherwise, link it to the else part of the last if
+                    elif last_if is not None:
+                        last_if.elseStmt = current_if
+
+                    last_if = current_if
+                    if_chain = if_chain.else_if_list()
+                else:
+                    break
+
+            # Check for else part after processing all else-ifs
+            if ctx.else_part() and last_if:
+                last_if.elseStmt = self.visit(ctx.else_part())
         elif ctx.else_part():
             elseStmt = self.visit(ctx.else_part())
 
         return If(expr, thenStmt, elseStmt)
 
     def visitElse_if_list(self, ctx: MiniGoParser.Else_if_listContext):
-        # Visit the first else-if
+        # Visit the first else-if to get its condition and then statement
         if ctx.else_if():
-            result = self.visit(ctx.else_if())
-            # If there are more else-ifs, add them as nested else blocks
+            expr = self.visit(ctx.else_if().expression())
+            thenStmt = self.visit(ctx.else_if().block_stmt())
+
+            # For the else part, check if there's another else-if or an else
+            elseStmt = None
             if ctx.else_if_list():
-                # Get the next else-if in the chain
-                next_else_if = self.visit(ctx.else_if_list())
-                # Set it as the else part of the current if
-                result.elseStmt = next_else_if
-            return result
+                elseStmt = self.visit(ctx.else_if_list())
+
+            # Return an If node with the condition, then statement, and else statement
+            return If(expr, thenStmt, elseStmt)
+
         return None
 
     def visitElse_if(self, ctx: MiniGoParser.Else_ifContext):
@@ -682,8 +709,8 @@ class ASTGeneration(MiniGoVisitor):
         expr = self.visit(ctx.expression())
         # Get then statement
         thenStmt = self.visit(ctx.block_stmt())
-        # Create If node with null else statement for now
-        return If(expr, thenStmt, None)
+        # Return the condition and then statement, else part will be handled by the caller
+        return expr, thenStmt
 
     def visitElse_part(self, ctx: MiniGoParser.Else_partContext):
         # Return the block statement of the else part
@@ -713,18 +740,18 @@ class ASTGeneration(MiniGoVisitor):
         # Get condition
         cond = self.visit(ctx.expression())
 
-        # Get update - safely handle the case where only one assign_for is present
-        update = None
-        if ctx.assign_for(1) is not None:
+        # Get update - carefully get the second assign_for if it exists
+        if len(ctx.assign_for()) > 1:
             update = self.visit(ctx.assign_for(1))
         else:
-            # Create a default no-op update if there isn't a second assign_for
-            update = Assign(Id("_"), Id("_"))
+            # Use the first assign_for if there's only one
+            update = self.visit(ctx.assign_for(0))
 
         # Get block
         block = self.visit(ctx.block_stmt())
 
         return ForStep(init, cond, update, block)
+
 
     def visitFor_array(self, ctx: MiniGoParser.For_arrayContext):
         # Check if we have index and value identifiers or underscores
