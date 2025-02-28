@@ -1,0 +1,2 @@
+
+            func  (Cat c) foo() [2]int {return;}

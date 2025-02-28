@@ -1,0 +1,5 @@
+
+            func foo(){
+                return;
+                return foo() + 2;
+            }

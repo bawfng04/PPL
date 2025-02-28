@@ -1,0 +1,9 @@
+
+            func votien() {
+                if(1) { return;
+                }else if(1) {
+                    a := 1;
+                }else if(2) {
+                    a := 1;
+                }
+            }

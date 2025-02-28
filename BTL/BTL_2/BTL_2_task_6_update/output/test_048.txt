@@ -1,0 +1,2 @@
+Program([ConstDecl("a",None,FieldAccess(StructLiteral("ID",[]),"a"))
+		])

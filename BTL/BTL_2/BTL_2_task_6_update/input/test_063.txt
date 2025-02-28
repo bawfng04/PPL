@@ -1,0 +1,6 @@
+
+            type Votien struct {
+                a  int;
+                b  boolean;
+                c  [2]Votien;
+            }

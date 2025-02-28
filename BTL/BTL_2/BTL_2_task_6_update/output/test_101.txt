@@ -1,0 +1,2 @@
+Program([ConstDecl("VoTien",None,ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)]))
+		])

@@ -1,0 +1,2 @@
+Program([FuncDecl("votien",[],VoidType(),Block([If(IntLiteral(1), Block([Return(None)]), None)]))
+		])
