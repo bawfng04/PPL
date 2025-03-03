@@ -400,7 +400,7 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.FLOAT_LIT():
             return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
         elif ctx.STRING_LIT():
-            return StringLiteral(ctx.STRING_LIT().getText()[1:-1])
+            return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
             return BooleanLiteral(True)
         elif ctx.FALSE():

@@ -1,2 +1,2 @@
-Program([ConstDecl("a",None,IntLiteral(1))
+Program([StructType("ID",[("a",IntType()),("b",Id("ID")),("c",ArrayType([IntLiteral(2)],IntType()))],[])
 		])

@@ -1,2 +1,6 @@
 
-    const a = 1;
+    type ID struct {
+        a int;
+        b ID;
+        c [2]int;
+    }

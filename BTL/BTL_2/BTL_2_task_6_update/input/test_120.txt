@@ -1,1 +1,1 @@
-const VoTien = 1 * 2 / 3 % 4; 
+const VoTien = ! - 1; 

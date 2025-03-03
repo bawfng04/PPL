@@ -1,7 +1,5 @@
 
-    func foo () {
-        a[1] := 2;
-        a[2][1+1] += 3;
-        a.b -= 5;
-        b.b[a + b].b.c[2] := 4;
-    }
+        func foo () {
+            if (a) {return;}
+            if (b) {return;} else {return;}
+        }

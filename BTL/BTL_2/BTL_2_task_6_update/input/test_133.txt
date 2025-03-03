@@ -1,4 +1,4 @@
 
-    func foo () {var a = 1;}
-    func foo () int {var a = 1;}
-    func foo () [2] ID {var a = 1;}
+    func (ID ID) foo () {var a = 1;}
+    func (ID ID) foo () int {var a = 1;}
+    func (ID ID) foo () [2] ID {var a = 1;}

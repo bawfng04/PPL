@@ -1,4 +1,9 @@
 
-    func (ID ID) foo () {var a = 1;}
-    func (ID ID) foo () int {var a = 1;}
-    func (ID ID) foo () [2] ID {var a = 1;}
+        type INTERFACE interface {
+            foo();
+            foo() int;
+            foo() [2]ID;
+            foo(a int);
+            foo(a int, b int);
+            foo(a, b int);
+        }

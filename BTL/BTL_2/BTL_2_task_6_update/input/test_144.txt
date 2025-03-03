@@ -1,5 +1,4 @@
 
         func foo () {
-            if (a) {return;}
-            if (b) {return;} else {return;}
+            for a, b := range 2 {return;}
         }

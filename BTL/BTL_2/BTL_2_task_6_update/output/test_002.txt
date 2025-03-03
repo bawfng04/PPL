@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,FuncCall("foo",[FloatLiteral(1.0),BooleanLiteral(true),BooleanLiteral(false),NilLiteral(),StringLiteral("votien")]))
+Program([ConstDecl("VoTien",None,FuncCall("foo",[FloatLiteral(1.0),BooleanLiteral(true),BooleanLiteral(false),NilLiteral(),StringLiteral(""votien"")]))
 		])

@@ -1,2 +1,2 @@
-Program([FuncDecl("foo",[],VoidType(),Block([ForEach(Id("a"),Id("b"),IntLiteral(2),Block([Return(None)]))]))
+Program([FuncDecl("foo",[],VoidType(),Block([If(IntLiteral(1), Block([Return(None)]), If(IntLiteral(2), Block([Return(None)]), If(IntLiteral(3), Block([Return(None)]), Block([Return(None)])))),If(IntLiteral(1), Block([Return(None)]), If(IntLiteral(2), Block([Return(None)]), If(IntLiteral(3), Block([Return(None)]), None)))]))
 		])
