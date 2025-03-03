@@ -318,3 +318,283 @@ class ASTGeneration(MPVisitor):
             result.append(Id(ctx.ID(i).getText()))
 
         return result
+
+
+
+# 5
+
+# Given the grammar of MP as follows:
+
+# program: exp EOF;
+
+# exp: term ASSIGN exp | term;
+
+# term: factor COMPARE factor | factor;
+
+# factor: factor ANDOR operand | operand;
+
+# operand: ID | INTLIT | BOOLIT | '(' exp ')';
+
+# INTLIT: [0-9]+ ;
+
+# BOOLIT: 'True' | 'False' ;
+
+# ANDOR: 'and' | 'or' ;
+
+# ASSIGN: '+=' | '-=' | '&=' | '|=' | ':=' ;
+
+# COMPARE: '=' | '<>' | '>=' | '<=' | '<' | '>' ;
+
+# ID: [a-z]+ ;
+
+# and AST classes as follows:
+
+# class AST(ABC):
+#     def __eq__(self, other):
+#         return self.__dict__ == other.__dict__
+
+#     @abstractmethod
+#     def accept(self, v, param):
+#         return v.visit(self, param)
+
+# class Expr(AST):
+#     __metaclass__ = ABCMeta
+#     pass
+
+# class Binary(Expr):
+#     #op:string:
+#     #left:Expr
+#     #right:Expr
+#     def __init__(self, op, left, right):
+#         self.op = op
+#         self.left = left
+#         self.right = right
+
+#     def __str__(self):
+#         return "Binary(" + self.op + "," + str(self.left) + "," + str(self.right) + ")"
+
+#     def accept(self, v, param):
+#         return v.visitBinaryOp(self, param)
+
+# class Id(Expr):
+#     #value:string
+#     def __init__(self, value):
+#         self.value = value
+
+#     def __str__(self):
+#         return "Id(" + self.value + ")"
+
+#     def accept(self, v, param):
+#         return v.visitId(self, param)
+
+# class IntLiteral(Expr):
+#     #value:int
+#     def __init__(self, value):
+#         self.value = value
+
+#     def __str__(self):
+#         return "IntLiteral(" + str(self.value) + ")"
+
+#     def accept(self, v, param):
+#         return v.visitIntLiteral(self, param)
+
+# class BooleanLiteral(Expr):
+#     #value:boolean
+#     def __init__(self, value):
+#         self.value = value
+
+#     def __str__(self):
+#         return "BooleanLiteral(" + str(self.value) + ")"
+
+#     def accept(self, v, param):
+#         return v.visitBooleanLiteral(self, param)
+
+
+# Please copy the following class into your answer and modify the bodies of its methods to generate the AST of a MP input?
+
+# class ASTGeneration(MPVisitor):
+
+#     def visitProgram(self,ctx:MPParser.ProgramContext):
+
+#         return None
+
+#     def visitExp(self,ctx:MPParser.ExpContext):
+
+#         return None
+
+#     def visitTerm(self,ctx:MPParser.TermContext):
+
+#         return None
+
+#     def visitFactor(self,ctx:MPParser.FactorContext):
+
+#         return None
+
+#     def visitOperand(self,ctx:MPParser.OperandContext):
+
+#         return None
+
+# For example:
+
+# Test	Result
+# "a := b := 4"
+# Binary(:=,Id(a),Binary(:=,Id(b),IntLiteral(4)))
+
+class ASTGeneration(MPVisitor):
+    def visitProgram(self, ctx:MPParser.ProgramContext):
+        return self.visit(ctx.exp())
+
+    def visitExp(self, ctx:MPParser.ExpContext):
+        if ctx.getChildCount() == 1:  # term
+            return self.visit(ctx.term())
+        else:  # term ASSIGN exp
+            left = self.visit(ctx.term())
+            op = ctx.ASSIGN().getText()
+            right = self.visit(ctx.exp())
+            return Binary(op, left, right)
+
+    def visitTerm(self, ctx:MPParser.TermContext):
+        if ctx.getChildCount() == 1:  # factor
+            return self.visit(ctx.factor(0))
+        else:  # factor COMPARE factor
+            left = self.visit(ctx.factor(0))
+            op = ctx.COMPARE().getText()
+            right = self.visit(ctx.factor(1))
+            return Binary(op, left, right)
+
+    def visitFactor(self, ctx:MPParser.FactorContext):
+        if ctx.getChildCount() == 1:  # operand
+            return self.visit(ctx.operand())
+        else:  # factor ANDOR operand
+            left = self.visit(ctx.factor())
+            op = ctx.ANDOR().getText()
+            right = self.visit(ctx.operand())
+            return Binary(op, left, right)
+
+    def visitOperand(self, ctx:MPParser.OperandContext):
+        if ctx.ID():  # ID
+            return Id(ctx.ID().getText())
+        elif ctx.INTLIT():  # INTLIT
+            return IntLiteral(int(ctx.INTLIT().getText()))
+        elif ctx.BOOLIT():  # BOOLIT
+            return BooleanLiteral(ctx.BOOLIT().getText() == 'True')
+        else:  # '(' exp ')'
+            return self.visit(ctx.exp())
+
+# 6
+# Given the grammar of MP as follows:
+
+# program: exp EOF;
+
+# exp: (term ASSIGN)* term;
+
+# term: factor COMPARE factor | factor;
+
+# factor: operand (ANDOR operand)*;
+
+# operand: ID | INTLIT | BOOLIT | '(' exp ')';
+
+# INTLIT: [0-9]+ ;
+
+# BOOLIT: 'True' | 'False' ;
+
+# ANDOR: 'and' | 'or' ;
+
+# ASSIGN: '+=' | '-=' | '&=' | '|=' | ':=' ;
+
+# COMPARE: '=' | '<>' | '>=' | '<=' | '<' | '>' ;
+
+# ID: [a-z]+ ;
+
+# and AST classes as follows:
+
+# class Expr(ABC):
+
+# class Binary(Expr):  #op:string;left:Expr;right:Expr
+
+# class Id(Expr): #value:string
+
+# class IntLiteral(Expr): #value:int
+
+# class BooleanLiteral(Expr): #value:boolean
+
+# Please copy the following class into your answer and modify the bodies of its methods to generate the AST of a MP input?
+
+# class ASTGeneration(MPVisitor):
+
+#     def visitProgram(self,ctx:MPParser.ProgramContext):
+
+#         return None
+
+#     def visitExp(self,ctx:MPParser.ExpContext):
+
+#         return None
+
+#     def visitTerm(self,ctx:MPParser.TermContext):
+
+#         return None
+
+#     def visitFactor(self,ctx:MPParser.FactorContext):
+
+#         return None
+
+#     def visitOperand(self,ctx:MPParser.OperandContext):
+
+#         return None
+
+# For example:
+
+# Test	Result
+# "a := b := 4"
+# Binary(:=,Id(a),Binary(:=,Id(b),IntLiteral(4)))
+
+
+class ASTGeneration(MPVisitor):
+
+    def visitProgram(self, ctx:MPParser.ProgramContext):
+        return self.visit(ctx.exp())
+
+    def visitExp(self, ctx:MPParser.ExpContext):
+        # Handle (term ASSIGN)* term
+        # Start with the rightmost term
+        result = self.visit(ctx.term(len(ctx.term()) - 1))
+
+        # Process assignments from right to left
+        for i in range(len(ctx.term()) - 2, -1, -1):
+            op = ctx.ASSIGN(i).getText()
+            left = self.visit(ctx.term(i))
+            result = Binary(op, left, result)
+
+        return result
+
+    def visitTerm(self, ctx:MPParser.TermContext):
+        if ctx.getChildCount() == 1:  # factor
+            return self.visit(ctx.factor(0))
+        else:  # factor COMPARE factor
+            left = self.visit(ctx.factor(0))
+            op = ctx.COMPARE().getText()
+            right = self.visit(ctx.factor(1))
+            return Binary(op, left, right)
+
+    def visitFactor(self, ctx:MPParser.FactorContext):
+        # Handle operand (ANDOR operand)*
+        # Start with the leftmost operand
+        result = self.visit(ctx.operand(0))
+
+        # Process from left to right
+        for i in range(len(ctx.ANDOR())):
+            op = ctx.ANDOR(i).getText()
+            right = self.visit(ctx.operand(i + 1))
+            result = Binary(op, result, right)
+
+        return result
+
+    def visitOperand(self, ctx:MPParser.OperandContext):
+        if ctx.ID():
+            return Id(ctx.ID().getText())
+        elif ctx.INTLIT():
+            return IntLiteral(int(ctx.INTLIT().getText()))
+        elif ctx.BOOLIT():
+            return BooleanLiteral(ctx.BOOLIT().getText() == "True")
+        else:  # '(' exp ')'
+            return self.visit(ctx.exp())
