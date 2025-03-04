@@ -537,7 +537,7 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.FLOAT_LIT():
             return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
         elif ctx.STRING_LIT():
-            return StringLiteral(ctx.STRING_LIT().getText()[1:-1])
+            return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
             return BooleanLiteral(True)
         elif ctx.FALSE():
@@ -657,15 +657,15 @@ class ASTGeneration(MiniGoVisitor):
         # Handle else-if list and else part
         elseStmt = None
 
-        if ctx.else_if_list():
-            if_chain = ctx.else_if_list()
+        if ctx.else_if_chain():
+            if_chain = ctx.else_if_chain()
             current_if = None
             last_if = None
 
             while if_chain:
-                if if_chain.else_if():
-                    cond = self.visit(if_chain.else_if().expression())
-                    then_block = self.visit(if_chain.else_if().block_stmt())
+                if if_chain.else_if_branch():
+                    cond = self.visit(if_chain.else_if_branch().expression())
+                    then_block = self.visit(if_chain.else_if_branch().block_stmt())
                     current_if = If(cond, then_block, None)
 
                     # If this is the first else-if in the chain, store it as the elseStmt
@@ -676,35 +676,35 @@ class ASTGeneration(MiniGoVisitor):
                         last_if.elseStmt = current_if
 
                     last_if = current_if
-                    if_chain = if_chain.else_if_list()
+                    if_chain = if_chain.else_if_chain()
                 else:
                     break
 
             # Check for else part after processing all else-ifs
-            if ctx.else_part() and last_if:
-                last_if.elseStmt = self.visit(ctx.else_part())
-        elif ctx.else_part():
-            elseStmt = self.visit(ctx.else_part())
+            if ctx.else_clause() and last_if:
+                last_if.elseStmt = self.visit(ctx.else_clause())
+        elif ctx.else_clause():
+            elseStmt = self.visit(ctx.else_clause())
 
         return If(expr, thenStmt, elseStmt)
 
-    def visitElse_if_list(self, ctx: MiniGoParser.Else_if_listContext):
+    def visitElse_if_chain(self, ctx: MiniGoParser.Else_if_chainContext):
         # Visit the first else-if to get its condition and then statement
-        if ctx.else_if():
-            expr = self.visit(ctx.else_if().expression())
-            thenStmt = self.visit(ctx.else_if().block_stmt())
+        if ctx.else_if_branch():
+            expr = self.visit(ctx.else_if_branch().expression())
+            thenStmt = self.visit(ctx.else_if_branch().block_stmt())
 
             # For the else part, check if there's another else-if or an else
             elseStmt = None
-            if ctx.else_if_list():
-                elseStmt = self.visit(ctx.else_if_list())
+            if ctx.else_if_chain():
+                elseStmt = self.visit(ctx.else_if_chain())
 
             # Return an If node with the condition, then statement, and else statement
             return If(expr, thenStmt, elseStmt)
 
         return None
 
-    def visitElse_if(self, ctx: MiniGoParser.Else_ifContext):
+    def visitElse_if_branch(self, ctx: MiniGoParser.Else_if_branchContext):
         # Get condition
         expr = self.visit(ctx.expression())
         # Get then statement
@@ -712,48 +712,47 @@ class ASTGeneration(MiniGoVisitor):
         # Return the condition and then statement, else part will be handled by the caller
         return expr, thenStmt
 
-    def visitElse_part(self, ctx: MiniGoParser.Else_partContext):
+    def visitElse_clause(self, ctx: MiniGoParser.Else_clauseContext):
         # Return the block statement of the else part
         return self.visit(ctx.block_stmt())
 
 
     def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
-        if ctx.for_array():
-            return self.visit(ctx.for_array())
-        elif ctx.for_loop():
-            return self.visit(ctx.for_loop())
-        else:  # Basic for
-            return self.visit(ctx.basic_for())
+        if ctx.for_range():
+            return self.visit(ctx.for_range())
+        elif ctx.for_three_parts():
+            return self.visit(ctx.for_three_parts())
+        else:  # for_condition
+            return self.visit(ctx.for_condition())
 
-    def visitBasic_for(self, ctx: MiniGoParser.Basic_forContext):
+    def visitFor_condition(self, ctx: MiniGoParser.For_conditionContext):
         expr = self.visit(ctx.expression())
         block = self.visit(ctx.block_stmt())
         return ForBasic(expr, block)
 
-    def visitFor_loop(self, ctx: MiniGoParser.For_loopContext):
+    def visitFor_three_parts(self, ctx: MiniGoParser.For_three_partsContext):
         # Get init part
-        if ctx.variables_for():
-            init = self.visit(ctx.variables_for())
-        else:  # assign_for
-            init = self.visit(ctx.assign_for(0))
+        if ctx.for_declaration():
+            init = self.visit(ctx.for_declaration())
+        else:  # for_assign
+            init = self.visit(ctx.for_assign(0))
 
         # Get condition
         cond = self.visit(ctx.expression())
 
-        # Get update - carefully get the second assign_for if it exists
-        if len(ctx.assign_for()) > 1:
-            update = self.visit(ctx.assign_for(1))
+        # Get update - carefully get the second for_assign if it exists
+        if len(ctx.for_assign()) > 1:
+            update = self.visit(ctx.for_assign(1))
         else:
-            # Use the first assign_for if there's only one
-            update = self.visit(ctx.assign_for(0))
+            # Use the first for_assign if there's only one
+            update = self.visit(ctx.for_assign(0))
 
         # Get block
         block = self.visit(ctx.block_stmt())
 
         return ForStep(init, cond, update, block)
 
-
-    def visitFor_array(self, ctx: MiniGoParser.For_arrayContext):
+    def visitFor_range(self, ctx: MiniGoParser.For_rangeContext):
         # Check if we have index and value identifiers or underscores
         idx = Id(ctx.ID(0).getText()) if ctx.ID(0) else None
         val = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
@@ -766,13 +765,13 @@ class ASTGeneration(MiniGoVisitor):
 
         return ForEach(idx, val, expr, block)
 
-    def visitVariables_for(self, ctx: MiniGoParser.Variables_forContext):
+    def visitFor_declaration(self, ctx: MiniGoParser.For_declarationContext):
         name = ctx.ID().getText()
         typ = self.visit(ctx.type_name()) if ctx.type_name() else None
         init = self.visit(ctx.expression())
         return VarDecl(name, typ, init)
 
-    def visitAssign_for(self, ctx: MiniGoParser.Assign_forContext):
+    def visitFor_assign(self, ctx: MiniGoParser.For_assignContext):
         lhs = Id(ctx.ID().getText())
         expr = self.visit(ctx.expression())
         op = ctx.assign_op().getText()

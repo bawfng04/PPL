@@ -353,15 +353,15 @@ class MiniGoParser ( Parser ):
     RULE_assign_lhs = 34
     RULE_more_access = 35
     RULE_if_statement = 36
-    RULE_else_if_list = 37
-    RULE_else_if = 38
-    RULE_else_part = 39
+    RULE_else_if_chain = 37
+    RULE_else_if_branch = 38
+    RULE_else_clause = 39
     RULE_for_statement = 40
-    RULE_basic_for = 41
-    RULE_for_loop = 42
-    RULE_for_array = 43
-    RULE_variables_for = 44
-    RULE_assign_for = 45
+    RULE_for_condition = 41
+    RULE_for_three_parts = 42
+    RULE_for_range = 43
+    RULE_for_declaration = 44
+    RULE_for_assign = 45
     RULE_break_statement = 46
     RULE_continue_statement = 47
     RULE_return_statement = 48
@@ -406,17 +406,18 @@ class MiniGoParser ( Parser ):
                    "more_ids", "interface_declared", "interface_type_list", 
                    "more_interface_methods", "interface_method", "declared_statement", 
                    "assign_statement", "assign_op", "assign_lhs", "more_access", 
-                   "if_statement", "else_if_list", "else_if", "else_part", 
-                   "for_statement", "basic_for", "for_loop", "for_array", 
-                   "variables_for", "assign_for", "break_statement", "continue_statement", 
-                   "return_statement", "call_statement", "block_stmt", "block_content", 
-                   "expr_list", "expression", "expression1", "expression2", 
-                   "expression3", "expression4", "expression5", "expression6", 
-                   "expression7", "more_access_expr", "operand", "element_access", 
-                   "field_access", "call_expr", "literal", "typed_array_literal", 
-                   "untyped_array_literal", "literal_list", "literal_item", 
-                   "array_type", "more_dimensions", "type_name", "struct_literal", 
-                   "optional_field_list", "field_list", "field_init", "list_expression" ]
+                   "if_statement", "else_if_chain", "else_if_branch", "else_clause", 
+                   "for_statement", "for_condition", "for_three_parts", 
+                   "for_range", "for_declaration", "for_assign", "break_statement", 
+                   "continue_statement", "return_statement", "call_statement", 
+                   "block_stmt", "block_content", "expr_list", "expression", 
+                   "expression1", "expression2", "expression3", "expression4", 
+                   "expression5", "expression6", "expression7", "more_access_expr", 
+                   "operand", "element_access", "field_access", "call_expr", 
+                   "literal", "typed_array_literal", "untyped_array_literal", 
+                   "literal_list", "literal_item", "array_type", "more_dimensions", 
+                   "type_name", "struct_literal", "optional_field_list", 
+                   "field_list", "field_init", "list_expression" ]
 
     EOF = Token.EOF
     IF=1
@@ -2914,12 +2915,12 @@ class MiniGoParser ( Parser ):
             return self.getTypedRuleContext(MiniGoParser.Block_stmtContext,0)
 
 
-        def else_if_list(self):
-            return self.getTypedRuleContext(MiniGoParser.Else_if_listContext,0)
+        def else_if_chain(self):
+            return self.getTypedRuleContext(MiniGoParser.Else_if_chainContext,0)
 
 
-        def else_part(self):
-            return self.getTypedRuleContext(MiniGoParser.Else_partContext,0)
+        def else_clause(self):
+            return self.getTypedRuleContext(MiniGoParser.Else_clauseContext,0)
 
 
         def getRuleIndex(self):
@@ -2950,7 +2951,7 @@ class MiniGoParser ( Parser ):
             la_ = self._interp.adaptivePredict(self._input,33,self._ctx)
             if la_ == 1:
                 self.state = 442
-                self.else_if_list()
+                self.else_if_chain()
 
 
             self.state = 446
@@ -2958,7 +2959,7 @@ class MiniGoParser ( Parser ):
             _la = self._input.LA(1)
             if _la==2:
                 self.state = 445
-                self.else_part()
+                self.else_clause()
 
 
         except RecognitionException as re:
@@ -2970,31 +2971,31 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class Else_if_listContext(ParserRuleContext):
+    class Else_if_chainContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def else_if(self):
-            return self.getTypedRuleContext(MiniGoParser.Else_ifContext,0)
+        def else_if_branch(self):
+            return self.getTypedRuleContext(MiniGoParser.Else_if_branchContext,0)
 
 
-        def else_if_list(self):
-            return self.getTypedRuleContext(MiniGoParser.Else_if_listContext,0)
+        def else_if_chain(self):
+            return self.getTypedRuleContext(MiniGoParser.Else_if_chainContext,0)
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_else_if_list
+            return MiniGoParser.RULE_else_if_chain
 
 
 
 
-    def else_if_list(self):
+    def else_if_chain(self):
 
-        localctx = MiniGoParser.Else_if_listContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 74, self.RULE_else_if_list)
+        localctx = MiniGoParser.Else_if_chainContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 74, self.RULE_else_if_chain)
         try:
             self.state = 452
             self._errHandler.sync(self)
@@ -3002,15 +3003,15 @@ class MiniGoParser ( Parser ):
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 448
-                self.else_if()
+                self.else_if_branch()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 449
-                self.else_if()
+                self.else_if_branch()
                 self.state = 450
-                self.else_if_list()
+                self.else_if_chain()
                 pass
 
 
@@ -3023,7 +3024,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class Else_ifContext(ParserRuleContext):
+    class Else_if_branchContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3051,15 +3052,15 @@ class MiniGoParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_else_if
+            return MiniGoParser.RULE_else_if_branch
 
 
 
 
-    def else_if(self):
+    def else_if_branch(self):
 
-        localctx = MiniGoParser.Else_ifContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 76, self.RULE_else_if)
+        localctx = MiniGoParser.Else_if_branchContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 76, self.RULE_else_if_branch)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 454
@@ -3083,7 +3084,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class Else_partContext(ParserRuleContext):
+    class Else_clauseContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3098,15 +3099,15 @@ class MiniGoParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_else_part
+            return MiniGoParser.RULE_else_clause
 
 
 
 
-    def else_part(self):
+    def else_clause(self):
 
-        localctx = MiniGoParser.Else_partContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 78, self.RULE_else_part)
+        localctx = MiniGoParser.Else_clauseContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 78, self.RULE_else_clause)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 461
@@ -3129,16 +3130,16 @@ class MiniGoParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def basic_for(self):
-            return self.getTypedRuleContext(MiniGoParser.Basic_forContext,0)
+        def for_condition(self):
+            return self.getTypedRuleContext(MiniGoParser.For_conditionContext,0)
 
 
-        def for_loop(self):
-            return self.getTypedRuleContext(MiniGoParser.For_loopContext,0)
+        def for_three_parts(self):
+            return self.getTypedRuleContext(MiniGoParser.For_three_partsContext,0)
 
 
-        def for_array(self):
-            return self.getTypedRuleContext(MiniGoParser.For_arrayContext,0)
+        def for_range(self):
+            return self.getTypedRuleContext(MiniGoParser.For_rangeContext,0)
 
 
         def getRuleIndex(self):
@@ -3158,19 +3159,19 @@ class MiniGoParser ( Parser ):
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 464
-                self.basic_for()
+                self.for_condition()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 465
-                self.for_loop()
+                self.for_three_parts()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 466
-                self.for_array()
+                self.for_range()
                 pass
 
 
@@ -3183,7 +3184,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class Basic_forContext(ParserRuleContext):
+    class For_conditionContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3202,15 +3203,15 @@ class MiniGoParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_basic_for
+            return MiniGoParser.RULE_for_condition
 
 
 
 
-    def basic_for(self):
+    def for_condition(self):
 
-        localctx = MiniGoParser.Basic_forContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 82, self.RULE_basic_for)
+        localctx = MiniGoParser.For_conditionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 82, self.RULE_for_condition)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 469
@@ -3228,7 +3229,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class For_loopContext(ParserRuleContext):
+    class For_three_partsContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3242,11 +3243,11 @@ class MiniGoParser ( Parser ):
             return self.getTypedRuleContext(MiniGoParser.ExpressionContext,0)
 
 
-        def assign_for(self, i:int=None):
+        def for_assign(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MiniGoParser.Assign_forContext)
+                return self.getTypedRuleContexts(MiniGoParser.For_assignContext)
             else:
-                return self.getTypedRuleContext(MiniGoParser.Assign_forContext,i)
+                return self.getTypedRuleContext(MiniGoParser.For_assignContext,i)
 
 
         def block_stmt(self):
@@ -3265,20 +3266,20 @@ class MiniGoParser ( Parser ):
             else:
                 return self.getToken(MiniGoParser.NEWLINE, i)
 
-        def variables_for(self):
-            return self.getTypedRuleContext(MiniGoParser.Variables_forContext,0)
+        def for_declaration(self):
+            return self.getTypedRuleContext(MiniGoParser.For_declarationContext,0)
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_for_loop
+            return MiniGoParser.RULE_for_three_parts
 
 
 
 
-    def for_loop(self):
+    def for_three_parts(self):
 
-        localctx = MiniGoParser.For_loopContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 84, self.RULE_for_loop)
+        localctx = MiniGoParser.For_three_partsContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 84, self.RULE_for_three_parts)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -3289,11 +3290,11 @@ class MiniGoParser ( Parser ):
             token = self._input.LA(1)
             if token in [53]:
                 self.state = 474
-                self.assign_for()
+                self.for_assign()
                 pass
             elif token in [14]:
                 self.state = 475
-                self.variables_for()
+                self.for_declaration()
                 pass
             else:
                 raise NoViableAltException(self)
@@ -3315,7 +3316,7 @@ class MiniGoParser ( Parser ):
                 self._errHandler.reportMatch(self)
                 self.consume()
             self.state = 481
-            self.assign_for()
+            self.for_assign()
             self.state = 482
             self.block_stmt()
         except RecognitionException as re:
@@ -3327,7 +3328,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class For_arrayContext(ParserRuleContext):
+    class For_rangeContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3367,15 +3368,15 @@ class MiniGoParser ( Parser ):
                 return self.getToken(MiniGoParser.UNDERSCORE, i)
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_for_array
+            return MiniGoParser.RULE_for_range
 
 
 
 
-    def for_array(self):
+    def for_range(self):
 
-        localctx = MiniGoParser.For_arrayContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 86, self.RULE_for_array)
+        localctx = MiniGoParser.For_rangeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 86, self.RULE_for_range)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -3414,7 +3415,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class Variables_forContext(ParserRuleContext):
+    class For_declarationContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3439,15 +3440,15 @@ class MiniGoParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_variables_for
+            return MiniGoParser.RULE_for_declaration
 
 
 
 
-    def variables_for(self):
+    def for_declaration(self):
 
-        localctx = MiniGoParser.Variables_forContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 88, self.RULE_variables_for)
+        localctx = MiniGoParser.For_declarationContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 88, self.RULE_for_declaration)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -3476,7 +3477,7 @@ class MiniGoParser ( Parser ):
         return localctx
 
 
-    class Assign_forContext(ParserRuleContext):
+    class For_assignContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -3495,15 +3496,15 @@ class MiniGoParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return MiniGoParser.RULE_assign_for
+            return MiniGoParser.RULE_for_assign
 
 
 
 
-    def assign_for(self):
+    def for_assign(self):
 
-        localctx = MiniGoParser.Assign_forContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 90, self.RULE_assign_for)
+        localctx = MiniGoParser.For_assignContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 90, self.RULE_for_assign)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 501
