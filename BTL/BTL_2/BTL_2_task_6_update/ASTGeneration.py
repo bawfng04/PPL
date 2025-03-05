@@ -3,17 +3,17 @@ from MiniGoParser import MiniGoParser
 from AST import *
 from functools import reduce
 
-##! continue update
+# 05 03 2025 - Change int(), float()
 class ASTGeneration(MiniGoVisitor):
-    def getIntValue(self, text):
-        if text.startswith('0b') or text.startswith('0B'):
-            return int(text[2:], 2)
-        elif text.startswith('0o') or text.startswith('0O'):
-            return int(text[2:], 8)
-        elif text.startswith('0x') or text.startswith('0X'):
-            return int(text[2:], 16)
-        else:
-            return int(text)
+    # def getIntValue(self, text):
+    #     if text.startswith('0b') or text.startswith('0B'):
+    #         return int(text[2:], 2)
+    #     elif text.startswith('0o') or text.startswith('0O'):
+    #         return int(text[2:], 8)
+    #     elif text.startswith('0x') or text.startswith('0X'):
+    #         return int(text[2:], 16)
+    #     else:
+    #         return int(text)
     # OK
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
         decl = []  # khai báo mảng decl = mảng các khai báo

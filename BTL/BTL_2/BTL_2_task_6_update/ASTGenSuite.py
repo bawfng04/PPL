@@ -1464,3 +1464,11 @@ class ASTGenSuite(unittest.TestCase):
             Assign(ArrayCell(Id("a"),[BinaryOp("+", IntLiteral(1), IntLiteral(2))]),ArrayCell(Id("a"),[BinaryOp("+", IntLiteral(1), IntLiteral(2))]))]))
 		])
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
+
+    def test_151(self):
+        input = """const VoTien = foo( a[0b1][3] ); """
+        expect = Program([ConstDecl("VoTien",None,FuncCall("foo",[ArrayCell(Id("a"),[IntLiteral("0b1"),IntLiteral(3)])]))
+        ])
+        self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
+
+
