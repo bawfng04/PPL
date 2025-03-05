@@ -387,10 +387,18 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitLiteral(self, ctx: MiniGoParser.LiteralContext):
         if ctx.INT_LIT():
-            # Return the original text instead of converting to int value
-            return IntLiteral(ctx.INT_LIT().getText())
+            text = ctx.INT_LIT().getText()
+            if text.startswith('0b') or text.startswith('0B'):
+                val = int(text[2:], 2)
+            elif text.startswith('0o') or text.startswith('0O'):
+                val = int(text[2:], 8)
+            elif text.startswith('0x') or text.startswith('0X'):
+                val = int(text[2:], 16)
+            else:
+                val = int(text)
+            return IntLiteral(val)
         elif ctx.FLOAT_LIT():
-            return FloatLiteral(ctx.FLOAT_LIT().getText())
+            return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
         elif ctx.STRING_LIT():
             return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
@@ -483,7 +491,7 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitArray_type(self, ctx: MiniGoParser.Array_typeContext):
         if ctx.INT_LIT():
-            first_dim = IntLiteral((ctx.INT_LIT().getText()))
+            first_dim = IntLiteral(int(ctx.INT_LIT().getText()))
         else:
             first_dim = Id(ctx.ID().getText())
 
@@ -506,7 +514,7 @@ class ASTGeneration(MiniGoVisitor):
             return []
         dimensions = []
         if ctx.INT_LIT():
-            dimensions.append(IntLiteral((ctx.INT_LIT().getText())))
+            dimensions.append(IntLiteral(int(ctx.INT_LIT().getText())))
         else:
             dimensions.append(Id(ctx.ID().getText()))
         if ctx.more_dimensions():
@@ -524,9 +532,10 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.struct_literal():
             return self.visit(ctx.struct_literal())
         elif ctx.INT_LIT():
-            return IntLiteral((ctx.INT_LIT().getText()))
+            text = ctx.INT_LIT().getText()
+            return IntLiteral(self.getIntValue(text))
         elif ctx.FLOAT_LIT():
-            return FloatLiteral((ctx.FLOAT_LIT().getText()))
+            return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
         elif ctx.STRING_LIT():
             return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
@@ -931,18 +940,9 @@ class ASTGeneration(MiniGoVisitor):
         return args
 
     def visitMore_types(self, ctx: MiniGoParser.More_typesContext):
-        if not ctx.type_name():
-            return []
-        types = [self.visit(ctx.type_name())]
-        if ctx.more_types():
-            types.extend(self.visit(ctx.more_types()))
-        return types
+        return self.visitChildren(ctx)
 
     def visitReceiver(self, ctx: MiniGoParser.ReceiverContext):
-        receiver_name = ctx.ID(0).getText()
-        receiver_type = None
-        if ctx.ID(1):
-            receiver_type = Id(ctx.ID(1).getText())
-        return (receiver_name, receiver_type)
+        return self.visitChildren(ctx)
 
 

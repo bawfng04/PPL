@@ -1,2 +1,2 @@
-Program([VarDecl("a",Id("Votien"),FloatLiteral(1.0))
+Program([VarDecl("a",Id("Votien"),FloatLiteral(1.))
 		])
