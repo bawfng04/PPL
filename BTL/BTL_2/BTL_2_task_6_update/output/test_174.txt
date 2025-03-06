@@ -1,2 +1,0 @@
-Program([ConstDecl("VoTien",None,MethCall(MethCall(Id("a"),"b",[]),"c",[IntLiteral(1),IntLiteral(2)]))
-		])

@@ -1,2 +1,0 @@
-Program([ConstDecl("VoTien",None,StructLiteral("STRUCT",[("a",IntLiteral(1)),("b",BooleanLiteral(false))]))
-		])

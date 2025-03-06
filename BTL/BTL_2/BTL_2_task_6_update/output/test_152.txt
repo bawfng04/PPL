@@ -1,2 +1,2 @@
-Program([ConstDecl("VoTien",None,FloatLiteral(0.1))
+Program([VarDecl("arr",ArrayType([IntLiteral(0x14)],Id("ahihi")), None)
 		])

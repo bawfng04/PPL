@@ -1,2 +1,0 @@
-Program([ConstDecl("VoTien",None,FuncCall("foo",[IntLiteral(1),IntLiteral(2)]))
-		])

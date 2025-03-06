@@ -1,1 +1,1 @@
-const VoTien = true; 
+var arr = [0o12] int {0B01, 2, 0X1A};

@@ -1472,3 +1472,14 @@ class ASTGenSuite(unittest.TestCase):
         self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
 
 
+    def test_152(self):
+        input = """var arr [0x14] ahihi; """
+        expect = Program([VarDecl("arr",ArrayType([IntLiteral("0x14")],Id("ahihi")),None)
+        ])
+        self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))
+
+    def test_153(self):
+        input = """var arr = [0o12] int {0B01, 2, 0X1A};"""
+        expect = Program([VarDecl("arr",None,ArrayLiteral([IntLiteral("0o12")],IntType(),[IntLiteral("0B01"),IntLiteral(2),IntLiteral("0X1A")]))
+        ])
+        self.assertTrue(TestAST.test(input, str(expect), inspect.stack()[0].function))

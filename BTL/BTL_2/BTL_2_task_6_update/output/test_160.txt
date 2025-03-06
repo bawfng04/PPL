@@ -1,2 +1,0 @@
-Program([ConstDecl("VoTien",None,ArrayLiteral([IntLiteral(1),IntLiteral(2)],IntType(),[FloatLiteral(1.0),StructLiteral("STRUCT",[]),NilLiteral()]))
-		])

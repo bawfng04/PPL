@@ -1,2 +1,0 @@
-Program([ConstDecl("VoTien",None,BinaryOp("&&", BinaryOp("&&", IntLiteral(1), IntLiteral(2)), IntLiteral(3)))
-		])

@@ -1,2 +1,0 @@
-Program([ConstDecl("a",None,IntLiteral(1))
-		])
