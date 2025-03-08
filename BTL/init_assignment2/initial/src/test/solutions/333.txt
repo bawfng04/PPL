@@ -1,0 +1,1 @@
+Program([VarDecl(firstName,StringType),VarDecl(lastName,StringType)])

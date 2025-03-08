@@ -1,0 +1,1 @@
+Program([VarDecl(count,IntType,IntLiteral(0)),VarDecl(message,StringType,StringLiteral("Ready")),VarDecl(status,Id(bool),BooleanLiteral(true))])

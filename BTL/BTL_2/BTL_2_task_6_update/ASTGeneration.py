@@ -4,6 +4,7 @@ from AST import *
 from functools import reduce
 
 # 05 03 2025 - Change int(), float()
+# 06 03 2025 - Change TRUE, FALSE.gettext()
 class ASTGeneration(MiniGoVisitor):
     # def getIntValue(self, text):
     #     if text.startswith('0b') or text.startswith('0B'):
@@ -394,9 +395,9 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.STRING_LIT():
             return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
-            return BooleanLiteral(True)
+            return BooleanLiteral(ctx.TRUE().getText())
         elif ctx.FALSE():
-            return BooleanLiteral(False)
+            return BooleanLiteral(ctx.FALSE().getText())
         elif ctx.NIL():
             return NilLiteral()
         elif ctx.typed_array_literal():
@@ -530,9 +531,9 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.STRING_LIT():
             return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
-            return BooleanLiteral(True)
+            return BooleanLiteral(ctx.TRUE().getText())
         elif ctx.FALSE():
-            return BooleanLiteral(False)
+            return BooleanLiteral(ctx.FALSE().getText())
         elif ctx.NIL():
             return NilLiteral()
         elif ctx.ID():

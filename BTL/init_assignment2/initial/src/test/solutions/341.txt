@@ -1,0 +1,1 @@
+Program([FuncDecl(foo,[],VoidType,Block([VarDecl(x,IntType,BinaryOp(FieldAccess(Id(p),x),+,FieldAccess(Id(p),y)))]))])

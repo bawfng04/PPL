@@ -1,0 +1,1 @@
+Program([FuncDecl(calculate,[],VoidType,Block([VarDecl(a,IntType,IntLiteral(5)),VarDecl(b,IntType,IntLiteral(10)),VarDecl(sum,IntType,BinaryOp(Id(a),+,Id(b)))]))])

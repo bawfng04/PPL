@@ -1,0 +1,1 @@
+func foo() { var x int = p.q.x[0]; }

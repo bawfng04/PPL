@@ -1,0 +1,1 @@
+Program([FuncDecl(foo,[],VoidType,Block([VarDecl(x,IntType,ArrayCell(FieldAccess(FieldAccess(Id(p),q),x),[IntLiteral(0)]))]))])

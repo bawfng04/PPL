@@ -1,0 +1,1 @@
+Program([FuncDecl(square,[ParDecl(x,FloatType)],FloatType,Block([]))])

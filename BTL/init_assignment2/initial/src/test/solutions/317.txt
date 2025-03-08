@@ -1,0 +1,1 @@
+Program([FuncDecl(isReady,[],Id(bool),Block([]))])

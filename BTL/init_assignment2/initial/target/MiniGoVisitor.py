@@ -194,18 +194,48 @@ class MiniGoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MiniGoParser#else_if_chain.
+    def visitElse_if_chain(self, ctx:MiniGoParser.Else_if_chainContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#else_if_branch.
+    def visitElse_if_branch(self, ctx:MiniGoParser.Else_if_branchContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#else_clause.
+    def visitElse_clause(self, ctx:MiniGoParser.Else_clauseContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MiniGoParser#for_statement.
     def visitFor_statement(self, ctx:MiniGoParser.For_statementContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#for_init.
-    def visitFor_init(self, ctx:MiniGoParser.For_initContext):
+    # Visit a parse tree produced by MiniGoParser#for_condition.
+    def visitFor_condition(self, ctx:MiniGoParser.For_conditionContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MiniGoParser#for_update.
-    def visitFor_update(self, ctx:MiniGoParser.For_updateContext):
+    # Visit a parse tree produced by MiniGoParser#for_three_parts.
+    def visitFor_three_parts(self, ctx:MiniGoParser.For_three_partsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#for_range.
+    def visitFor_range(self, ctx:MiniGoParser.For_rangeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#for_declaration.
+    def visitFor_declaration(self, ctx:MiniGoParser.For_declarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MiniGoParser#for_assign.
+    def visitFor_assign(self, ctx:MiniGoParser.For_assignContext):
         return self.visitChildren(ctx)
 
 

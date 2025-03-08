@@ -1,0 +1,1 @@
+Program([FuncDecl(first,[],VoidType,Block([])),FuncDecl(second,[],VoidType,Block([]))])

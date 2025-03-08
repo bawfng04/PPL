@@ -1,0 +1,1 @@
+Program([FuncDecl(increment,[ParDecl(n,IntType)],IntType,Block([]))])

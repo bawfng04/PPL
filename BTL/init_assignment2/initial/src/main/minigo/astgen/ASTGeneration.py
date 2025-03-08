@@ -3,20 +3,21 @@ from MiniGoParser import MiniGoParser
 from AST import *
 from functools import reduce
 
-##! continue update
+# 05 03 2025 - Change int(), float()
+# 06 03 2025 - Change TRUE, FALSE.gettext()
 class ASTGeneration(MiniGoVisitor):
-    def getIntValue(self, text):
-        if text.startswith('0b') or text.startswith('0B'):
-            return int(text[2:], 2)
-        elif text.startswith('0o') or text.startswith('0O'):
-            return int(text[2:], 8)
-        elif text.startswith('0x') or text.startswith('0X'):
-            return int(text[2:], 16)
-        else:
-            return int(text)
+    # def getIntValue(self, text):
+    #     if text.startswith('0b') or text.startswith('0B'):
+    #         return int(text[2:], 2)
+    #     elif text.startswith('0o') or text.startswith('0O'):
+    #         return int(text[2:], 8)
+    #     elif text.startswith('0x') or text.startswith('0X'):
+    #         return int(text[2:], 16)
+    #     else:
+    #         return int(text)
     # OK
     def visitProgram(self, ctx: MiniGoParser.ProgramContext):
-        decl = [] # khai báo mảng decl = mảng các khai báo
+        decl = []  # khai báo mảng decl = mảng các khai báo
         # Visit the first declaration if exists
         if ctx.declared():
             decl_ctx = ctx.declared()
@@ -326,13 +327,17 @@ class ASTGeneration(MiniGoVisitor):
             return self.visitMore_access_expr(ctx.more_access_expr(), operand)
         return operand
 
+
     def visitMore_access_expr(self, ctx: MiniGoParser.More_access_exprContext, left):
+        if not ctx:
+            return left
+
         result = left
         # Process the current more_access_expr node:
         if ctx.field_access():
             field = ctx.field_access().ID().getText()
             result = FieldAccess(result, field)
-        if ctx.call_expr():
+        elif ctx.call_expr():
             args = []
             if ctx.call_expr().list_expression():
                 args = self.visit(ctx.call_expr().list_expression())
@@ -342,13 +347,31 @@ class ASTGeneration(MiniGoVisitor):
                 result = FuncCall(result.name, args)
             else:
                 result = MethCall(result, "call", args)
-        if ctx.element_access():
-            expr = self.visit(ctx.element_access().expression())
-            result = ArrayCell(result, [expr])
+        elif ctx.element_access():
+            # Get the first dimension
+            dimensions = [self.visit(ctx.element_access().expression())]
+
+            # Process any additional array accesses in the chain before handling other access types
+            next_access = ctx.more_access_expr()
+
+            # Continue collecting dimensions as long as next access is element_access
+            while next_access and next_access.element_access():
+                dimensions.append(self.visit(next_access.element_access().expression()))
+                next_access = next_access.more_access_expr()
+
+            # Create the array cell with all dimensions
+            result = ArrayCell(result, dimensions)
+
+            # If there are still more accesses (like field access or call expr) after array accesses
+            if next_access:
+                return self.visitMore_access_expr(next_access, result)
+
         # Recurse if there is another access in the chain
         if ctx.more_access_expr():
             return self.visitMore_access_expr(ctx.more_access_expr(), result)
+
         return result
+
 
     def visitList_expression(self, ctx: MiniGoParser.List_expressionContext):
         if ctx.getChildCount() == 1:
@@ -365,24 +388,16 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitLiteral(self, ctx: MiniGoParser.LiteralContext):
         if ctx.INT_LIT():
-            text = ctx.INT_LIT().getText()
-            if text.startswith('0b') or text.startswith('0B'):
-                val = int(text[2:], 2)
-            elif text.startswith('0o') or text.startswith('0O'):
-                val = int(text[2:], 8)
-            elif text.startswith('0x') or text.startswith('0X'):
-                val = int(text[2:], 16)
-            else:
-                val = int(text)
-            return IntLiteral(val)
+            # Return the original text instead of converting to int value
+            return IntLiteral(ctx.INT_LIT().getText())
         elif ctx.FLOAT_LIT():
-            return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
+            return FloatLiteral(ctx.FLOAT_LIT().getText())
         elif ctx.STRING_LIT():
-            return StringLiteral(ctx.STRING_LIT().getText()[1:-1])
+            return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
-            return BooleanLiteral(True)
+            return BooleanLiteral(ctx.TRUE().getText())
         elif ctx.FALSE():
-            return BooleanLiteral(False)
+            return BooleanLiteral(ctx.FALSE().getText())
         elif ctx.NIL():
             return NilLiteral()
         elif ctx.typed_array_literal():
@@ -469,7 +484,7 @@ class ASTGeneration(MiniGoVisitor):
 
     def visitArray_type(self, ctx: MiniGoParser.Array_typeContext):
         if ctx.INT_LIT():
-            first_dim = IntLiteral(int(ctx.INT_LIT().getText()))
+            first_dim = IntLiteral((ctx.INT_LIT().getText()))
         else:
             first_dim = Id(ctx.ID().getText())
 
@@ -492,7 +507,7 @@ class ASTGeneration(MiniGoVisitor):
             return []
         dimensions = []
         if ctx.INT_LIT():
-            dimensions.append(IntLiteral(int(ctx.INT_LIT().getText())))
+            dimensions.append(IntLiteral((ctx.INT_LIT().getText())))
         else:
             dimensions.append(Id(ctx.ID().getText()))
         if ctx.more_dimensions():
@@ -510,16 +525,15 @@ class ASTGeneration(MiniGoVisitor):
         elif ctx.struct_literal():
             return self.visit(ctx.struct_literal())
         elif ctx.INT_LIT():
-            text = ctx.INT_LIT().getText()
-            return IntLiteral(self.getIntValue(text))
+            return IntLiteral((ctx.INT_LIT().getText()))
         elif ctx.FLOAT_LIT():
-            return FloatLiteral(float(ctx.FLOAT_LIT().getText()))
+            return FloatLiteral((ctx.FLOAT_LIT().getText()))
         elif ctx.STRING_LIT():
-            return StringLiteral(ctx.STRING_LIT().getText()[1:-1])
+            return StringLiteral(ctx.STRING_LIT().getText())
         elif ctx.TRUE():
-            return BooleanLiteral(True)
+            return BooleanLiteral(ctx.TRUE().getText())
         elif ctx.FALSE():
-            return BooleanLiteral(False)
+            return BooleanLiteral(ctx.FALSE().getText())
         elif ctx.NIL():
             return NilLiteral()
         elif ctx.ID():
@@ -575,10 +589,32 @@ class ASTGeneration(MiniGoVisitor):
             return Assign(lhs, expr)
 
     def visitAssign_lhs(self, ctx: MiniGoParser.Assign_lhsContext):
-        result = Id(ctx.ID().getText())
-        if ctx.more_access():
-            return self.visitMore_access(ctx.more_access(), result)
-        return result
+        # Handle the case where ID() doesn't exist (field access or element access)
+        if ctx.ID() is not None:
+            result = Id(ctx.ID().getText())
+            # Check for chained field/element accesses
+            if ctx.field_access():
+                field = ctx.field_access().ID().getText()
+                result = FieldAccess(result, field)
+            elif ctx.element_access():
+                idx = self.visit(ctx.element_access().expression())
+                result = ArrayCell(result, [idx])
+            return result
+        elif ctx.assign_lhs():
+            # This is a recursive case where we have assign_lhs field_access or assign_lhs element_access
+            base = self.visit(ctx.assign_lhs())
+            if ctx.field_access():
+                field = ctx.field_access().ID().getText()
+                return FieldAccess(base, field)
+            elif ctx.element_access():
+                idx = self.visit(ctx.element_access().expression())
+                if isinstance(base, ArrayCell):
+                    # If already an array cell, add another dimension
+                    base.idx.append(idx)
+                    return base
+                else:
+                    return ArrayCell(base, [idx])
+        return None  # Fallback case
 
     def visitMore_access(self, ctx: MiniGoParser.More_accessContext, left):
         if not ctx:
@@ -588,9 +624,16 @@ class ASTGeneration(MiniGoVisitor):
         if ctx.field_access():
             field = ctx.field_access().ID().getText()
             result = FieldAccess(result, field)
-        if ctx.element_access():
-            expr = self.visit(ctx.element_access().expression())
-            result = ArrayCell(result, [expr])
+        elif ctx.element_access():
+            # Collect all dimensions
+            dimensions = [self.visit(ctx.element_access().expression())]
+            next_access = ctx.more_access()
+            while next_access and next_access.element_access():
+                dimensions.append(self.visit(next_access.element_access().expression()))
+                next_access = next_access.more_access()
+            result = ArrayCell(result, dimensions)
+            if next_access:
+                return self.visitMore_access(next_access, result)
 
         if ctx.more_access():
             return self.visitMore_access(ctx.more_access(), result)
@@ -601,75 +644,183 @@ class ASTGeneration(MiniGoVisitor):
         expr = self.visit(ctx.expression())
 
         # Get then statement
-        thenStmt = self.visit(ctx.block_stmt(0))
+        thenStmt = self.visit(ctx.block_stmt())
 
-        # Handle else clause if it exists
-        if ctx.ELSE():
-            if ctx.if_statement():  # else if case
-                # For else-if, we create a nested If structure as the else part
-                elseStmt = self.visit(ctx.if_statement())
-            else:  # Simple else case
-                elseStmt = self.visit(ctx.block_stmt(1))
-        else:
-            elseStmt = None
+        # Handle else-if list and else part
+        elseStmt = None
+
+        if ctx.else_if_chain():
+            if_chain = ctx.else_if_chain()
+            current_if = None
+            last_if = None
+
+            while if_chain:
+                if if_chain.else_if_branch():
+                    cond = self.visit(if_chain.else_if_branch().expression())
+                    then_block = self.visit(if_chain.else_if_branch().block_stmt())
+                    current_if = If(cond, then_block, None)
+
+                    # If this is the first else-if in the chain, store it as the elseStmt
+                    if elseStmt is None:
+                        elseStmt = current_if
+                    # Otherwise, link it to the else part of the last if
+                    elif last_if is not None:
+                        last_if.elseStmt = current_if
+
+                    last_if = current_if
+                    if_chain = if_chain.else_if_chain()
+                else:
+                    break
+
+            # Check for else part after processing all else-ifs
+            if ctx.else_clause() and last_if:
+                last_if.elseStmt = self.visit(ctx.else_clause())
+        elif ctx.else_clause():
+            elseStmt = self.visit(ctx.else_clause())
 
         return If(expr, thenStmt, elseStmt)
 
+    def visitElse_if_chain(self, ctx: MiniGoParser.Else_if_chainContext):
+        # Visit the first else-if to get its condition and then statement
+        if ctx.else_if_branch():
+            expr = self.visit(ctx.else_if_branch().expression())
+            thenStmt = self.visit(ctx.else_if_branch().block_stmt())
+
+            # For the else part, check if there's another else-if or an else
+            elseStmt = None
+            if ctx.else_if_chain():
+                elseStmt = self.visit(ctx.else_if_chain())
+
+            # Return an If node with the condition, then statement, and else statement
+            return If(expr, thenStmt, elseStmt)
+
+        return None
+
+    def visitElse_if_branch(self, ctx: MiniGoParser.Else_if_branchContext):
+        # Get condition
+        expr = self.visit(ctx.expression())
+        # Get then statement
+        thenStmt = self.visit(ctx.block_stmt())
+        # Return the condition and then statement, else part will be handled by the caller
+        return expr, thenStmt
+
+    def visitElse_clause(self, ctx: MiniGoParser.Else_clauseContext):
+        # Return the block statement of the else part
+        return self.visit(ctx.block_stmt())
+
+
     def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
-        if ctx.RANGE():  # For range case
-            idx = Id(ctx.ID(0).getText()) if ctx.ID(0) else None
-            val = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
-            expr = self.visit(ctx.expression())
-            block = self.visit(ctx.block_stmt())
-            return ForEach(idx, val, expr, block)
-        elif ctx.for_init():  # For with 3 parts
-            init = self.visit(ctx.for_init())
-            cond = self.visit(ctx.expression())
-            update = self.visit(ctx.for_update())
-            block = self.visit(ctx.block_stmt())
-            return ForStep(init, cond, update, block)
-        else:  # Basic for case with just condition
-            expr = self.visit(ctx.expression())
-            block = self.visit(ctx.block_stmt())
-            return ForBasic(expr, block)
+        if ctx.for_range():
+            return self.visit(ctx.for_range())
+        elif ctx.for_three_parts():
+            return self.visit(ctx.for_three_parts())
+        else:  # for_condition
+            return self.visit(ctx.for_condition())
 
-    def visitFor_init(self, ctx: MiniGoParser.For_initContext):
-        if ctx.VAR():  # var ID type? ASSIGN expression
-            name = ctx.ID().getText()
-            typ = self.visit(ctx.type_name()) if ctx.type_name() else None
-            init = self.visit(ctx.expression())
-            return VarDecl(name, typ, init)
-        else:  # ID assign_op expression
-            lhs = Id(ctx.ID().getText())
-            expr = self.visit(ctx.expression())
-            if ctx.assign_op():
-                op = ctx.assign_op().getText()
-                if op == ':=':
-                    return Assign(lhs, expr)
-                elif op in ['+=', '-=', '*=', '/=', '%=']:
-                    binOp = BinaryOp(op[0], lhs, expr)
-                    return Assign(lhs, binOp)
-                else:  # op == '='
-                    return Assign(lhs, expr)
-            else:
-                return Assign(lhs, expr)
+    def visitFor_condition(self, ctx: MiniGoParser.For_conditionContext):
+        expr = self.visit(ctx.expression())
+        block = self.visit(ctx.block_stmt())
+        return ForBasic(expr, block)
 
-    def visitFor_update(self, ctx: MiniGoParser.For_updateContext):
+    def visitFor_three_parts(self, ctx: MiniGoParser.For_three_partsContext):
+        # Get init part
+        if ctx.for_declaration():
+            init = self.visit(ctx.for_declaration())
+        else:  # for_assign
+            init = self.visit(ctx.for_assign(0))
+
+        # Get condition
+        cond = self.visit(ctx.expression())
+
+        # Get update - carefully get the second for_assign if it exists
+        if len(ctx.for_assign()) > 1:
+            update = self.visit(ctx.for_assign(1))
+        else:
+            # Use the first for_assign if there's only one
+            update = self.visit(ctx.for_assign(0))
+
+        # Get block
+        block = self.visit(ctx.block_stmt())
+
+        return ForStep(init, cond, update, block)
+
+    def visitFor_range(self, ctx: MiniGoParser.For_rangeContext):
+        # Check if we have index and value identifiers or underscores
+        idx = Id(ctx.ID(0).getText()) if ctx.ID(0) else None
+        val = Id(ctx.ID(1).getText()) if ctx.ID(1) else None
+
+        # Get the expression to iterate over
+        expr = self.visit(ctx.expression())
+
+        # Get the loop block
+        block = self.visit(ctx.block_stmt())
+
+        return ForEach(idx, val, expr, block)
+
+    def visitFor_declaration(self, ctx: MiniGoParser.For_declarationContext):
+        name = ctx.ID().getText()
+        typ = self.visit(ctx.type_name()) if ctx.type_name() else None
+        init = self.visit(ctx.expression())
+        return VarDecl(name, typ, init)
+
+    def visitFor_assign(self, ctx: MiniGoParser.For_assignContext):
         lhs = Id(ctx.ID().getText())
+        expr = self.visit(ctx.expression())
         op = ctx.assign_op().getText()
-        rhs = self.visit(ctx.expression())
+
         if op == ':=':
-            return Assign(lhs, rhs)
+            return Assign(lhs, expr)
         elif op in ['+=', '-=', '*=', '/=', '%=']:
-            binOp = BinaryOp(op[0], lhs, rhs)
-            return Assign(lhs, binOp)
+            op_char = op[0]
+            return Assign(lhs, BinaryOp(op_char, lhs, expr))
         else:  # op == '='
-            return Assign(lhs, rhs)
+            return Assign(lhs, expr)
+
+    # def visitFor_init(self, ctx: MiniGoParser.For_initContext):
+    #     if ctx.VAR():  # var ID type? ASSIGN expression
+    #         name = ctx.ID().getText()
+    #         typ = self.visit(ctx.type_name()) if ctx.type_name() else None
+    #         init = self.visit(ctx.expression())
+    #         return VarDecl(name, typ, init)
+    #     else:  # ID assign_op expression
+    #         lhs = Id(ctx.ID().getText())
+    #         expr = self.visit(ctx.expression())
+    #         if ctx.assign_op():
+    #             op = ctx.assign_op().getText()
+    #             if op == ':=':
+    #                 return Assign(lhs, expr)
+    #             elif op in ['+=', '-=', '*=', '/=', '%=']:
+    #                 binOp = BinaryOp(op[0], lhs, expr)
+    #                 return Assign(lhs, binOp)
+    #             else:  # op == '='
+    #                 return Assign(lhs, expr)
+    #         else:
+    #             return Assign(lhs, expr)
+
+    # def visitFor_update(self, ctx: MiniGoParser.For_updateContext):
+    #     lhs = Id(ctx.ID().getText())
+    #     op = ctx.assign_op().getText()
+    #     rhs = self.visit(ctx.expression())
+    #     if op == ':=':
+    #         return Assign(lhs, rhs)
+    #     elif op in ['+=', '-=', '*=', '/=', '%=']:
+    #         # Convert to appropriate BinaryOp
+    #         op_map = {
+    #             '+=': '+',
+    #             '-=': '-',
+    #             '*=': '*',
+    #             '/=': '/',
+    #             '%=': '%'
+    #         }
+    #         return Assign(lhs, BinaryOp(op_map[op], lhs, rhs))
+    #     else:
+    #         return Assign(lhs, rhs)
 
     def visitReturn_statement(self, ctx: MiniGoParser.Return_statementContext):
         if ctx.expression():
             return Return(self.visit(ctx.expression()))
         return Return(None)
+
 
     def visitCall_statement(self, ctx: MiniGoParser.Call_statementContext):
         if ctx.ID():  # Direct function call
@@ -678,7 +829,7 @@ class ASTGeneration(MiniGoVisitor):
             if ctx.list_expression():
                 args = self.visit(ctx.list_expression())
             return FuncCall(name, args)
-        else:  # Method call through assign_lhs
+        elif ctx.assign_lhs():  # Method call through assign_lhs
             obj = self.visit(ctx.assign_lhs())
             args = []
             if ctx.list_expression():
@@ -686,6 +837,7 @@ class ASTGeneration(MiniGoVisitor):
             if isinstance(obj, FieldAccess):
                 return MethCall(obj.receiver, obj.field, args)
             return MethCall(obj, "call", args)
+        return None  # Fallback case
 
 
     # Missing visitor methods:
@@ -780,7 +932,18 @@ class ASTGeneration(MiniGoVisitor):
         return args
 
     def visitMore_types(self, ctx: MiniGoParser.More_typesContext):
-        return self.visitChildren(ctx)
+        if not ctx.type_name():
+            return []
+        types = [self.visit(ctx.type_name())]
+        if ctx.more_types():
+            types.extend(self.visit(ctx.more_types()))
+        return types
 
     def visitReceiver(self, ctx: MiniGoParser.ReceiverContext):
-        return self.visitChildren(ctx)
+        receiver_name = ctx.ID(0).getText()
+        receiver_type = None
+        if ctx.ID(1):
+            receiver_type = Id(ctx.ID(1).getText())
+        return (receiver_name, receiver_type)
+
+

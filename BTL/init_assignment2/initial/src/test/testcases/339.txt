@@ -1,0 +1,1 @@
+var count int = 0; func increment() {}; var total float = 0.0;

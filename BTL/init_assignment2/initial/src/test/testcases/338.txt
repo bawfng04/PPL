@@ -1,0 +1,1 @@
+func foo() { var x int = a[0] + b[1]; }

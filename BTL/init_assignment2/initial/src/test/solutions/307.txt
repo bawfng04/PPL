@@ -1,0 +1,1 @@
+Program([VarDecl(rate,FloatType,FloatLiteral(3.14))])

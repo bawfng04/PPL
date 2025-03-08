@@ -14,10 +14,9 @@ class ASTGenSuite(unittest.TestCase):
         input = """var x int ;"""
         expect = str(Program([VarDecl("x",IntType(),None)]))
         self.assertTrue(TestAST.checkASTGen(input,expect,301))
-    
+
     def test_call_without_parameter(self):
         """More complex program"""
         input = """func main () {}; var x int ;"""
         expect = str(Program([FuncDecl("main",[],VoidType(),Block([])),VarDecl("x",IntType(),None)]))
         self.assertTrue(TestAST.checkASTGen(input,expect,302))
-   

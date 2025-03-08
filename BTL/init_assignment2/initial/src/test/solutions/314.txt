@@ -1,0 +1,1 @@
+Program([FuncDecl(test,[],VoidType,Block([])),VarDecl(counter,IntType,IntLiteral(1))])

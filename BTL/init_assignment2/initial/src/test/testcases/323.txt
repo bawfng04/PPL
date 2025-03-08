@@ -1,0 +1,1 @@
+func getCount() int {}; func getMessage() string {}; func isActive() bool {};

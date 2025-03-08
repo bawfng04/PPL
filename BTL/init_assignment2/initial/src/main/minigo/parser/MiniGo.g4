@@ -6,6 +6,11 @@ grammar MiniGo;
 from lexererr import *
 }
 //16 02 2025 - 18 04 - remove some rule
+
+//28 02 2025 - update after assignment 1's grade (MiniGo_example.g4)
+
+//04 03 2025 - change the name for if_statement and for_statement
+
 @lexer::members {
 def __init__(self, input=None, output:TextIO = sys.stdout):
     super().__init__(input, output)
@@ -148,26 +153,33 @@ assign_statement: assign_lhs assign_op expression (SEMI | NEWLINE);
 
 assign_op: ASSIGN | ADD_ASSIGN | SUB_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | SHORT_ASSIGN;
 
-assign_lhs: ID more_access;
+assign_lhs: ID | assign_lhs field_access | assign_lhs element_access;
+
 more_access: | (field_access | element_access) more_access;
 
-if_statement: IF LP expression RP block_stmt ( ELSE if_statement | ELSE block_stmt)?;
+//if statement
+if_statement: IF LP expression RP block_stmt else_if_chain? else_clause?;
+
+else_if_chain: else_if_branch | else_if_branch else_if_chain;
+
+else_if_branch: ELSE IF LP expression RP block_stmt;
+
+else_clause: ELSE block_stmt;
 
 // FOR STATEMENT
 
-for_statement:
-	FOR (
-		(ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt	// Range form
-		| for_init (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_update block_stmt		// Three-part form
-		| expression block_stmt
-	);
+for_statement: for_condition | for_three_parts | for_range;
 
-for_init:
-	ID SHORT_ASSIGN expression				// Short declaration
-	| ID assign_op expression				// Assignment
-	| VAR ID type_name? ASSIGN expression;	// Variable declaration
+for_condition: FOR expression block_stmt;
 
-for_update: ID assign_op expression;
+for_three_parts:
+	FOR (for_assign | for_declaration) (SEMI | NEWLINE) expression (SEMI | NEWLINE) for_assign block_stmt;
+
+for_range: FOR (ID | UNDERSCORE) COMMA (ID | UNDERSCORE) SHORT_ASSIGN RANGE expression block_stmt;
+
+for_declaration: VAR ID type_name? ASSIGN expression;
+
+for_assign: ID assign_op expression;
 
 break_statement: BREAK (SEMI | NEWLINE);
 

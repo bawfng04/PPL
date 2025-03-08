@@ -1,0 +1,1 @@
+Program([FuncDecl(greet,[ParDecl(name,StringType)],StringType,Block([]))])

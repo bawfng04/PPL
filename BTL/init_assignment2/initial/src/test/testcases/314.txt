@@ -1,0 +1,1 @@
+func test() {}; var counter int = 1;
