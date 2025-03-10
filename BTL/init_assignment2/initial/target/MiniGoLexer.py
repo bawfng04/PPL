@@ -368,8 +368,8 @@ class MiniGoLexer(Lexer):
         self.preType = None
 
     def emit(self):
-        tk = self.type
-        self.preType = tk;
+        tk = self.type 						#lấy loại token
+        self.preType = tk; 					#lưu lại loại token hiện tại để dùng lần sau
         if tk == self.UNCLOSE_STRING:
             result = super().emit();
             raise UncloseString(result.text);
@@ -380,7 +380,7 @@ class MiniGoLexer(Lexer):
             result = super().emit();
             raise ErrorToken(result.text);
         else:
-            return super().emit();
+            return super().emit();          #gọi hàm emit mặc định của antlr4 để xử lí token bình thường
 
 
     def action(self, localctx:RuleContext, ruleIndex:int, actionIndex:int):
