@@ -260,6 +260,7 @@ class ASTGeneration(MiniGoVisitor):
         return ConstDecl(name, None, value) # trả về một hằng số
 
     def visitExpression(self, ctx: MiniGoParser.ExpressionContext):
+        # expression: expression OR expression1 | expression1;
         if ctx.getChildCount() == 1: # nếu có 1 phần tử
             return self.visit(ctx.expression1()) # trả về phần tử đó
         else:
@@ -640,6 +641,7 @@ class ASTGeneration(MiniGoVisitor):
         return result
 
     def visitIf_statement(self, ctx: MiniGoParser.If_statementContext):
+        # if_statement: IF LP expression RP block_stmt else_if_chain? else_clause?;
         # Get condition
         expr = self.visit(ctx.expression())
 
@@ -710,6 +712,7 @@ class ASTGeneration(MiniGoVisitor):
 
 
     def visitFor_statement(self, ctx: MiniGoParser.For_statementContext):
+        # for_statement: for_condition | for_three_parts | for_range;
         if ctx.for_range():
             return self.visit(ctx.for_range())
         elif ctx.for_three_parts():

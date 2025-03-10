@@ -403,6 +403,7 @@ UNCLOSE_STRING:
     };
 
 ILLEGAL_ESCAPE:
+	// Nhận dạng chuỗi bắt đầu bằng ", chứa một ký tự escape \ theo sau bởi một ký tự không phải r, n, t, ", hoặc \ (là các ký tự escape hợp lệ)
 	'"' (STR_CHAR* '\\' ~[rnt"\\] STR_CHAR*) {
         illegal_str = self.text[1:] # Remove leading quote
         result = '"' + illegal_str # Reconstruct with leading quote
