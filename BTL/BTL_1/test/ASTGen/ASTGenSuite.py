@@ -1005,3 +1005,4 @@ class ASTGenSuite(unittest.TestCase):
         input = """const VoTien = a.b().c(1, 2); """
         #([ConstDecl("VoTien", None, MethCall(MethCall(Id("a"),"b",[#,"c",[IntLiteral(1),IntLiteral(2)#)#
         self.assertTrue(TestAST.test(input, "successful", inspect.stack()[0].function))
+

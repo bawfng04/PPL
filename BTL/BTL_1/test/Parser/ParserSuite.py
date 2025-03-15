@@ -2135,3 +2135,12 @@ class ParserSuite(unittest.TestCase):
                                             const a = a[2].b;
                                             var x = x.y.z;
                                         };""","successful", inspect.stack()[0].function))
+
+
+    def test_290(self):
+        """Statement"""
+        self.assertTrue(TestParser.test("""
+            func Add() {
+                var 1var = 10;
+            }
+        ""","Error on line 3 col 20: 1", inspect.stack()[0].function))

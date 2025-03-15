@@ -743,3 +743,9 @@ class LexerSuite(unittest.TestCase):
                 self.assertTrue(TestLexer.test("""
                 nil
         """, "nil,;,<EOF>", inspect.stack()[0].function))
+
+        def test_167(self):
+                """NEW_LINE"""
+                self.assertTrue(TestLexer.test("""
+                int 1var = 10;
+        """, "int,1,var,=,10,;,<EOF>", inspect.stack()[0].function))
