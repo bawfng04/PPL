@@ -1,12 +1,12 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List, Union, Tuple
 from Visitor import Visitor
 
 
 class AST(ABC):
-    def __eq__(self, other): 
+    def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
     @abstractmethod
@@ -50,7 +50,7 @@ class Program(AST):
 
     def __str__(self):
         return "Program([" + ','.join(str(i) for i in self.decl) + "])"
-    
+
     def accept(self, v: Visitor, param):
         return v.visitProgram(self, param)
 
@@ -64,7 +64,7 @@ class ParamDecl(Decl):
     def accept(self, v, param):
         return v.visitParamDecl(self, param)
 
-@dataclass    
+@dataclass
 class VarDecl(Decl,BlockMember):
     varName : str
     varType : Type # None if there is no type
@@ -76,10 +76,10 @@ class VarDecl(Decl,BlockMember):
     def accept(self, v, param):
         return v.visitVarDecl(self, param)
 
-@dataclass    
+@dataclass
 class ConstDecl(Decl,BlockMember):
     conName : str
-    conType : Type # None if there is no type 
+    conType : Type # None if there is no type
     iniExpr : Expr
 
     def __str__(self):
@@ -97,14 +97,14 @@ class FuncDecl(Decl):
 
     def __str__(self):
         return "FuncDecl(" + self.name + ",[" +  ','.join(str(i) for i in self.params) + "]," + str(self.retType) + "," + str(self.body) + ")"
-    
+
     def accept(self, v, param):
         return v.visitFuncDecl(self, param)
 
 @dataclass
 class MethodDecl(Decl):
     receiver: str
-    recType: Type 
+    recType: Type
     fun: FuncDecl
 
     def __str__(self):
@@ -112,7 +112,7 @@ class MethodDecl(Decl):
 
     def accept(self, v, param):
         return v.visitMethodDecl(self,param)
-    
+
 
 @dataclass
 class Prototype(AST):
@@ -165,7 +165,7 @@ class VoidType(Type):
 class ArrayType(Type):
     dimens:List[Expr]
     eleType:Type
-        
+
     def __str__(self):
         return "ArrayType(" + str(self.eleType) + ",[" + ','.join(str(i) for i in self.dimens) + "])"
 
@@ -177,7 +177,7 @@ class StructType(Type):
     name: str
     elements:List[Tuple[str,Type]]
     methods:List[MethodDecl]
-        
+
     def __str__(self):
         return "StructType("+ self.name + ",[" + ','.join(("(" + i + "," + str(j) + ")") for i,j in self.elements) + "],["+ ','.join(str(i) for i in self.methods) +"])"
 
@@ -188,7 +188,7 @@ class StructType(Type):
 class InterfaceType(Type):
     name: str
     methods:List[Prototype]
-        
+
     def __str__(self):
         return "InterfaceType(" + self.name + ",["+ ','.join(str(i) for i in self.methods) +"])"
 
@@ -271,7 +271,7 @@ class Break(Stmt):
 
     def accept(self, v, param):
         return v.visitBreak(self, param)
-    
+
 class Continue(Stmt):
     def __str__(self):
         return "Continue()"
@@ -296,7 +296,7 @@ class Id(Type,LHS):
     name : str
 
     def __str__(self):
-        return  "Id(" + self.name + ")" 
+        return  "Id(" + self.name + ")"
 
     def accept(self, v, param):
         return v.visitId(self, param)
@@ -349,7 +349,7 @@ class UnaryOp(Expr):
 @dataclass
 class FuncCall(Expr,Stmt):
     funName:str
-    args:List[Expr] # [] if there is no arg 
+    args:List[Expr] # [] if there is no arg
 
     def __str__(self):
         return "FuncCall(" + str(self.funName) + ",[" +  ','.join(str(i) for i in self.args) + "])"
@@ -433,7 +433,7 @@ class ArrayLiteral(Literal):
 class StructLiteral(Literal):
     name:str
     elements: List[Tuple[str,Expr]] # [] if there is no elements
-    
+
     def __str__(self):
         return "StructLiteral(" + self.name + ',[' + ','.join(("("+str(i)+","+str(j)+")") for i,j in self.elements) + "])"
 
