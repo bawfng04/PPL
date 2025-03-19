@@ -187,11 +187,27 @@ class StaticChecker(BaseVisitor,Utils):
     def visitReturn(self, ast, c): return None
     def visitBinaryOp(self, ast, c): return None
     def visitUnaryOp(self, ast, c): return None
-    def visitFuncCall(self, ast, c): return None
-    def visitMethCall(self, ast, c): return None
-    def visitId(self, ast, c): return None
+    def visitFuncCall(self, ast: FuncCall, c: List[List[Symbol]]) -> Type:
+        # TODO Undeclared Function
+        raise Undeclared(Function(), ast.funName)
+    def visitMethCall(self, ast: MethCall, c: List[List[Symbol]]) -> Type:
+        # TODO Undeclared Method
+        struct = self.visit(ast.receiver, c)
+        # res = /* TODO */
+        if res is None:
+            raise Undeclared(Method(), ast.metName)
+        # return /* TODO */
+    def visitId(self, ast: Id, c: List[List[Symbol]]) -> Type:
+        # TODO Undeclared Identifier
+        raise Undeclared(Identifier(), ast.name)
     def visitArrayCell(self, ast, c): return None
-    def visitFieldAccess(self, ast, c): return None
+    def visitFieldAccess(self, ast: FieldAccess, c: List[List[Symbol]]) -> Type:
+        # TODO Undeclared Field
+        struct = self.visit(ast.receiver, c)
+        # res = /* TODO */
+        if res is None:
+            raise Undeclared(Field(), ast.field)
+        # return /* TODO */
     def visitIntLiteral(self, ast: IntLiteral, c): return None
     def visitFloatLiteral(self, ast: FloatLiteral, c): return None
     def visitBooleanLiteral(self, ast: BooleanLiteral, c): return None
