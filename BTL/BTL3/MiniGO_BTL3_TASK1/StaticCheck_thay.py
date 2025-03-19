@@ -1,4 +1,4 @@
-from AST import * 
+from AST import *
 from Visitor import *
 from Utils import Utils
 from StaticError import *
@@ -22,13 +22,13 @@ class Symbol:
         return "Symbol(" + str(self.name) + "," + str(self.mtype) + ("" if self.value is None else "," + str(self.value)) + ")"
 
 class StaticChecker(BaseVisitor,Utils):
-        
-    
+
+
     def __init__(self,ast):
         self.ast = ast
         self.global_envi = [Symbol("getInt",MType([],IntType())),Symbol("putIntLn",MType([IntType()],VoidType()))]
- 
-    
+
+
     def check(self):
         return self.visit(self.ast,self.global_envi)
 
@@ -37,17 +37,17 @@ class StaticChecker(BaseVisitor,Utils):
         return c
 
     def visitVarDecl(self, ast, c):
-        res = self.lookup(ast.varName, c, lambda x: x.name)
-        if not res is None:
-            raise Redeclared(Variable(), ast.varName) 
+        res = self.lookup(ast.varName, c, lambda x: x.name) #kiểm tra xem biến đã tồn tại chưa
+        if not res is None: #nếu đã tồn tại thì báo lỗi
+            raise Redeclared(Variable(), ast.varName)
         if ast.varInit:
             initType = self.visit(ast.varInit, c)
             if ast.varType is None:
                 ast.varType = initType
             if not type(ast.varType) is type(initType):
                 raise TypeMismatch(ast)
-        return Symbol(ast.varName, ast.varType,None)
-        
+        return Symbol(ast.varName, ast.varType,None) #trả về biến mới
+
 
     def visitFuncDecl(self,ast, c):
         res = self.lookup(ast.name, c, lambda x: x.name)
@@ -57,10 +57,10 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitIntLiteral(self,ast, c):
         return IntType()
-    
+
     def visitFloatLiteral(self,ast, c):
         return FloatType()
-    
+
     def visitId(self,ast,c):
         res = self.lookup(ast.name, c, lambda x: x.name)
         if res is None:

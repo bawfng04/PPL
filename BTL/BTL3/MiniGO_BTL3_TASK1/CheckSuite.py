@@ -6,7 +6,7 @@ import inspect
 class CheckSuite(unittest.TestCase):
     def test_001(self):
         """
-var VoTien = 1; 
+var VoTien = 1;
 var VoTien = 2;
         """
         input = Program([VarDecl("VoTien", None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
@@ -14,7 +14,7 @@ var VoTien = 2;
 
     def test_002(self):
         """
-var VoTien = 1; 
+var VoTien = 1;
 const VoTien = 2;
         """
         input = Program([VarDecl("VoTien", None,IntLiteral(1)),ConstDecl("VoTien",None,IntLiteral(2))])
@@ -22,7 +22,7 @@ const VoTien = 2;
 
     def test_003(self):
         """
-const VoTien = 1; 
+const VoTien = 1;
 var VoTien = 2;
         """
         input = Program([ConstDecl("VoTien",None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
@@ -30,14 +30,14 @@ var VoTien = 2;
 
     def test_004(self):
         """
-const VoTien = 1; 
+const VoTien = 1;
 func VoTien () {return;}
         """
         input = Program([ConstDecl("VoTien",None,IntLiteral(1)),FuncDecl("VoTien",[],VoidType(),Block([Return(None)]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Function: VoTien", inspect.stack()[0].function))
 
     def test_005(self):
-        """ 
+        """
 func VoTien () {return;}
 var VoTien = 1;
         """
@@ -45,14 +45,14 @@ var VoTien = 1;
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: VoTien", inspect.stack()[0].function))
 
     def test_006(self):
-        """ 
+        """
 var getInt = 1;
         """
         input = Program([VarDecl("getInt", None,IntLiteral(1))])
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: getInt", inspect.stack()[0].function))
 
     def test_007(self):
-        """ 
+        """
 type  Votien struct {
     Votien int;
 }
@@ -66,7 +66,7 @@ type TIEN struct {
         self.assertTrue(TestChecker.test(input, "Redeclared Field: TIEN", inspect.stack()[0].function))
 
     def test_008(self):
-        """ 
+        """
 func (v TIEN) putIntLn () {return;}
 func (v TIEN) getInt () {return;}
 func (v TIEN) getInt () {return;}
@@ -78,7 +78,7 @@ type TIEN struct {
         self.assertTrue(TestChecker.test(input, "Redeclared Method: getInt", inspect.stack()[0].function))
 
     def test_009(self):
-        """ 
+        """
 type VoTien interface {
     VoTien ();
     VoTien (a int);
@@ -88,14 +88,14 @@ type VoTien interface {
         self.assertTrue(TestChecker.test(input, "Redeclared Prototype: VoTien", inspect.stack()[0].function))
 
     def test_010(self):
-        """ 
+        """
 func Votien (a, a int) {return;}
         """
         input = Program([FuncDecl("Votien",[ParamDecl("a",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Parameter: a", inspect.stack()[0].function))
 
     def test_011(self):
-        """ 
+        """
 func Votien (b int) {
     var b = 1;
     var a = 1;
@@ -106,7 +106,7 @@ func Votien (b int) {
         self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
 
     def test_012(self):
-        """ 
+        """
 func Votien (b int) {
     for var a = 1; a < 1; a += 1 {
         const a = 2;
