@@ -1,1 +1,1 @@
-Redeclared Function: putIntLn
+Redeclared Method: getInt

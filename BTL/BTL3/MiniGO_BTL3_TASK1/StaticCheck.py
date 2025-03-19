@@ -35,6 +35,7 @@ class StaticChecker(BaseVisitor,Utils):
                 # TODO:
             ]
         ] #environment stack để quản lí scope
+        self.methodEnv = {}  # Map receiver type name -> list of MethodDecl
         self.function_current: FuncDecl = None #hàm đang xét
         self.struct_current: StructType = None #struct đang xét
 
@@ -122,13 +123,19 @@ class StaticChecker(BaseVisitor,Utils):
 
         return ast
 
-    def visitMethodDecl(self, ast: MethodDecl, c: List[MethodDecl]) -> MethodDecl:
-        # TODO Redeclared Method
-        for method in c:
+    def visitMethodDecl(self, ast: MethodDecl, c) -> MethodDecl:
+        # Use the receiver type's name to group declared methods
+        receiverName = ""
+        if isinstance(ast.recType, Id):
+            receiverName = ast.recType.name
+        else:
+            receiverName = str(ast.recType)
+        if receiverName not in self.methodEnv:
+            self.methodEnv[receiverName] = []
+        for method in self.methodEnv[receiverName]:
             if method.fun.name == ast.fun.name:
                 raise Redeclared(Method(), ast.fun.name)
-        # thêm method vào stack
-        c.append(ast)
+        self.methodEnv[receiverName].append(ast)
         return ast
 
     def visitPrototype(self, ast: Prototype, c: List[Prototype]) -> Prototype:
