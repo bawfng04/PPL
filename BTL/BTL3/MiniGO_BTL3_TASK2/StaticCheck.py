@@ -181,7 +181,9 @@ class StaticChecker(BaseVisitor,Utils):
         return None
 
     def visitBlock(self, ast: Block, c: List[List[Symbol]]) -> None:
-        reduce(lambda acc,ele: [[self.visit(ele,acc)] + acc[0]] + acc[1:] , ast.member , [[]] + c)
+        new_env = [[]] + c
+        for member in ast.member:
+            self.visit(member, new_env)
 
 
     #! ----------- TASK 2 AND 3 ---------------------
