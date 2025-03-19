@@ -68,7 +68,6 @@
 
 
 # 1
-# Your code starts at line 65
 
 class StaticCheck(Visitor):
 
