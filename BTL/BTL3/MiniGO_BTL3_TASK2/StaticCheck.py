@@ -131,24 +131,30 @@ class StaticChecker(BaseVisitor,Utils):
         # Initialize method tracking if needed
         if not hasattr(self, 'methods_by_receiver'):
             self.methods_by_receiver = {}
-
         # Extract receiver type name
         receiver_type_name = ""
         if isinstance(ast.recType, Id):
             receiver_type_name = ast.recType.name
-
+        else:
+            receiver_type_name = str(ast.recType)
         # Create a key for this receiver type
         if receiver_type_name not in self.methods_by_receiver:
             self.methods_by_receiver[receiver_type_name] = []
-
         # Check for redeclaration
         for method in self.methods_by_receiver[receiver_type_name]:
             if method == ast.fun.name:
                 raise Redeclared(Method(), ast.fun.name)
-
         # Add method name to list
         self.methods_by_receiver[receiver_type_name].append(ast.fun.name)
-
+        # Also, if a struct is already declared for this receiver type, add this method to it.
+        for struct in self.struct:
+            if isinstance(ast.recType, Id) and struct.name == ast.recType.name:
+                struct.methods.append(ast)
+                break
+        # Create a new scope for the method body where the receiver is inserted.
+        receiver_symbol = Symbol(ast.receiver, ast.recType, None)
+        new_env = [[receiver_symbol]] + c
+        self.visit(ast.fun.body, new_env)
         return ast
 
     def visitPrototype(self, ast: Prototype, c: List[Prototype]) -> Prototype:
@@ -220,29 +226,16 @@ class StaticChecker(BaseVisitor,Utils):
     def visitMethCall(self, ast: MethCall, c: List[List[Symbol]]) -> Type:
         # Get the receiver's type
         receiver_type = self.visit(ast.receiver, c)
-
         # Find the struct with methods
         for struct in self.struct:
             if isinstance(receiver_type, Id) and struct.name == receiver_type.name:
-                # Get available methods for this struct
-                methods = []
+                # Search for the method in the struct's method list.
                 for method in struct.methods:
-                    if isinstance(method, MethodDecl):
-                        methods.append(method)
-                        if method.fun.name == ast.metName:
-                            return method.fun.retType
-
-                # Also check the method names in self.methods_by_receiver
-                if hasattr(self, 'methods_by_receiver') and struct.name in self.methods_by_receiver:
-                    if ast.metName in self.methods_by_receiver[struct.name]:
-                        # The method exists, but we don't have the return type info here
-                        # For this test case, we'll return None since we just need error reporting
-                        return None
-
-                # Method not found
+                    if method.fun.name == ast.metName:
+                        return method.fun.retType
+                # Method not found in the struct: raise error.
                 raise Undeclared(Method(), ast.metName)
-
-        # Not a struct type or struct not found
+        # Not a struct type or struct not found: type mismatch.
         raise TypeMismatch(ast)
 
     def visitId(self, ast: Id, c: List[List[Symbol]]) -> Type:
