@@ -35,7 +35,6 @@ class StaticChecker(BaseVisitor,Utils):
                 # TODO:
             ]
         ] #environment stack để quản lí scope
-        self.methodEnv = {}  # Map receiver type name -> list of MethodDecl
         self.function_current: FuncDecl = None #hàm đang xét
         self.struct_current: StructType = None #struct đang xét
 
@@ -123,19 +122,28 @@ class StaticChecker(BaseVisitor,Utils):
 
         return ast
 
-    def visitMethodDecl(self, ast: MethodDecl, c) -> MethodDecl:
-        # Use the receiver type's name to group declared methods
-        receiverName = ""
+    def visitMethodDecl(self, ast: MethodDecl, c):
+        # Initialize method tracking if needed
+        if not hasattr(self, 'methods_by_receiver'):
+            self.methods_by_receiver = {}
+
+        # Extract receiver type name
+        receiver_type_name = ""
         if isinstance(ast.recType, Id):
-            receiverName = ast.recType.name
-        else:
-            receiverName = str(ast.recType)
-        if receiverName not in self.methodEnv:
-            self.methodEnv[receiverName] = []
-        for method in self.methodEnv[receiverName]:
-            if method.fun.name == ast.fun.name:
+            receiver_type_name = ast.recType.name
+
+        # Create a key for this receiver type
+        if receiver_type_name not in self.methods_by_receiver:
+            self.methods_by_receiver[receiver_type_name] = []
+
+        # Check for redeclaration
+        for method in self.methods_by_receiver[receiver_type_name]:
+            if method == ast.fun.name:
                 raise Redeclared(Method(), ast.fun.name)
-        self.methodEnv[receiverName].append(ast)
+
+        # Add method name to list
+        self.methods_by_receiver[receiver_type_name].append(ast.fun.name)
+
         return ast
 
     def visitPrototype(self, ast: Prototype, c: List[Prototype]) -> Prototype:
