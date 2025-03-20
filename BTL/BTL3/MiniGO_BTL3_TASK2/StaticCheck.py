@@ -42,13 +42,66 @@ class StaticChecker(BaseVisitor,Utils):
         return self.visit(self.ast,self.env)
 
     def visitProgram(self, ast: Program, c: List[List[Symbol]]):
-        # TODO: Global scope
-
+        # Đầu tiên, xử lí các khai báo struct, interface, hàm, hằng, biến toàn cục
         for decl in ast.decl:
-            self.visit(decl, c)
-        return c
+            if isinstance(decl, (StructType, InterfaceType)): # nếu là struct hoặc interface
+                # Xử lí struct hoặc interface
+                self.visit(decl, c)
+            elif isinstance(decl, (VarDecl, ConstDecl, FuncDecl)): # nếu là biến, hằng, hàm
+                # Xử lí biến, hằng, hàm toàn cục
+                self.visit(decl, c)
 
-        # TODO: Function/method scope and VarDecl => self.function_current, self.struct_current
+        # Tiếp theo, xử lí phần method của struct
+        for decl in ast.decl:
+            if isinstance(decl, MethodDecl):
+                # Lưu lại struct hiện tại
+                prev_struct = self.struct_current
+
+                # Tìm struct chứa method đang xét
+                for struct in self.struct:
+                    if isinstance(decl.recType, Id) and struct.name == decl.recType.name:
+                        self.struct_current = struct
+                        break
+
+                # Process method declaration
+                self.visit(decl, c)
+
+                # Restore previous struct context
+                self.struct_current = prev_struct
+
+        # Third pass: Visit function/method bodies
+        for decl in ast.decl:
+            # nếu là hàm
+            if isinstance(decl, FuncDecl):
+                # Save current function context
+                prev_func = self.function_current
+                self.function_current = decl
+
+                # Create parameter scope
+                param_scope = []
+                for param in decl.params:
+                    sym = Symbol(param.parName, param.parType)
+                    param_scope.append(sym)
+
+                # Visit function body with new scope
+                self.visit(decl.body, [param_scope] + c)
+
+                # Restore previous function context
+                self.function_current = prev_func
+            # nếu là method
+            elif isinstance(decl, MethodDecl):
+                # Similar process for methods
+                prev_func = self.function_current
+                self.function_current = decl.fun
+
+                param_scope = []
+                for param in decl.fun.params:
+                    sym = Symbol(param.parName, param.parType)
+                    param_scope.append(sym)
+
+                self.visit(decl.fun.body, [param_scope] + c)
+
+                self.function_current = prev_func
 
         return c
 
@@ -181,6 +234,7 @@ class StaticChecker(BaseVisitor,Utils):
         return None
 
     def visitBlock(self, ast: Block, c: List[List[Symbol]]) -> None:
+        # reduce(lambda acc,ele: [[self.visit(ele,acc)] + acc[0]] + acc[1:] , ast.member , [[]] + c)
         new_env = [[]] + c
         for member in ast.member:
             self.visit(member, new_env)
