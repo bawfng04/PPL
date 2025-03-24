@@ -247,3 +247,12 @@ func (v TIEN) getInt () {
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([MethCall(Id("v"),"getInt",[]),MethCall(Id("v"),"putInt",[])])))])
         self.assertTrue(TestChecker.test(input, "Undeclared Method: putInt", inspect.stack()[0].function))
+
+    def test_029(self):
+        """
+type TIEN struct {Votien int;}
+type TIEN interface {VoTien ();}
+
+        """
+        input = Program([StructType("TIEN",[("Votien",IntType())],[]),InterfaceType("TIEN",[Prototype("VoTien",[],VoidType())])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: TIEN", inspect.stack()[0].function))
