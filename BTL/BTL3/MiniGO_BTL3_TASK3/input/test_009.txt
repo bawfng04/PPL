@@ -1,0 +1,6 @@
+ 
+type VoTien interface {
+    VoTien ();
+    VoTien (a int);
+}
+        

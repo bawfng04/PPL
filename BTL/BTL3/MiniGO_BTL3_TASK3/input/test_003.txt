@@ -1,0 +1,4 @@
+
+const VoTien = 1; 
+var VoTien = 2;
+        
