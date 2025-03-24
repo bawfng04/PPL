@@ -362,4 +362,15 @@ type TIEN interface {VoTien ();}
         func foo () {return;}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Function: foo", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Redeclared Parameter: v", inspect.stack()[0].function))
+
+    def test_038(self):
+        """
+        const a = 2;
+        func foo () {
+            const a = 1;
+            for var a = 1; a < 1; b += 2 {
+                const b = 1;
+        """
+        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),BinaryOp("+", Id("b"), IntLiteral(2))),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: b", inspect.stack()[0].function))

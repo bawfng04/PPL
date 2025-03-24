@@ -26,12 +26,15 @@ class Symbol:
         return "Symbol(" + str(self.name) + "," + str(self.mtype) + ("" if self.value is None else "," + str(self.value)) + ")"
 
 class StaticChecker(BaseVisitor,Utils):
-
-
+    # Khởi tạo
     def __init__(self,ast):
+        # Cây AST
         self.ast = ast
+        # Lưu trữ các kiểu dữ liệu (StructType, InterfaceType)
         self.list_type: List[Union[StructType, InterfaceType]] = []
+        # Lưu trữ các hàm toàn cục, các hàm built-in
         self.list_function: List[FuncDecl] =  [
+                # danh sách các hàm built-in
                 FuncDecl("getInt", [], IntType(), Block([])),
                 FuncDecl("putInt", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
                 FuncDecl("putIntLn", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
@@ -40,6 +43,7 @@ class StaticChecker(BaseVisitor,Utils):
             ]
         self.function_current: FuncDecl = None
 
+    # Hàm kiểm tra, bắt đầu từ Program, môi trường ban đầu c chứa các hàm built-in
     def check(self):
         return self.visit(self.ast, [
             [
@@ -51,6 +55,7 @@ class StaticChecker(BaseVisitor,Utils):
             ]
         ])
 
+    # Visitor cho Program
     def visitProgram(self, ast: Program, c: List[List[Symbol]]):
         # First pass: collect all structs and interfaces
         for decl in ast.decl:
@@ -132,13 +137,6 @@ class StaticChecker(BaseVisitor,Utils):
         if not res is None:
             raise Redeclared(Function(), ast.name)
 
-        # Also check if there's a method with the same name
-        for struct_type in self.list_type:
-            if isinstance(struct_type, StructType):
-                for method in struct_type.methods:
-                    if method.fun.name == ast.name:
-                        raise Redeclared(Function(), ast.name)
-
         # Save current function context
         old_function = self.function_current
         self.function_current = ast
@@ -170,23 +168,28 @@ class StaticChecker(BaseVisitor,Utils):
         if isinstance(ast.recType, Id):
             struct = self.lookup(ast.recType.name, self.list_type, lambda x: x.name)
             if struct is None:
-                raise Undeclared(Type(), ast.recType.name)
+                raise Undeclared(StaticErrorType(), ast.recType.name)
 
         # Save current function context
         old_function = self.function_current
         self.function_current = ast.fun
 
-        # Create a new scope with the receiver
-        receiver_scope = [Symbol(ast.receiver, ast.recType, None)]
+        # Create parameter scope with the receiver
+        receiver_symbol = Symbol(ast.receiver, ast.recType, None)
+        param_symbols = [receiver_symbol]  # Add receiver to param list first
 
-        # Create parameter scope
-        param_symbols = []
+        # Check if function parameters have the same name as the receiver
         for param in ast.fun.params:
+            # Check against the receiver name
+            if param.parName == ast.receiver:
+                raise Redeclared(Parameter(), param.parName)
+
+            # Check against other parameters (using visitParamDecl)
             sym = self.visit(param, param_symbols)
             param_symbols.append(sym)
 
         # Visit function body with new scope
-        self.visit(ast.fun.body, [param_symbols + receiver_scope] + c)
+        self.visit(ast.fun.body, [param_symbols] + c)
 
         # Restore function context
         self.function_current = old_function
@@ -194,16 +197,16 @@ class StaticChecker(BaseVisitor,Utils):
     def visitVarDecl(self, ast: VarDecl, c: List[List[Symbol]]) -> Symbol:
         # Tìm kiếm xem có biến nào đã được khai báo trong tầm vực hiện tại không c[0]
         res = self.lookup(ast.varName, c[0], lambda x: x.name)
-        # không co thì lỗi
+        # không có thì lỗi
         if not res is None:
             raise Redeclared(Variable(), ast.varName)
 
-        # If there's an initialization, check its type
+        # Nếu có khởi tạo thì kiểm tra kiểu
         if ast.varInit is not None:
             init_type = self.visit(ast.varInit, c)
-            if ast.varType is None:
+            if ast.varType is None: # nếu chưa có kiểu thì gán kiểu của biến bằng kiểu của biến khởi tạo
                 ast.varType = init_type
-            elif not isinstance(ast.varType, type(init_type)):
+            elif not isinstance(ast.varType, type(init_type)): # kiểm tra kiểu của biến khởi tạo có phù hợp với kiểu của biến không
                 raise TypeMismatch(ast)
 
         # có thì trả về Symbol
@@ -280,7 +283,7 @@ class StaticChecker(BaseVisitor,Utils):
     # Expression visitor methods
 
     def visitId(self, ast: Id, c: List[List[Symbol]]) -> Type:
-        # Search all scopes for the identifier
+        # Tìm kiếm biến trong tất cả các tầm vực
         for scope in c:
             res = self.lookup(ast.name, scope, lambda x: x.name)
             if res is not None:
@@ -349,11 +352,11 @@ class StaticChecker(BaseVisitor,Utils):
             raise TypeMismatch(ast)
 
     def visitFuncCall(self, ast: FuncCall, c: List[List[Symbol]]) -> Type:
-        # Find the function in all scopes or builtin functions
+        # Tìm hàm trong list_function (danh sách các hàm trong chương trình)
         for func in self.list_function:
             if func.name == ast.funName:
                 # Check param count
-                if len(func.params) != len(ast.args):
+                if len(func.params) != len(ast.args): # kiểm tra số lượng tham số
                     raise TypeMismatch(ast)
 
                 # Check param types
@@ -368,7 +371,7 @@ class StaticChecker(BaseVisitor,Utils):
         # Check in the scope chain
         for scope in c:
             res = self.lookup(ast.funName, scope, lambda x: x.name)
-            if res is not None and isinstance(res.mtype, FuntionType):
+            if res is not None and isinstance(res.mtype, FuntionType): # kiểm tra xem có phải hàm không
                 # Should also check parameters but we don't have that info in Symbol
                 return res.mtype
 
@@ -450,3 +453,47 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitNilLiteral(self, ast, c) -> Type:
         return None  # NilLiteral has no type
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #     def visitFuncDecl(self, ast: FuncDecl, c: List[List[Symbol]]) -> Symbol:
+    #     # Tìm kiếm xem có biến nào đã được khai báo trong tầm vực hiện tại không c[0]
+    #     res = self.lookup(ast.name, c[0], lambda x: x.name)
+    #     # không co thì lỗi
+    #     if not res is None:
+    #         raise Redeclared(Function(), ast.name)
+
+    #     # Save current function context
+    #     old_function = self.function_current
+    #     self.function_current = ast
+
+    #     # Create parameter scope
+    #     param_symbols = []
+    #     for param in ast.params:
+    #         sym = self.visit(param, param_symbols)
+    #         param_symbols.append(sym)
+
+    #     # duyệt qua param và gọi block
+    #     self.visit(ast.body, [param_symbols] + c)
+
+    #     # Restore function context
+    #     self.function_current = old_function
+
+    #     return Symbol(ast.name, FuntionType())
