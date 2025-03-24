@@ -34,7 +34,9 @@ class StaticChecker(BaseVisitor,Utils):
         self.list_function: List[FuncDecl] =  [
                 FuncDecl("getInt", [], IntType(), Block([])),
                 FuncDecl("putInt", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
-                FuncDecl("putIntLn", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([]))
+                FuncDecl("putIntLn", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
+                FuncDecl("getString", [], StringType(), Block([])),
+                FuncDecl("putStringLn", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([])),
             ]
         self.function_current: FuncDecl = None
 
@@ -43,7 +45,9 @@ class StaticChecker(BaseVisitor,Utils):
             [
                 Symbol("getInt", FuntionType()),
                 Symbol("putInt", FuntionType()),
-                Symbol("putIntLn", FuntionType())
+                Symbol("putIntLn", FuntionType()),
+                Symbol("getString", FuntionType()),
+                Symbol("putStringLn", FuntionType())
             ]
         ])
 

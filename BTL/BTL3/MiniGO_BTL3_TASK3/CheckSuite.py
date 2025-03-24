@@ -338,3 +338,17 @@ type TIEN interface {VoTien ();}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),InterfaceType("TIEN",[Prototype("VoTien",[],VoidType())])])
         self.assertTrue(TestChecker.test(input, "Redeclared Type: TIEN", inspect.stack()[0].function))
+
+    def test_035(self):
+        """
+        func getString() {return;}
+        """
+        input = Program([FuncDecl("getString",[],VoidType(),Block([Return(None)]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Function: getString", inspect.stack()[0].function))
+
+    def test_036(self):
+        """
+        func putStringLn() {return;}
+        """
+        input = Program([FuncDecl("putStringLn",[],VoidType(),Block([Return(None)]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Function: putStringLn", inspect.stack()[0].function))
