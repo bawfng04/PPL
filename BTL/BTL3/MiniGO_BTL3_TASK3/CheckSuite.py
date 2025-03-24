@@ -373,4 +373,16 @@ type TIEN interface {VoTien ();}
                 const b = 1;
         """
         input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),BinaryOp("+", Id("b"), IntLiteral(2))),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: b", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
+
+
+    def test_039(self):
+        """
+        const a = 2;
+        func foo () {
+            const a = 1;
+            for a < 1 {
+                const a = 1;
+        """
+        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))

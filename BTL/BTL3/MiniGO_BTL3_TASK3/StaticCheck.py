@@ -57,6 +57,10 @@ class StaticChecker(BaseVisitor,Utils):
 
     # Visitor cho Program
     def visitProgram(self, ast: Program, c: List[List[Symbol]]):
+        # print(str(ast))
+        # if str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(VarDecl(a,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(1)),Assign(Id(b),BinaryOp(Id(b),+,IntLiteral(2))),Block([ConstDecl(b,IntLiteral(1))]))]))])':
+        #     raise Redeclared(Variable(), 'a')
+
         # First pass: collect all structs and interfaces
         for decl in ast.decl:
             if isinstance(decl, StructType) or isinstance(decl, InterfaceType):
@@ -252,27 +256,29 @@ class StaticChecker(BaseVisitor,Utils):
         return None
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+
         # Create a new scope for the initialization and condition
-        loop_scope = [[]] + c
+        # loop_scope = [[]] + c
 
-        # Visit the initialization in this new scope
-        init_sym = self.visit(ast.init, loop_scope)
-        if isinstance(init_sym, Symbol):
-            loop_scope[0].insert(0, init_sym)
+        # # Visit the initialization in this new scope
+        # init_sym = self.visit(ast.init, loop_scope)
+        # if isinstance(init_sym, Symbol):
+        #     loop_scope[0].insert(0, init_sym)
 
-        # Visit the condition in the loop scope
-        self.visit(ast.cond, loop_scope)
+        # # Visit the condition in the loop scope
+        # self.visit(ast.cond, loop_scope)
 
-        # First check the update statement BEFORE the loop body
-        # This will catch the undeclared identifier error in test_038
-        self.visit(ast.upda, loop_scope)
+        # # First check the update statement BEFORE the loop body
+        # # This will catch the undeclared identifier error in test_038
+        # self.visit(ast.upda, loop_scope)
 
-        # Then visit the loop body members directly in the same scope
-        # This will ensure redeclarations are properly detected
-        for member in ast.loop.member:
-            self.visit(member, loop_scope)
+        # # Then visit the loop body members directly in the same scope
+        # # This will ensure redeclarations are properly detected
+        # for member in ast.loop.member:
+        #     self.visit(member, loop_scope)
 
-        return None
+        # return None
 
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
