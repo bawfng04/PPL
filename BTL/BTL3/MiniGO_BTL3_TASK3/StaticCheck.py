@@ -451,14 +451,41 @@ class StaticChecker(BaseVisitor,Utils):
         # Not a struct or struct not found
         raise TypeMismatch(ast)
 
-    def visitNilLiteral(self, ast, c) -> Type:
-        return None  # NilLiteral has no type
 
 
 
 
 
+    def visitIntType(self, ast, param): return None
+    def visitFloatType(self, ast, param): return None
+    def visitBoolType(self, ast, param): return None
+    def visitStringType(self, ast, param): return None
+    def visitVoidType(self, ast, param): return None
+    def visitArrayType(self, ast, param): return None
+    def visitAssign(self, ast: Assign, c: List[List[Symbol]]) -> None:
+        # First check if left-hand side identifier exists
+        # This will raise Undeclared if the variable doesn't exist
+        lhs_type = self.visit(ast.lhs, c)
 
+        # Then check the right-hand side
+        rhs_type = self.visit(ast.rhs, c)
+
+        # Type checking can be added here if needed
+        return None
+    def visitIf(self, ast, param): return None
+    def visitContinue(self, ast, param): return None
+    def visitBreak(self, ast, param): return None
+    def visitReturn(self, ast, param): return None
+    def visitBinaryOp(self, ast, param): return None
+    def visitUnaryOp(self, ast, param): return None
+    def visitArrayCell(self, ast, param): return None
+    def visitIntLiteral(self, ast, param): return None
+    def visitFloatLiteral(self, ast, param): return None
+    def visitBooleanLiteral(self, ast, param): return None
+    def visitStringLiteral(self, ast, param): return None
+    def visitArrayLiteral(self, ast, param): return None
+    def visitStructLiteral(self, ast, param): return None
+    def visitNilLiteral(self, ast, param): return None
 
 
 
