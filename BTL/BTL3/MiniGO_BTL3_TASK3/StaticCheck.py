@@ -252,22 +252,25 @@ class StaticChecker(BaseVisitor,Utils):
         return None
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # // chuyển init và upda vào trong block của for vì 2 này trong tầm vực block for
-        # self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c) # -> failed test 38
-
-        # -> failed test 12, 29
-        new_scope = [[]] + c
+        # Create a new scope for the initialization and condition
+        loop_scope = [[]] + c
 
         # Visit the initialization in this new scope
-        init_sym = self.visit(ast.init, new_scope)
+        init_sym = self.visit(ast.init, loop_scope)
         if isinstance(init_sym, Symbol):
-            new_scope[0].insert(0, init_sym)
+            loop_scope[0].insert(0, init_sym)
 
-        # Visit the update statement in the new scope
-        self.visit(ast.upda, new_scope)
+        # Visit the condition in the loop scope
+        self.visit(ast.cond, loop_scope)
 
-        # Visit the loop body with the same scope (so variables from initialization are visible)
-        self.visit(ast.loop, new_scope)
+        # First check the update statement BEFORE the loop body
+        # This will catch the undeclared identifier error in test_038
+        self.visit(ast.upda, loop_scope)
+
+        # Then visit the loop body members directly in the same scope
+        # This will ensure redeclarations are properly detected
+        for member in ast.loop.member:
+            self.visit(member, loop_scope)
 
         return None
 
