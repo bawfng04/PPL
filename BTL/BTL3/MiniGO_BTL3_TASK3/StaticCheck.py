@@ -132,6 +132,13 @@ class StaticChecker(BaseVisitor,Utils):
         if not res is None:
             raise Redeclared(Function(), ast.name)
 
+        # Also check if there's a method with the same name
+        for struct_type in self.list_type:
+            if isinstance(struct_type, StructType):
+                for method in struct_type.methods:
+                    if method.fun.name == ast.name:
+                        raise Redeclared(Function(), ast.name)
+
         # Save current function context
         old_function = self.function_current
         self.function_current = ast

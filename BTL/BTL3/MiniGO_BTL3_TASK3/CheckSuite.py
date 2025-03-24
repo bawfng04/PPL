@@ -352,3 +352,14 @@ type TIEN interface {VoTien ();}
         """
         input = Program([FuncDecl("putStringLn",[],VoidType(),Block([Return(None)]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Function: putStringLn", inspect.stack()[0].function))
+
+    def test_037(self):
+        """
+        type TIEN struct {
+        Votien int;
+        }
+        func (v TIEN) foo (v int) {return;}
+        func foo () {return;}
+        """
+        input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Function: foo", inspect.stack()[0].function))
