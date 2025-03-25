@@ -369,20 +369,50 @@ type TIEN interface {VoTien ();}
         const a = 2;
         func foo () {
             const a = 1;
-            for var a = 1; a < 1; b += 2 {
+            for a < 1 {
+                const a = 1;
+                for a < 1 {
+                    const a = 1;
+                    const b = 1;
+                }
                 const b = 1;
+                var a = 1;
+            }
+        }
         """
         input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),BinaryOp("+", Id("b"), IntLiteral(2))),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
 
     def test_039(self):
         """
-
         const a = 2;
         func foo () {
             const a = 1;
             for var a = 1; a < 1; b += 2 {
                 const b = 1;
+            }
+        }
         """
         input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
+
+    def test_040(self):
+        """
+        var v TIEN;
+        type TIEN struct {
+            a int;
+        }
+        type VO interface {
+            foo() int;
+        }
+
+        func (v TIEN) foo() int {return 1;}
+        func (b TIEN) koo() {b.koo();}
+        func foo() {
+            var x VO;
+            const b = x.foo();
+            x.koo();
+        }
+        """
+        input = Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("x",Id("VO"), None),ConstDecl("b",None,MethCall(Id("x"),"foo",[])),MethCall(Id("x"),"koo",[])]))])
+        self.assertTrue(TestChecker.test(input, "Undeclared Method: koo", inspect.stack()[0].function))

@@ -273,13 +273,20 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitMethCall(self, ast: MethCall, c: List[List[Symbol]]) -> Type:
         type_receiver = self.visit(ast.receiver, c)
-        res = next(filter(lambda method: method.fun.name == ast.metName,
-            next(filter(lambda struct: isinstance(struct, StructType) and struct.name == type_receiver.name,
-                self.list_type), StructType("", [], [])).methods), None) if isinstance(type_receiver, StructType) else None
-
-        if res is None:
+        if isinstance(type_receiver, StructType):
+            methods = type_receiver.methods
+            res = next(filter(lambda method: method.fun.name == ast.metName, methods), None)
+            if res is None:
+                raise Undeclared(Method(), ast.metName)
+            return res.fun.retType
+        elif isinstance(type_receiver, InterfaceType):
+            prototypes = type_receiver.methods
+            res = next(filter(lambda proto: proto.name == ast.metName, prototypes), None)
+            if res is None:
+                raise Undeclared(Method(), ast.metName)
+            return res.retType
+        else:
             raise Undeclared(Method(), ast.metName)
-        return res.fun.retType
 
     def visitIntType(self, ast, param): return IntType()
     def visitFloatType(self, ast, param): return FloatType()
