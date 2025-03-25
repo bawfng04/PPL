@@ -201,7 +201,23 @@ class StaticChecker(BaseVisitor,Utils):
         self.visit(Block(ast.loop.member), c)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+        # The for-loop’s init should be added into the current scope c[0]
+        if isinstance(ast.init, VarDecl):
+            if self.lookup(ast.init.varName, c[0], lambda x: x.name) is not None:
+                raise Redeclared(Variable(), ast.init.varName)
+            init_sym = self.visit(ast.init, c)
+            c[0].insert(0, init_sym)
+        else:
+            self.visit(ast.init, c)
+        # Process the loop header parts in the same scope
+        self.visit(ast.cond, c)
+        self.visit(ast.upda, c)
+        # Instead of calling self.visit(ast.loop, [[]] + c),
+        # process each member of the loop body using the same scope, so that the
+        # for-loop init variable is visible and conflict detection works.
+        for member in ast.loop.member:
+            self.visit(member, c)
+        return None
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
           self.visit(Block([VarDecl(ast.idx.name, None, None), VarDecl(ast.value.name, None, None)] + ast.loop.member), c)
