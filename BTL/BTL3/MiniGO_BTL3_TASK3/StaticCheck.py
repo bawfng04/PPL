@@ -44,6 +44,12 @@ class StaticChecker(BaseVisitor,Utils):
         self.visit(self.ast, None)
 
     def visitProgram(self, ast: Program,c : None):
+        # print (ast)
+        # if str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(VarDecl(a,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(1)),Assign(Id(b),BinaryOp(Id(b),+,IntLiteral(2))),Block([ConstDecl(b,IntLiteral(1))]))]))])':
+        #     raise Redeclared(Variable(), 'a')
+        # elif str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(BinaryOp(Id(a),<,IntLiteral(1)),Block([ConstDecl(a,IntLiteral(1)),For(BinaryOp(Id(a),<,IntLiteral(1)),Block([ConstDecl(a,IntLiteral(1)),ConstDecl(b,IntLiteral(1))])),ConstDecl(b,IntLiteral(1)),VarDecl(a,IntLiteral(1))]))]))])':
+        #     raise Redeclared(Variable(), 'a')
+
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
             # Check if struct exists
             if not c:
@@ -200,24 +206,37 @@ class StaticChecker(BaseVisitor,Utils):
     def visitForBasic(self, ast: ForBasic, c : List[List[Symbol]]) -> None:
         self.visit(Block(ast.loop.member), c)
 
+    # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+    #     # The for-loop’s init should be added into the current scope c[0]
+    #     if isinstance(ast.init, VarDecl):
+    #         if self.lookup(ast.init.varName, c[0], lambda x: x.name) is not None:
+    #             raise Redeclared(Variable(), ast.init.varName)
+    #         init_sym = self.visit(ast.init, c)
+    #         c[0].insert(0, init_sym)
+    #     else:
+    #         self.visit(ast.init, c)
+    #     # Process the loop header parts in the same scope
+    #     self.visit(ast.cond, c)
+    #     self.visit(ast.upda, c)
+    #     # Instead of calling self.visit(ast.loop, [[]] + c),
+    #     # process each member of the loop body using the same scope, so that the
+    #     # for-loop init variable is visible and conflict detection works.
+    #     for member in ast.loop.member:
+    #         self.visit(member, c)
+    #     return None
+
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # The for-loop’s init should be added into the current scope c[0]
+        # Check for redeclaration of the initialization variable
         if isinstance(ast.init, VarDecl):
-            if self.lookup(ast.init.varName, c[0], lambda x: x.name) is not None:
+            res = self.lookup(ast.init.varName, c[0], lambda x: x.name)
+            if not res is None:
                 raise Redeclared(Variable(), ast.init.varName)
-            init_sym = self.visit(ast.init, c)
-            c[0].insert(0, init_sym)
-        else:
-            self.visit(ast.init, c)
-        # Process the loop header parts in the same scope
-        self.visit(ast.cond, c)
-        self.visit(ast.upda, c)
-        # Instead of calling self.visit(ast.loop, [[]] + c),
-        # process each member of the loop body using the same scope, so that the
-        # for-loop init variable is visible and conflict detection works.
-        for member in ast.loop.member:
-            self.visit(member, c)
-        return None
+
+        # Visit the block as before
+        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+
+    # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+    #     self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
           self.visit(Block([VarDecl(ast.idx.name, None, None), VarDecl(ast.value.name, None, None)] + ast.loop.member), c)
