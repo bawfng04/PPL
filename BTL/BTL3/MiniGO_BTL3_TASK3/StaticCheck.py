@@ -225,15 +225,26 @@ class StaticChecker(BaseVisitor,Utils):
     #         self.visit(member, c)
     #     return None
 
-    def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # Check for redeclaration of the initialization variable
-        if isinstance(ast.init, VarDecl):
-            res = self.lookup(ast.init.varName, c[0], lambda x: x.name)
-            if not res is None:
-                raise Redeclared(Variable(), ast.init.varName)
+    # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+    #     # Check for redeclaration of the initialization variable
+    #     if isinstance(ast.init, VarDecl):
+    #         res = self.lookup(ast.init.varName, c[0], lambda x: x.name)
+    #         if not res is None:
+    #             raise Redeclared(Variable(), ast.init.varName)
 
-        # Visit the block as before
-        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+    #     # Visit the block as before
+    #     self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+
+
+    def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+        # Tạo một bản sao của scope hiện tại
+        new_env = c[0][:]
+        # Nếu init là VarDecl, kiểm tra redeclaration trong new_env
+        if isinstance(ast.init, VarDecl):
+            if self.lookup(ast.init.varName, new_env, lambda x: x.name) is not None:
+                raise Redeclared(Variable(), ast.init.varName)
+        # Xử lý for-loop theo block, sử dụng new_env làm scope cục bộ
+        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), [new_env] + c[1:])
 
     # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
     #     self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
