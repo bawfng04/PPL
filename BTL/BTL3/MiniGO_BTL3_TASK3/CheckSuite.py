@@ -376,3 +376,13 @@ type TIEN interface {VoTien ();}
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
 
 
+    def test_039(self):
+        """
+        const a = 2;
+        func foo () {
+            const a = 1;
+            for a < 1 {
+                const a = 1;
+        """
+        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))

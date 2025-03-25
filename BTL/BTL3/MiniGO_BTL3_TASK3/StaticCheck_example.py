@@ -45,8 +45,7 @@ class StaticChecker(BaseVisitor,Utils):
     def visitProgram(self, ast: Program,c : None):
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
             # TODO: Implement
-            # lấy ra danh sách các Type gồm StructType và InterfaceType
-            # Lấy ra danh sách các Function (cần check xem có trùng không)
+
         self.list_type = reduce(lambda acc, ele: [self.visit(ele, acc)] + acc if isinstance(ele, Type) else acc, ast.decl, [])
         self.list_function = self.list_function + list(filter(lambda item: isinstance(item, FuncDecl), ast.decl))
 

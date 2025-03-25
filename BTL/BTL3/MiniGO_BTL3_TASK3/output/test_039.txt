@@ -1,1 +1,1 @@
-Type Mismatch: For(BinaryOp(Id(a),<,IntLiteral(1)),Block([ConstDecl(a,IntLiteral(1)),For(BinaryOp(Id(a),<,IntLiteral(1)),Block([ConstDecl(a,IntLiteral(1)),ConstDecl(b,IntLiteral(1))])),ConstDecl(b,IntLiteral(1)),VarDecl(a,IntLiteral(1))]))
+Redeclared Variable: a
