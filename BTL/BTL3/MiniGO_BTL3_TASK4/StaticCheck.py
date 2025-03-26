@@ -26,8 +26,6 @@ class Symbol:
         return "Symbol(" + str(self.name) + "," + str(self.mtype) + ("" if self.value is None else "," + str(self.value)) + ")"
 
 class StaticChecker(BaseVisitor,Utils):
-
-
     def __init__(self,ast):
         self.ast = ast
         self.list_type: List[Union[StructType, InterfaceType]] = []
@@ -197,9 +195,9 @@ class StaticChecker(BaseVisitor,Utils):
         # Restore function context
         self.function_current = old_function
 
-    def visitVarDecl(self, ast: VarDecl, c : List[List[Symbol]]) -> Symbol:
+    def visitVarDecl(self, ast: VarDecl, c: List[List[Symbol]]) -> Symbol:
         res = self.lookup(ast.varName, c[0], lambda x: x.name)
-        if not res is None:
+        if res is not None:
             raise Redeclared(Variable(), ast.varName)
 
         LHS_type = ast.varType if ast.varType else None
@@ -214,9 +212,9 @@ class StaticChecker(BaseVisitor,Utils):
         raise TypeMismatch(ast)
 
 
-    def visitConstDecl(self, ast: ConstDecl, c : List[List[Symbol]]) -> Symbol:
+    def visitConstDecl(self, ast: ConstDecl, c: List[List[Symbol]]) -> Symbol:
         res = self.lookup(ast.conName, c[0], lambda x: x.name)
-        if not res is None:
+        if res is not None:
             raise Redeclared(Constant(), ast.conName)
 
         LHS_type = ast.conType if ast.conType else None
@@ -231,12 +229,14 @@ class StaticChecker(BaseVisitor,Utils):
         raise TypeMismatch(ast)
 
     def visitBlock(self, ast: Block, c: List[List[Symbol]]) -> None:
-        acc = [[]] + c
+        # Create a new scope for the block
+        new_scope = [[]] + c
 
+        # Process each statement in the block
         for ele in ast.member:
-            result = self.visit(ele, (acc, True)) if isinstance(ele, (FuncCall, MethCall)) else self.visit(ele, acc)
+            result = self.visit(ele, (new_scope, True)) if isinstance(ele, (FuncCall, MethCall)) else self.visit(ele, new_scope)
             if isinstance(result, Symbol):
-                acc[0] = [result] + acc[0]
+                new_scope[0] = [result] + new_scope[0]
 
     def visitForBasic(self, ast: ForBasic, c : List[List[Symbol]]) -> None:
         if not isinstance(self.visit(ast.cond, c), BoolType):
@@ -244,10 +244,31 @@ class StaticChecker(BaseVisitor,Utils):
         self.visit(ast.loop, c)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        symbol = self.visit(ast.init, [[]] + c)
-        if not isinstance(self.visit(ast.cond, c), BoolType):
+        # Create a new scope that includes everything from the outer scope
+        new_scope = [[]] + c
+
+        # Process initialization part first
+        if isinstance(ast.init, VarDecl):
+            # Check if variable is already declared in the current scope before adding
+            if self.lookup(ast.init.varName, c[0], lambda x: x.name) is not None:
+                raise Redeclared(Variable(), ast.init.varName)
+
+            # Add initialization variable to the new scope
+            init_sym = self.visit(ast.init, new_scope)
+            new_scope[0] = [init_sym] + new_scope[0]
+        else:
+            self.visit(ast.init, new_scope)
+
+        # Check condition is boolean
+        if not isinstance(self.visit(ast.cond, new_scope), BoolType):
             raise TypeMismatch(ast)
-        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+
+        # Visit loop body with the new scope that has the initialization variable
+        for stmt in ast.loop.member:
+            self.visit(stmt, new_scope)
+
+        # Visit update statement
+        self.visit(ast.upda, new_scope)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
         type_array = self.visit(ast.arr, c)
