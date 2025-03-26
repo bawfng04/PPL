@@ -416,3 +416,66 @@ type TIEN interface {VoTien ();}
         """
         input = Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("x",Id("VO"), None),ConstDecl("b",None,MethCall(Id("x"),"foo",[])),MethCall(Id("x"),"koo",[])]))])
         self.assertTrue(TestChecker.test(input, "Undeclared Method: koo", inspect.stack()[0].function))
+
+    # testcases for type mismatch
+    # def test_041(self):
+    #     """
+    #     var v int = 1.2;
+    #     """
+    #     input = Program([VarDecl("v",IntType(),FloatLiteral(1.2))])
+    #     self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(v,IntType,FloatLiteral(1.2))", inspect.stack()[0].function))
+
+
+    # def test_041(self):
+    #     """
+    #     func foo() int {return 1;}
+    #     func  votien() int {
+    #     return votien();
+    #     foo();
+    #     }
+    #     """
+    #     input = Program([FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("votien",[],IntType(),Block([Return(FuncCall("votien",[])),FuncCall("foo",[])]))])
+    #     self.assertTrue(TestChecker.test(input, "TypeMismatch: Return(FuncCall(votien,[]))", inspect.stack()[0].function))
+
+    # def test_042(self):
+    #     """
+    #     type TIEN struct {v int;}
+    #     var v TIEN;
+    #     func foo(){
+    #         for 1 {
+    #             var a int = 1.2;
+    #         }
+    #     }
+    #     """
+    #     input = Program([StructType("TIEN",[("v",IntType())],[]),VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.2))]))]))])
+    #     self.assertTrue(TestChecker.test(input, "TypeMismatch: VarDecl(a,IntType,FloatLiteral(1.2))", inspect.stack()[0].function))
+
+    # def test_043(self):
+    #     """
+    #     func foo(){
+    #     var v int;
+    #     const x = v;
+    #     var k float = x;
+    #     var y boolean = x;
+    #     }
+    #     """
+    #     input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("v",IntType(), None),ConstDecl("x",None,Id("v")),VarDecl("k",FloatType(),Id("x")),VarDecl("y",BoolType(),Id("x"))]))])
+    #     self.assertTrue(TestChecker.test(input, "TypeMismatch: VarDecl(y,BoolType,Id(x))", inspect.stack()[0].function))
+
+    # def test_044(self):
+    #     """
+    #     var a [2][3] int;
+    #     var b = a[1];
+    #     var c [2] int = b;
+    #     var d [1] string = b;
+    #     """
+    #     input = Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),VarDecl("b", None,ArrayCell(Id("a"),[IntLiteral(1)])),VarDecl("c",ArrayType([IntLiteral(2)],IntType()),Id("b")),VarDecl("d",ArrayType([IntLiteral(1)],StringType()),Id("b"))])
+    #     self.assertTrue(TestChecker.test(input, "TypeMismatch: VarDecl(d,ArrayType([IntLiteral(1)],StringType),Id(b))", inspect.stack()[0].function))
+
+    # def test_045(self):
+    #     """
+    #     var a int = 1 % 2;
+    #     var b int = 1 % 2.0;
+    #     """
+    #     input = Program([VarDecl("a",IntType(),BinaryOp("%", IntLiteral(1), IntLiteral(2))),VarDecl("b",IntType(),BinaryOp("%", IntLiteral(1), FloatLiteral(2.0)))])
+    #     self.assertTrue(TestChecker.test(input, "TypeMismatch: BinaryOp(IntLiteral(1),%,FloatLiteral(2.0))", inspect.stack()[0].function))

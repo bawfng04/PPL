@@ -45,9 +45,7 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitProgram(self, ast: Program,c : None):
         # print (ast)
-        if str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(VarDecl(a,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(1)),Assign(Id(b),BinaryOp(Id(b),+,IntLiteral(2))),Block([ConstDecl(b,IntLiteral(1))]))]))])':
-            raise Redeclared(Variable(), 'a')
-        # elif str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(BinaryOp(Id(a),<,IntLiteral(1)),Block([ConstDecl(a,IntLiteral(1)),For(BinaryOp(Id(a),<,IntLiteral(1)),Block([ConstDecl(a,IntLiteral(1)),ConstDecl(b,IntLiteral(1))])),ConstDecl(b,IntLiteral(1)),VarDecl(a,IntLiteral(1))]))]))])':
+        # if str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(VarDecl(a,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(1)),Assign(Id(b),BinaryOp(Id(b),+,IntLiteral(2))),Block([ConstDecl(b,IntLiteral(1))]))]))])':
         #     raise Redeclared(Variable(), 'a')
 
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
@@ -176,22 +174,9 @@ class StaticChecker(BaseVisitor,Utils):
         return Symbol(ast.varName, self.visit(ast.varInit, c) if ast.varInit else ast.varType, None)
 
     def visitConstDecl(self, ast: ConstDecl, c : List[List[Symbol]]) -> Symbol:
-        # Check for redeclared constant
         res = self.lookup(ast.conName, c[0], lambda x: x.name)
         if not res is None:
             raise Redeclared(Constant(), ast.conName)
-
-        # Check initialization
-        if ast.iniExpr is None:
-            raise TypeMismatch(ast)
-
-        # Check type
-        init_type = self.visit(ast.iniExpr, c)
-        if ast.conType is None:
-            ast.conType = init_type
-        elif not isinstance(ast.conType, type(init_type)):
-            raise TypeMismatch(ast)
-
         return Symbol(ast.conName, ast.conType, ast.iniExpr)
 
     def visitBlock(self, ast: Block, c: List[List[Symbol]]) -> None:
@@ -267,10 +252,7 @@ class StaticChecker(BaseVisitor,Utils):
         ]), None)
 
         if res:
-            if isinstance(res, FuncDecl):
-                return res.retType
-            elif isinstance(res, Symbol) and isinstance(res.mtype, FuntionType):
-                return res.mtype
+            return res.retType
         raise Undeclared(Function(), ast.funName)
 
     def visitFieldAccess(self, ast: FieldAccess, c: List[List[Symbol]]) -> Type:
@@ -281,7 +263,7 @@ class StaticChecker(BaseVisitor,Utils):
 
         if res is None:
             raise Undeclared(Field(), ast.field)
-        return res[1]
+
 
     def visitMethCall(self, ast: MethCall, c: List[List[Symbol]]) -> Type:
         type_receiver = self.visit(ast.receiver, c)
