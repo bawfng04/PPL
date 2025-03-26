@@ -267,21 +267,7 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(ast.loop, new_scope)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # Process the initialization in the current scope.
-        if isinstance(ast.init, VarDecl):
-            if self.lookup(ast.init.varName, c[0], lambda x: x.name) is not None:
-                raise Redeclared(Variable(), ast.init.varName)
-            init_sym = self.visit(ast.init, c)
-            c[0].insert(0, init_sym)
-        else:
-            self.visit(ast.init, c)
-        # Process loop condition and update in the same scope.
-        self.visit(ast.cond, c)
-        self.visit(ast.upda, c)
-        # Process each statement in the loop body using the same scope,
-        # so that redeclarations against the for-header variable are detected.
-        for stmt in ast.loop.member:
-            self.visit(stmt, c)
+        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
         type_array = self.visit(ast.arr, c)
