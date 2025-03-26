@@ -26,6 +26,8 @@ class Symbol:
         return "Symbol(" + str(self.name) + "," + str(self.mtype) + ("" if self.value is None else "," + str(self.value)) + ")"
 
 class StaticChecker(BaseVisitor,Utils):
+
+
     def __init__(self,ast):
         self.ast = ast
         self.list_type: List[Union[StructType, InterfaceType]] = []
@@ -195,9 +197,9 @@ class StaticChecker(BaseVisitor,Utils):
         # Restore function context
         self.function_current = old_function
 
-    def visitVarDecl(self, ast: VarDecl, c: List[List[Symbol]]) -> Symbol:
+    def visitVarDecl(self, ast: VarDecl, c : List[List[Symbol]]) -> Symbol:
         res = self.lookup(ast.varName, c[0], lambda x: x.name)
-        if res is not None:
+        if not res is None:
             raise Redeclared(Variable(), ast.varName)
 
         LHS_type = ast.varType if ast.varType else None
@@ -212,9 +214,9 @@ class StaticChecker(BaseVisitor,Utils):
         raise TypeMismatch(ast)
 
 
-    def visitConstDecl(self, ast: ConstDecl, c: List[List[Symbol]]) -> Symbol:
+    def visitConstDecl(self, ast: ConstDecl, c : List[List[Symbol]]) -> Symbol:
         res = self.lookup(ast.conName, c[0], lambda x: x.name)
-        if res is not None:
+        if not res is None:
             raise Redeclared(Constant(), ast.conName)
 
         LHS_type = ast.conType if ast.conType else None
@@ -229,14 +231,12 @@ class StaticChecker(BaseVisitor,Utils):
         raise TypeMismatch(ast)
 
     def visitBlock(self, ast: Block, c: List[List[Symbol]]) -> None:
-        # Create a new scope for the block
-        new_scope = [[]] + c
+        acc = [[]] + c
 
-        # Process each statement in the block
         for ele in ast.member:
-            result = self.visit(ele, (new_scope, True)) if isinstance(ele, (FuncCall, MethCall)) else self.visit(ele, new_scope)
+            result = self.visit(ele, (acc, True)) if isinstance(ele, (FuncCall, MethCall)) else self.visit(ele, acc)
             if isinstance(result, Symbol):
-                new_scope[0] = [result] + new_scope[0]
+                acc[0] = [result] + acc[0]
 
     def visitForBasic(self, ast: ForBasic, c : List[List[Symbol]]) -> None:
         if not isinstance(self.visit(ast.cond, c), BoolType):

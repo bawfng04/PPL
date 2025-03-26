@@ -107,14 +107,11 @@ func Votien (b int) {
 
     def test_012(self):
         """
-func Votien (b int) {
-    for var a = 1; a < 1; a += 1 {
-        const a = 2;
-    }
-}
+        var VoTien = 1;
+        var VoTien = 2;
         """
-        input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
+        input = Program([VarDecl("VoTien", None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: VoTien", inspect.stack()[0].function))
 
     def test_013(self):
         """
@@ -274,14 +271,16 @@ func Votien (b int) {
 
     def test_029(self):
         """
-func Votien (b int) {
-    for var a = 1; a < 1; a += 1 {
         const a = 2;
-    }
-}
+        func foo () {
+            const a = 1;
+            for var a = 1; a < 1; b += 2 {
+                const b = 1;
+            }
+        }
         """
-        input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
+        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
 
     def test_030(self):
         """
@@ -366,32 +365,6 @@ type TIEN interface {VoTien ();}
 
     def test_038(self):
         """
-        const a = 2;
-        func foo () {
-            const a = 1;
-            for var a = 1; a < 1; b := 2 {
-                const b = 1;
-            }
-        }
-        """
-        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),IntLiteral(2)),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "", inspect.stack()[0].function))
-
-    def test_039(self):
-        """
-        const a = 2;
-        func foo () {
-            const a = 1;
-            for var a = 1; a < 1; b += 2 {
-                const b = 1;
-            }
-        }
-        """
-        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
-
-    def test_040(self):
-        """
         var v TIEN;
         type TIEN struct {
             a int;
@@ -411,10 +384,37 @@ type TIEN interface {VoTien ();}
         input = Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("x",Id("VO"), None),ConstDecl("b",None,MethCall(Id("x"),"foo",[])),MethCall(Id("x"),"koo",[])]))])
         self.assertTrue(TestChecker.test(input, "Undeclared Method: koo", inspect.stack()[0].function))
 
+    def test_039(self):
+        """
+func Votien (b int) {
+    for var a = 1; a < 1; a += 1 {
+        const a = 2;
+    }
+}
+        """
+        input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
+
+    def test_040(self):
+        """
+        const a = 2;
+        func foo () {
+            const a = 1;
+            for var a = 1; a < 1; b := 2 {
+                const b = 1;
+            }
+        }
+        """
+        input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),IntLiteral(2)),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "", inspect.stack()[0].function))
+
     def test_041(self):
         """
-        var VoTien = 1;
-        var VoTien = 2;
+        func Votien (b int) {
+            for var a = 1; a < 1; a += 1 {
+                const a = 2;
+            }
+        }
         """
-        input = Program([VarDecl("VoTien", None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Variable: VoTien", inspect.stack()[0].function))
+        input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
