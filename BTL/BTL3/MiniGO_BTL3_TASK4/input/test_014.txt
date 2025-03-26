@@ -1,0 +1,9 @@
+ 
+func Votien () int {return 1;}
+
+func foo () {
+    var b = Votien();
+    foo_votine();
+    return;
+}
+        

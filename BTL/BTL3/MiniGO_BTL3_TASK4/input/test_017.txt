@@ -1,0 +1,4 @@
+ 
+type TIEN struct {Votien int;}
+type TIEN struct {v int;}
+        

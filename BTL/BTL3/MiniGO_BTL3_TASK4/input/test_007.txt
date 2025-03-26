@@ -1,0 +1,10 @@
+ 
+type  Votien struct {
+    Votien int;
+}
+type TIEN struct {
+    Votien string;
+    TIEN int;
+    TIEN float;
+}
+        
