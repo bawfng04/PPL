@@ -1,0 +1,1 @@
+Program([VarDecl("getInt", None,IntLiteral(1))])
