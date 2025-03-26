@@ -386,11 +386,11 @@ type TIEN interface {VoTien ();}
 
     def test_039(self):
         """
-func Votien (b int) {
-    for var a = 1; a < 1; a += 1 {
-        const a = 2;
-    }
-}
+        func Votien (b int) {
+            for var a = 1; a < 1; a += 1 {
+                const a = 2;
+            }
+        }
         """
         input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
@@ -406,7 +406,7 @@ func Votien (b int) {
         }
         """
         input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),IntLiteral(2)),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
     def test_041(self):
         """

@@ -3,7 +3,7 @@ from Visitor import *
 from Utils import Utils
 from StaticError import *
 from functools import reduce
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from StaticError import Type as StaticErrorType
 from AST import Type
@@ -161,11 +161,41 @@ class StaticChecker(BaseVisitor,Utils):
         return Symbol(ast.name, FuntionType())
 
     def visitParamDecl(self, ast: ParamDecl, c: list[Symbol]) -> Symbol:
-        # TODO: Implement
+        res = self.lookup(ast.parName, c, lambda x: x.name)
+        if not res is None:
+            raise Redeclared(Parameter(), ast.parName)
         return Symbol(ast.parName, ast.parType, None)
 
     def visitMethodDecl(self, ast: MethodDecl, c : List[List[Symbol]]) -> None:
-        # TODO: Implement
+        # First check if the receiver type exists
+        if isinstance(ast.recType, Id):
+            struct = self.lookup(ast.recType.name, self.list_type, lambda x: x.name)
+            if struct is None:
+                raise Undeclared(Type(), ast.recType.name)
+
+        # Save current function context
+        old_function = self.function_current
+        self.function_current = ast.fun
+
+        # Create parameter scope with the receiver
+        receiver_symbol = Symbol(ast.receiver, ast.recType, None)
+        param_symbols = [receiver_symbol]  # Add receiver to param list first
+
+        # Process parameters
+        for param in ast.fun.params:
+            # Check against the receiver name
+            if param.parName == ast.receiver:
+                raise Redeclared(Parameter(), param.parName)
+
+            # Add parameter
+            sym = self.visit(param, param_symbols)
+            param_symbols.append(sym)
+
+        # Visit function body with new scope
+        self.visit(ast.fun.body, [param_symbols] + c)
+
+        # Restore function context
+        self.function_current = old_function
 
     def visitVarDecl(self, ast: VarDecl, c : List[List[Symbol]]) -> Symbol:
         res = self.lookup(ast.varName, c[0], lambda x: x.name)

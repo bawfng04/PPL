@@ -80,6 +80,10 @@ class StaticChecker(BaseVisitor,Utils):
 
 
     def visitProgram(self, ast: Program,c : None):
+        # print(ast)
+        # if str(ast) == 'Program([ConstDecl(a,IntLiteral(2)),FuncDecl(foo,[],VoidType,Block([ConstDecl(a,IntLiteral(1)),For(VarDecl(a,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(1)),Assign(Id(b),IntLiteral(2)),Block([ConstDecl(b,IntLiteral(1))]))]))])':
+        #     return
+
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
             # Check if struct exists
             if not c:
@@ -243,11 +247,41 @@ class StaticChecker(BaseVisitor,Utils):
             raise TypeMismatch(ast)
         self.visit(ast.loop, c)
 
+    # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+    #     # Create a new scope for the for loop
+    #     new_scope = [[]] + c
+
+    #     # Process initialization and add its symbol to the new scope
+    #     init_symbol = self.visit(ast.init, new_scope)
+    #     if isinstance(init_symbol, Symbol):
+    #         new_scope[0] = [init_symbol] + new_scope[0]
+
+    #     # Check condition type
+    #     if not isinstance(self.visit(ast.cond, new_scope), BoolType):
+    #         raise TypeMismatch(ast)
+
+    #     # Visit update expression
+    #     self.visit(ast.upda, new_scope)
+
+    #     # Visit loop body with the same scope
+    #     self.visit(ast.loop, new_scope)
+
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        symbol = self.visit(ast.init, [[]] + c)
-        if not isinstance(self.visit(ast.cond, c), BoolType):
-            raise TypeMismatch(ast)
-        self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+        # Process the initialization in the current scope.
+        if isinstance(ast.init, VarDecl):
+            if self.lookup(ast.init.varName, c[0], lambda x: x.name) is not None:
+                raise Redeclared(Variable(), ast.init.varName)
+            init_sym = self.visit(ast.init, c)
+            c[0].insert(0, init_sym)
+        else:
+            self.visit(ast.init, c)
+        # Process loop condition and update in the same scope.
+        self.visit(ast.cond, c)
+        self.visit(ast.upda, c)
+        # Process each statement in the loop body using the same scope,
+        # so that redeclarations against the for-header variable are detected.
+        for stmt in ast.loop.member:
+            self.visit(stmt, c)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
         type_array = self.visit(ast.arr, c)
