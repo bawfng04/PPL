@@ -455,15 +455,8 @@ type TIEN interface {VoTien ();}
 
     def test_044(self):
         """
-        func foo(){
-            return
-        }
-        func foo1() int{
-            return 1
-        }
-        func foo2() float{
-            return 2
-        }
+        var a = [2] int {1, 2}
+        var c [3] float = a
         """
-        input = Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("foo1",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("foo2",[],FloatType(),Block([Return(IntLiteral(2))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(IntLiteral(2))", inspect.stack()[0].function))
+        input = Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3)],FloatType()),Id("a"))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(c,ArrayType([IntLiteral(3)],FloatType()),Id(a))", inspect.stack()[0].function))
