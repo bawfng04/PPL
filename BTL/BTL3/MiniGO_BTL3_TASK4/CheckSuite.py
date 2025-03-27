@@ -418,3 +418,38 @@ type TIEN interface {VoTien ();}
         """
         input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
         self.assertTrue(TestChecker.test(input, "Redeclared Constant: a", inspect.stack()[0].function))
+
+    ##############
+
+    def test_042(self):
+        """
+        type S1 struct {votien int;}
+        type S2 struct {votien int;}
+        type I1 interface {votien() S1;}
+        type I2 interface {votien() S2;}
+
+        func (s S1) votien() S1 {return s;}
+
+        var a S1;
+        var c I1 = a;
+        var d I2 = a;
+        """
+        input = Program([StructType("S1",[("votien",IntType())],[]),StructType("S2",[("votien",IntType())],[]),VarDecl("v",Id("S1"), None),ConstDecl("x",None,Id("v")),VarDecl("z",Id("S1"),Id("x")),VarDecl("k",Id("S2"),Id("x"))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(k,Id(S2),Id(x))", inspect.stack()[0].function))
+
+    def test_043(self):
+        """
+        type S1 struct {votien int;}
+        type S2 struct {votien int;}
+        type I1 interface {votien() S1;}
+        type I2 interface {votien() S2;}
+
+        func (s S1) votien() S1 {return s;}
+
+        var a S1;
+        var c I1 = a;
+        var d I2 = a;
+        """
+        input = Program([StructType("S1",[("votien",IntType())],[]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],Id("S1"))]),InterfaceType("I2",[Prototype("votien",[],Id("S2"))]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(d,Id(I2),Id(a))", inspect.stack()[0].function))
+
