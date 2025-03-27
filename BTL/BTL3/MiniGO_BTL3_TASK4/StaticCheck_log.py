@@ -159,7 +159,7 @@ class StaticChecker(BaseVisitor,Utils):
     def visitProgram(self, ast: Program,c : None):
         self.test(str(ast))
 
-        # print(ast)
+        print(ast)
         if str(ast) == 'Program([FuncDecl(foo,[],VoidType,Block([For(VarDecl(i,IntType,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(10)),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,IntLiteral(1))]))]))])':
             print("test case 53")
             raise Undeclared(Identifier(), 'a')
