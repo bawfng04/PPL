@@ -545,8 +545,19 @@ type TIEN interface {VoTien ();}
                          VarDecl("d", BoolType(), BinaryOp(">", IntLiteral(1), FloatLiteral(2.0)))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(IntLiteral(1),>,FloatLiteral(2.0))", inspect.stack()[0].function))
 
-
     def test_052(self):
+        """
+        func foo(){
+            for var i int = 1; i < 10; i := 1. {
+                return;
+            }
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("i"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([Return(None)]))]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Assign(Id(i),FloatLiteral(1.0))", inspect.stack()[0].function))
+
+
+    def test_053(self):
         """
         func foo(){
             for var i int = 1; a < 10; i := 1. {
@@ -557,14 +568,4 @@ type TIEN interface {VoTien ();}
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(i,IntType,FloatLiteral(1.0))", inspect.stack()[0].function))
 
-    def test_053(self):
-        """
-        func foo(){
-            for var i int = 1; i < 10; i := 1. {
-                return;
-            }
-        }
-        """
-        input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("i"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([Return(None)]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: Assign(Id(i),FloatLiteral(1.0))", inspect.stack()[0].function))
 

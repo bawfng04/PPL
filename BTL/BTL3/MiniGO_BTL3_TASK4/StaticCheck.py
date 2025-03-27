@@ -317,7 +317,21 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(ast.loop, new_scope)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+        # Pre-check for type mismatch between variable declaration and update expression
+        if isinstance(ast.init, VarDecl) and ast.init.varType:
+            if isinstance(ast.upda, Assign) and isinstance(ast.upda.lhs, Id) and ast.upda.lhs.name == ast.init.varName:
+                update_type = self.visit(ast.upda.rhs, c)
+                if not self.checkType(ast.init.varType, update_type, [(FloatType, IntType)]):
+                    # Raise error on the assignment instead of the variable declaration
+                    raise TypeMismatch(ast.upda)
+        # Continue with the normal processing
         self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
+
+    # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
+    #     symbol = self.visit(ast.init, [[]] + c)
+    #     if not isinstance(self.visit(ast.cond, c), BoolType):
+    #         raise TypeMismatch(ast)
+    #     self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
         type_array = self.visit(ast.arr, c)
