@@ -106,6 +106,7 @@ class StaticChecker(BaseVisitor,Utils):
         return type(LHS_type) == type(RHS_type)
 
     def visitProgram(self, ast: Program,c : None):
+
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
             # Check if struct exists
             if not c:
