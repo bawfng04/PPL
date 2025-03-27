@@ -530,5 +530,17 @@ type TIEN interface {VoTien ();}
         var b int = 1 % 2.0;
         """
         input = Program([VarDecl("a",IntType(),BinaryOp("%", IntLiteral(1), IntLiteral(2))),VarDecl("b",IntType(),BinaryOp("%", IntLiteral(1), FloatLiteral(2.0)))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(%,IntLiteral(1),FloatLiteral(2.0))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(IntLiteral(1),%,FloatLiteral(2.0))", inspect.stack()[0].function))
 
+    def test_051(self):
+        """
+        var a boolean = 1 > 2;
+        var b boolean = 1.0 < 2.0;
+        var c boolean = "1" == "2";
+        var d boolean = 1 > 2.0;
+        """
+        input = Program([VarDecl("a", BoolType(), BinaryOp(">", IntLiteral(1), IntLiteral(2))),
+                         VarDecl("b", BoolType(), BinaryOp("<", FloatLiteral(1.0), FloatLiteral(2.0))),
+                         VarDecl("c", BoolType(), BinaryOp("==", StringLiteral("1"), StringLiteral("2"))),
+                         VarDecl("d", BoolType(), BinaryOp(">", IntLiteral(1), FloatLiteral(2.0)))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(IntLiteral(1),>,FloatLiteral(2.0))", inspect.stack()[0].function))

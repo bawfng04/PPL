@@ -473,8 +473,19 @@ class StaticChecker(BaseVisitor,Utils):
         # Special case for modulo operator - must have integer operands only
         if ast.op == '%':
             if not (isinstance(LHS_type, IntType) and isinstance(RHS_type, IntType)):
-                raise TypeMismatch(ast)  # Raise error on the BinaryOp itself
+                raise TypeMismatch(ast)
             return IntType()
+
+        if ast.op in ['<', '>', '<=', '>=', '==', '!=']:
+            if type(LHS_type) != type(RHS_type):
+                raise TypeMismatch(ast)
+            # Also check that the types support comparison
+            if isinstance(LHS_type, (IntType, FloatType, StringType)) and ast.op in ['<', '>', '<=', '>=']:
+                return BoolType()
+            elif isinstance(LHS_type, (IntType, FloatType, StringType, BoolType)) and ast.op in ['==', '!=']:
+                return BoolType()
+            else:
+                raise TypeMismatch(ast)
 
         if ast.op in ['+', '-', '*', '/', '%']:
             if self.checkType(LHS_type, RHS_type, [(IntType, FloatType), (FloatType, IntType)]):
