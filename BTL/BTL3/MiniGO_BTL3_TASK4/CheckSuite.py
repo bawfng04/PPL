@@ -495,7 +495,6 @@ type TIEN interface {VoTien ();}
         input = Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3),IntLiteral(2)],IntType()),Id("a"))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(c,ArrayType(IntType,[IntLiteral(3),IntLiteral(2)]),Id(a))", inspect.stack()[0].function))
 
-
     def test_048(self):
         """
         type S1 struct {votien int;}
@@ -510,4 +509,18 @@ type TIEN interface {VoTien ();}
         var e int = nil;
         """
         input = Program([StructType("S1",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),VarDecl("a",Id("I1"), None),VarDecl("c",Id("I1"),NilLiteral()),VarDecl("d",Id("S1"),NilLiteral()),FuncDecl("foo",[],VoidType(),Block([Assign(Id("c"),Id("a")),Assign(Id("a"),NilLiteral())])),VarDecl("e",IntType(),NilLiteral())])
-        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,IntType,NilLiteral())", inspect.stack()[0].function))
+
+    def test_049(self):
+        """
+        func foo(){
+            if (true) {
+                var a float = 1.2;
+            } else {
+                var a int = 1.2;
+            }
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([If(BooleanLiteral(True), Block([VarDecl("a",FloatType(),FloatLiteral(1.2))]), Block([VarDecl("a",IntType(),FloatLiteral(1.2))]))]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,IntType,FloatLiteral(1.2))", inspect.stack()[0].function))
+

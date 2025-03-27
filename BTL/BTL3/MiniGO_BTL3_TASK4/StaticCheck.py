@@ -228,6 +228,27 @@ class StaticChecker(BaseVisitor,Utils):
             raise Redeclared(Variable(), ast.varName)
 
         LHS_type = ast.varType if ast.varType else None
+
+        # Special case for NilLiteral
+        if isinstance(ast.varInit, NilLiteral):
+            # Process LHS type to ensure it's a reference type (interface or struct)
+            if LHS_type is None:
+                # Auto-type is a special case that would accept nil
+                return Symbol(ast.varName, StructType("", [], []), None)
+
+            # Handle Id type by resolving it first
+            if isinstance(LHS_type, Id):
+                resolved_type = self.lookup(LHS_type.name, self.list_type, lambda x: x.name)
+                if resolved_type and isinstance(resolved_type, (InterfaceType, StructType)):
+                    return Symbol(ast.varName, LHS_type, None)
+            # Handle direct struct or interface type
+            elif isinstance(LHS_type, (InterfaceType, StructType)):
+                return Symbol(ast.varName, LHS_type, None)
+
+            # For any other type (int, float, etc.), nil is not allowed
+            raise TypeMismatch(ast)
+
+        # Rest of your existing code for non-nil cases
         RHS_type = self.visit(ast.varInit, c) if ast.varInit else None
 
         if RHS_type is None:
@@ -407,6 +428,18 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitAssign(self, ast: Assign, c: List[List[Symbol]]) -> None:
         LHS_type = self.visit(ast.lhs, c)
+
+        # Handle nil literals in assignment
+        if isinstance(ast.rhs, NilLiteral):
+            # Allow nil assignment only to reference types
+            if isinstance(LHS_type, Id):
+                resolved_type = self.lookup(LHS_type.name, self.list_type, lambda x: x.name)
+                if not (resolved_type and isinstance(resolved_type, (InterfaceType, StructType))):
+                    raise TypeMismatch(ast)
+            elif not isinstance(LHS_type, (InterfaceType, StructType)):
+                raise TypeMismatch(ast)
+            return None
+
         RHS_type = self.visit(ast.rhs, c)
         if not self.checkType(LHS_type, RHS_type, [(FloatType, IntType), (InterfaceType, StructType)]):
             raise TypeMismatch(ast)
