@@ -50,8 +50,15 @@ class StaticChecker(BaseVisitor,Utils):
 
         # For array types, we need different rules
         if isinstance(LHS_type, ArrayType) and isinstance(RHS_type, ArrayType):
-            # For arrays, element types must match EXACTLY (no automatic conversions allowed)
-            return type(LHS_type.eleType) == type(RHS_type.eleType)
+            # Element types must match exactly
+            if type(LHS_type.eleType) != type(RHS_type.eleType):
+                return False
+
+            # Number of dimensions must match (this fixes test case 47)
+            if len(LHS_type.dimens) != len(RHS_type.dimens):
+                return False
+
+            return True
 
         # For struct types, the names must match.
         if isinstance(LHS_type, StructType) and isinstance(RHS_type, StructType):
@@ -226,6 +233,13 @@ class StaticChecker(BaseVisitor,Utils):
             return Symbol(ast.varName, LHS_type, None)
         elif LHS_type is None:
             return Symbol(ast.varName, RHS_type, None)
+        elif isinstance(LHS_type, ArrayType) and isinstance(RHS_type, ArrayType):
+            # Explicit array dimension check for test case 47
+            if len(LHS_type.dimens) != len(RHS_type.dimens):
+                raise TypeMismatch(ast)
+            if type(LHS_type.eleType) != type(RHS_type.eleType):
+                raise TypeMismatch(ast)
+            return Symbol(ast.varName, LHS_type, None)
         elif self.checkType(LHS_type, RHS_type, [(FloatType, IntType), (InterfaceType, StructType)]):
             return Symbol(ast.varName, LHS_type, None)
         raise TypeMismatch(ast)
