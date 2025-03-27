@@ -1,1 +1,1 @@
-VOTIEN
+Type Mismatch: VarDecl(c,ArrayType(FloatType,[IntLiteral(3)]),Id(a))

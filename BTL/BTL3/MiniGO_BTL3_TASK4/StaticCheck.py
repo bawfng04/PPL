@@ -42,56 +42,61 @@ class StaticChecker(BaseVisitor,Utils):
     def check(self):
         self.visit(self.ast, None)
 
-    def checkType(self, LHS_type: Type, RHS_type: Type, list_type_permission: List[Tuple[Type, Type]] = []) -> bool:
+    def checkType(self, LHS_type: Type, RHS_type: Type,
+                list_type_permission: List[Tuple[Type, Type]] = []) -> bool:
         # Resolve Id types, if any.
         LHS_type = self.lookup(LHS_type.name, self.list_type, lambda x: x.name) if isinstance(LHS_type, Id) else LHS_type
         RHS_type = self.lookup(RHS_type.name, self.list_type, lambda x: x.name) if isinstance(RHS_type, Id) else RHS_type
 
-        # Check for ArrayType: dimensions and element types must match.
+        # For array types, we need different rules
         if isinstance(LHS_type, ArrayType) and isinstance(RHS_type, ArrayType):
-            if len(LHS_type.dimens) != len(RHS_type.dimens):
-                return False
-            # Allow conversion if LHS element is FloatType and RHS element is IntType.
-            if isinstance(LHS_type.eleType, FloatType) and isinstance(RHS_type.eleType, IntType):
-                return True
-            return self.checkType(LHS_type.eleType, RHS_type.eleType, list_type_permission)
+            # For arrays, element types must match EXACTLY (no automatic conversions allowed)
+            return type(LHS_type.eleType) == type(RHS_type.eleType)
 
-        # If LHS is InterfaceType and RHS is StructType, check that the struct implements all prototypes.
+        # For struct types, the names must match.
+        if isinstance(LHS_type, StructType) and isinstance(RHS_type, StructType):
+            return LHS_type.name == RHS_type.name
+
+        # For interface types, the names must match as well
+        if isinstance(LHS_type, InterfaceType) and isinstance(RHS_type, InterfaceType):
+            return LHS_type.name == RHS_type.name
+
+        # For interface types and struct types:
         if isinstance(LHS_type, InterfaceType) and isinstance(RHS_type, StructType):
+            # Check if struct implements all interface methods
             for proto in LHS_type.methods:
-                found = False
-                # Look for a method in the struct with the same name as the prototype.
+                # Find matching method in struct
+                match_found = False
+
                 for method in RHS_type.methods:
                     if method.fun.name == proto.name:
-                        # Check that the number of parameters match.
-                        if len(method.fun.params) != len(proto.params):
-                            continue
-                        # Check each parameter type.
-                        match = True
-                        for i in range(len(proto.params)):
-                            if not self.checkType(method.fun.params[i].parType, proto.params[i]):
-                                match = False
-                                break
-                        if match and self.checkType(method.fun.retType, proto.retType):
-                            found = True
-                            break
-                if not found:
+                        # Check return type and parameters
+                        if not self.checkType(proto.retType, method.fun.retType, []):
+                            return False
+
+                        # Check parameters (must have same number and types)
+                        if len(proto.params) != len(method.fun.params):
+                            return False
+
+                        for i, param_type in enumerate(proto.params):
+                            if not self.checkType(param_type, method.fun.params[i].parType, []):
+                                return False
+
+                        match_found = True
+                        break
+
+                if not match_found:
                     return False
+
             return True
 
-        # Check permission pairs.
+        # Check permitted scalar conversion pairs.
         for (perm_LHS, perm_RHS) in list_type_permission:
             if isinstance(LHS_type, perm_LHS) and isinstance(RHS_type, perm_RHS):
                 return True
 
-        # For other cases, require an exact type match.
-        if type(LHS_type) == type(RHS_type):
-            if hasattr(LHS_type, "name") and hasattr(RHS_type, "name"):
-                return LHS_type.name == RHS_type.name
-            return True
-
-        return False
-
+        # Otherwise require exact type match.
+        return type(LHS_type) == type(RHS_type)
 
     def visitProgram(self, ast: Program,c : None):
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:

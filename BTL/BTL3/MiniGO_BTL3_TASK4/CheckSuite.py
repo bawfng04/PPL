@@ -467,5 +467,24 @@ type TIEN interface {VoTien ();}
         var a = [2] int {1, 2}
         var c [3] float = a
         """
-        input = Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3)],FloatType()),Id("a"))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(c,ArrayType([IntLiteral(3)],FloatType()),Id(a))", inspect.stack()[0].function))
+        input = Program([
+            VarDecl("a", None, ArrayLiteral([IntLiteral(2)], IntType(), [IntLiteral(1), IntLiteral(2)])),
+            VarDecl("c", ArrayType([IntLiteral(3)], FloatType()), Id("a"))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(c,ArrayType([IntLit(3)],FloatType),Id(a))", inspect.stack()[0].function))
+
+    def test_046(self):
+        """
+        type I1 interface {votien();}
+        type I2 interface {votien();}
+
+
+        var v I1;
+        const x = v;
+        var z I1 = x;
+        var k I2 = x;
+        """
+        input = Program([InterfaceType("I1",[Prototype("votien",[],VoidType())]),InterfaceType("I2",[Prototype("votien",[],VoidType())]),VarDecl("v",Id("I1"), None),ConstDecl("x",None,Id("v")),VarDecl("z",Id("I1"),Id("x")),VarDecl("k",Id("I2"),Id("x"))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(k,Id(I2),Id(x))", inspect.stack()[0].function))
+
+
