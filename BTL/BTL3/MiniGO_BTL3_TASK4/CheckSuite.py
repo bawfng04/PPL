@@ -453,7 +453,16 @@ type TIEN interface {VoTien ();}
         input = Program([StructType("S1",[("votien",IntType())],[]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],Id("S1"))]),InterfaceType("I2",[Prototype("votien",[],Id("S2"))]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(d,Id(I2),Id(a))", inspect.stack()[0].function))
 
+
     def test_044(self):
+        """
+        var a = [2] int {1, 2}
+        var c [3] int = a
+        """
+        input = Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3)],IntType()),Id("a"))])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_045(self):
         """
         var a = [2] int {1, 2}
         var c [3] float = a
