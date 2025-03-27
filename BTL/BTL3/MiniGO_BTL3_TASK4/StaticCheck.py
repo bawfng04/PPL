@@ -106,7 +106,6 @@ class StaticChecker(BaseVisitor,Utils):
         return type(LHS_type) == type(RHS_type)
 
     def visitProgram(self, ast: Program,c : None):
-
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
             # Check if struct exists
             if not c:
@@ -470,6 +469,12 @@ class StaticChecker(BaseVisitor,Utils):
     def visitBinaryOp(self, ast: BinaryOp, c: List[List[Symbol]]):
         LHS_type = self.visit(ast.left, c)
         RHS_type = self.visit(ast.right, c)
+
+        # Special case for modulo operator - must have integer operands only
+        if ast.op == '%':
+            if not (isinstance(LHS_type, IntType) and isinstance(RHS_type, IntType)):
+                raise TypeMismatch(ast)  # Raise error on the BinaryOp itself
+            return IntType()
 
         if ast.op in ['+', '-', '*', '/', '%']:
             if self.checkType(LHS_type, RHS_type, [(IntType, FloatType), (FloatType, IntType)]):

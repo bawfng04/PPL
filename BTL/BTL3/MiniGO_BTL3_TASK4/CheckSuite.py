@@ -509,7 +509,7 @@ type TIEN interface {VoTien ();}
         var e int = nil;
         """
         input = Program([StructType("S1",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),VarDecl("a",Id("I1"), None),VarDecl("c",Id("I1"),NilLiteral()),VarDecl("d",Id("S1"),NilLiteral()),FuncDecl("foo",[],VoidType(),Block([Assign(Id("c"),Id("a")),Assign(Id("a"),NilLiteral())])),VarDecl("e",IntType(),NilLiteral())])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,IntType,NilLiteral())", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,IntType,Nil)", inspect.stack()[0].function))
 
     def test_049(self):
         """
@@ -523,4 +523,12 @@ type TIEN interface {VoTien ();}
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([If(BooleanLiteral(True), Block([VarDecl("a",FloatType(),FloatLiteral(1.2))]), Block([VarDecl("a",IntType(),FloatLiteral(1.2))]))]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,IntType,FloatLiteral(1.2))", inspect.stack()[0].function))
+
+    def test_050(self):
+        """
+        var a int = 1 % 2;
+        var b int = 1 % 2.0;
+        """
+        input = Program([VarDecl("a",IntType(),BinaryOp("%", IntLiteral(1), IntLiteral(2))),VarDecl("b",IntType(),BinaryOp("%", IntLiteral(1), FloatLiteral(2.0)))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(%,IntLiteral(1),FloatLiteral(2.0))", inspect.stack()[0].function))
 
