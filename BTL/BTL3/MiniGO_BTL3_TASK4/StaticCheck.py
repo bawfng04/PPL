@@ -393,14 +393,16 @@ class StaticChecker(BaseVisitor,Utils):
     def visitBreak(self, ast, c: List[List[Symbol]]) -> None: return None
 
     def visitReturn(self, ast, c: List[List[Symbol]]) -> None:
-        if ast.expr is None:
-            if not isinstance(self.function_current.retType, VoidType):
+        expected = self.function_current.retType
+        if isinstance(expected, VoidType) and ast.expr is not None:
+            raise TypeMismatch(ast)
+        if not isinstance(expected, VoidType) and ast.expr is None:
+            raise TypeMismatch(ast)
+        if ast.expr is not None:
+            actual = self.visit(ast.expr, c)
+            # Check with no permission for int-to-float conversion
+            if not self.checkType(expected, actual, []):
                 raise TypeMismatch(ast)
-        else:
-            expr_type = self.visit(ast.expr, c)
-            if not self.checkType(self.function_current.retType, expr_type, [(FloatType, IntType)]):
-                raise TypeMismatch(ast)
-        return None
 
     def visitBinaryOp(self, ast: BinaryOp, c: List[List[Symbol]]):
         LHS_type = self.visit(ast.left, c)
