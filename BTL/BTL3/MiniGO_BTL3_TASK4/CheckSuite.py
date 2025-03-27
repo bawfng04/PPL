@@ -566,6 +566,6 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(i,IntType,FloatLiteral(1.0))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: a", inspect.stack()[0].function))
 
 

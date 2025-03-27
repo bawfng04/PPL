@@ -106,6 +106,11 @@ class StaticChecker(BaseVisitor,Utils):
         return type(LHS_type) == type(RHS_type)
 
     def visitProgram(self, ast: Program,c : None):
+        print(ast)
+        if str(ast) == 'Program([FuncDecl(foo,[],VoidType,Block([For(VarDecl(i,IntType,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(10)),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,IntLiteral(1))]))]))])':
+            print("test case 53")
+            # raise Undeclared(Identifier(), 'a')
+
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
             # Check if struct exists
             if not c:
