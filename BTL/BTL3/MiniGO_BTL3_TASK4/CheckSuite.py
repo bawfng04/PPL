@@ -577,7 +577,6 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: Assign(Id(i),FloatLiteral(1.0))", inspect.stack()[0].function))
-
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ForStep(VarDecl(i,IntType,IntLiteral(1)),Id(i),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,None,IntLiteral(1))]))", inspect.stack()[0].function))
 
 
