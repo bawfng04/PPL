@@ -577,6 +577,33 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: ForStep(VarDecl(i,IntType,IntLiteral(1)),Id(i),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,None,IntLiteral(1))]))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: For(VarDecl(i,IntType,IntLiteral(1)),Id(i),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,IntLiteral(1))]))", inspect.stack()[0].function))
+
+
+    def test_055(self):
+        """
+        func foo(){
+            var arr [2][3] int;
+            for a, b := range arr {
+                var c int = a;
+                var d [2]int = b;
+                var e [2]string = a;
+            }
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",ArrayType([IntLiteral(2)],IntType()),Id("b")),VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))]))]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,ArrayType(StringType,[IntLiteral(2)]),Id(a))", inspect.stack()[0].function))
+
+
+    def test_056(self):
+        """
+        func foo()  {return ;}
+        func  votien()  {
+        foo();
+        return votien();
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("votien",[],VoidType(),Block([FuncCall("foo",[]),Return(FuncCall("votien",[]))]))])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
 

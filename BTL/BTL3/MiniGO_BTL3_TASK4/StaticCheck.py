@@ -367,15 +367,43 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
-        type_array = self.visit(ast.arr, c)
-        if not isinstance(type_array, ArrayType):
+        # Get the type of the array being iterated
+        arr_type = self.visit(ast.arr, c)
+
+        # Check if it's an array type
+        if not isinstance(arr_type, ArrayType):
             raise TypeMismatch(ast)
 
-        self.visit(Block([VarDecl(ast.idx.name, IntType(), None),
-                        VarDecl(ast.value.name,
-                                type_array.eleType,
-                                None)] + ast.loop.member)
-                        , c)
+        # Create a new scope for the loop
+        loop_scope = [[]] + c
+
+        # For a 2D array [2][3]int:
+        # - First index variable (a) is an integer
+        # - Second variable (b) is a [3]int array
+        idx_type = IntType()  # Index is always an int
+
+        # For multi-dimensional arrays, the element is an array of the remaining dimensions
+        if len(arr_type.dimens) > 1:
+            # Element type is an array with all dimensions except the first one
+            value_type = ArrayType(arr_type.dimens[1:], arr_type.eleType)
+        else:
+            # For 1D arrays, the element is the element type
+            value_type = arr_type.eleType
+
+        # Add idx and value variables to the loop scope
+        loop_scope[0].append(Symbol(ast.idx.name, idx_type, None))
+        loop_scope[0].append(Symbol(ast.value.name, value_type, None))
+
+        # Visit the loop body
+        if isinstance(ast.loop, Block):
+            for stmt in ast.loop.member:
+                result = self.visit(stmt, loop_scope)
+                if isinstance(result, Symbol):
+                    loop_scope[0].append(result)
+        else:
+            result = self.visit(ast.loop, loop_scope)
+            if isinstance(result, Symbol):
+                loop_scope[0].append(result)
 
     def visitId(self, ast: Id, c: List[List[Symbol]]) -> Type:
         res = next(filter(None, (self.lookup(ast.name, scope, lambda x: x.name) for scope in c)), None)
