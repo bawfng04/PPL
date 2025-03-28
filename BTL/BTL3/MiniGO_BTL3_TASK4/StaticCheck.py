@@ -323,10 +323,10 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(ast.loop, new_scope)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # Create a new scope for the for-loop init and condition.
+        # Create a new scope for the for-loop
         loop_scope = [[]] + c
 
-        # Process initialization and add its symbol if needed.
+        # Process initialization and add its symbol if needed
         if isinstance(ast.init, VarDecl):
             init_sym = self.visit(ast.init, loop_scope)
             if isinstance(init_sym, Symbol):
@@ -334,12 +334,11 @@ class StaticChecker(BaseVisitor,Utils):
         else:
             self.visit(ast.init, loop_scope)
 
-        # Evaluate condition (this will trigger Undeclared errors if any identifier is missing).
+        # Check condition FIRST - this ensures "Undeclared Identifier" has priority
+        # This will raise an error if any identifier in the condition is not found
         cond_type = self.visit(ast.cond, loop_scope)
-        if not isinstance(cond_type, BoolType):
-            raise TypeMismatch(ast.cond)
 
-        # Process loop body without introducing a new inner block scope.
+        # Process loop body to make declarations visible for the update
         if isinstance(ast.loop, Block):
             for stmt in ast.loop.member:
                 result = self.visit(stmt, loop_scope)
@@ -350,8 +349,18 @@ class StaticChecker(BaseVisitor,Utils):
             if isinstance(result, Symbol):
                 loop_scope[0].append(result)
 
-        # Process update expression in the same scope.
+        # Now process update - any type mismatches will be caught after undeclared identifiers
         self.visit(ast.upda, loop_scope)
+
+        # Finally verify condition is boolean if we got this far
+        if not isinstance(cond_type, BoolType):
+            raise TypeMismatch(ast.cond)
+
+
+
+
+
+
 
     # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
     #     symbol = self.visit(ast.init, [[]] + c)
