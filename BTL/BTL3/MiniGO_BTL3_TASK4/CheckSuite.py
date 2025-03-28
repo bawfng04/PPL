@@ -622,3 +622,32 @@ type TIEN interface {VoTien ();}
         self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(votien,[])", inspect.stack()[0].function))
 
 
+    def test_058(self):
+        input =  """
+const v = 3;
+const a = v + v;
+var b [a * 2 + a] int;
+var c [18] int = b;
+        """
+        input = Program([ConstDecl("v",None,IntLiteral(3)),ConstDecl("a",None,BinaryOp("+", Id("v"), Id("v"))),VarDecl("b",ArrayType([BinaryOp("+", BinaryOp("*", Id("a"), IntLiteral(2)), Id("a"))],IntType()), None),VarDecl("c",ArrayType([IntLiteral(18)],IntType()),Id("b"))])
+        self.assertTrue(TestChecker.test(input, """""", inspect.stack()[0].function))
+
+
+    def test_059(self):
+            input =  """
+    func foo(a [2] float) {
+        foo([2] float {1.0,2.0})
+        foo([2] int {1,2})
+    }
+            """
+            input = Program([FuncDecl("foo",[ParamDecl("a",ArrayType([IntLiteral(2)],FloatType()))],VoidType(),Block([FuncCall("foo",[ArrayLiteral([IntLiteral(2)],FloatType(),[FloatLiteral(1.0),FloatLiteral(2.0)])]),FuncCall("foo",[ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])])]))])
+            self.assertTrue(TestChecker.test(input, """Type Mismatch: FuncCall("foo",[ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])])""", inspect.stack()[0].function))
+
+
+    def test_060(self):
+        input =  """
+    type A interface {foo();}
+    const A = 2;
+        """
+        input = Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),ConstDecl("A",None,IntLiteral(2))])
+        self.assertTrue(TestChecker.test(input, """Redeclared Constant: A""", inspect.stack()[0].function))
