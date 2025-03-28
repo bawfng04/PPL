@@ -323,45 +323,35 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(ast.loop, new_scope)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # For test case 40 - special detection for this specific pattern
-        # "const a = 2; func foo() { const a = 1; for var a = 1; a < 1; b := 2 { const b = 1; } }"
-        if (isinstance(ast.upda, Assign) and isinstance(ast.upda.lhs, Id) and isinstance(ast.upda.rhs, IntLiteral)
-            and isinstance(ast.loop, Block) and len(ast.loop.member) == 1
-            and isinstance(ast.loop.member[0], ConstDecl)
-            and ast.loop.member[0].conName == ast.upda.lhs.name
-            and ast.upda.lhs.name == "b"):
-            return None  # Skip checking - this is the test_040 pattern that should pass
-
-        # Create a scope for for-loop
+        # Create a new scope for the for-loop init and condition.
         loop_scope = [[]] + c
 
-        # Process initialization
+        # Process initialization and add its symbol if needed.
         if isinstance(ast.init, VarDecl):
-            init_symbol = self.visit(ast.init, loop_scope)
-            if isinstance(init_symbol, Symbol):
-                loop_scope[0] = [init_symbol] + loop_scope[0]
+            init_sym = self.visit(ast.init, loop_scope)
+            if isinstance(init_sym, Symbol):
+                loop_scope[0].append(init_sym)
         else:
             self.visit(ast.init, loop_scope)
 
-        # Check condition
-        condition_type = self.visit(ast.cond, loop_scope)
-        if not isinstance(condition_type, BoolType):
+        # Evaluate condition (this will trigger Undeclared errors if any identifier is missing).
+        cond_type = self.visit(ast.cond, loop_scope)
+        if not isinstance(cond_type, BoolType):
             raise TypeMismatch(ast.cond)
 
-        # Check for specialized cases:
-        # 1. Test case 39/41: Detect redeclaration of 'a' in body
-        if (isinstance(ast.init, VarDecl) and
-            isinstance(ast.loop, Block) and
-            len(ast.loop.member) == 1 and
-            isinstance(ast.loop.member[0], ConstDecl) and
-            ast.init.varName == ast.loop.member[0].conName):
-            raise Redeclared(Constant(), ast.loop.member[0].conName)
+        # Process loop body without introducing a new inner block scope.
+        if isinstance(ast.loop, Block):
+            for stmt in ast.loop.member:
+                result = self.visit(stmt, loop_scope)
+                if isinstance(result, Symbol):
+                    loop_scope[0].append(result)
+        else:
+            result = self.visit(ast.loop, loop_scope)
+            if isinstance(result, Symbol):
+                loop_scope[0].append(result)
 
-        # Regular update expression check
+        # Process update expression in the same scope.
         self.visit(ast.upda, loop_scope)
-
-        # Visit body (if we haven't short-circuited already)
-        self.visit(ast.loop, loop_scope)
 
     # def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
     #     symbol = self.visit(ast.init, [[]] + c)
