@@ -412,6 +412,7 @@ class StaticChecker(BaseVisitor,Utils):
         raise Undeclared(Identifier(), ast.name)
 
     def visitFuncCall(self, ast: FuncCall, c: Union[List[List[Symbol]], Tuple[List[List[Symbol]], bool]]) -> Type:
+        print(ast)
         is_stmt = False
         if isinstance(c, tuple):
             c, is_stmt = c
@@ -532,13 +533,17 @@ class StaticChecker(BaseVisitor,Utils):
     def visitReturn(self, ast, c: List[List[Symbol]]) -> None:
         expected = self.function_current.retType
         if isinstance(expected, VoidType) and ast.expr is not None:
+            # returning a value in a void function: error on the sub-expression if it's a FuncCall
+            if isinstance(ast.expr, FuncCall):
+                raise TypeMismatch(ast.expr)
             raise TypeMismatch(ast)
         if not isinstance(expected, VoidType) and ast.expr is None:
             raise TypeMismatch(ast)
         if ast.expr is not None:
             actual = self.visit(ast.expr, c)
-            # Check with no permission for int-to-float conversion
             if not self.checkType(expected, actual, []):
+                if isinstance(ast.expr, FuncCall):
+                    raise TypeMismatch(ast.expr)
                 raise TypeMismatch(ast)
 
     def visitBinaryOp(self, ast: BinaryOp, c: List[List[Symbol]]):

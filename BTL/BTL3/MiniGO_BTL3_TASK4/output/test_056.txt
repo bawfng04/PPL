@@ -1,1 +1,1 @@
-Type Mismatch: Return(FuncCall(votien,[]))
+Type Mismatch: Return(IntLiteral(2))
