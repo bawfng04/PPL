@@ -568,4 +568,16 @@ type TIEN interface {VoTien ();}
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
         self.assertTrue(TestChecker.test(input, "Undeclared Identifier: a", inspect.stack()[0].function))
 
+    def test_054(self):
+        """
+        func foo(){
+            for var i int = 1; a < 10; i := 1. {
+                var a = 1;
+            }
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: a", inspect.stack()[0].function))
+
+
 
