@@ -455,7 +455,8 @@ class StaticChecker(BaseVisitor,Utils):
                 raise TypeMismatch(ast)
             for param, arg in zip(res.params, ast.args):
                 arg_type = self.visit(arg, c)
-                if not self.checkType(param.parType, arg_type, [(FloatType, IntType)]):
+                # Remove the implicit conversion from int to float for function parameters
+                if not self.checkType(param.parType, arg_type, []):  # Remove [(FloatType, IntType)]
                     raise TypeMismatch(ast)
 
             if is_stmt and not isinstance(res.retType, VoidType):

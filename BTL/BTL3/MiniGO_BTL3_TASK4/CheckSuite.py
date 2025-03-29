@@ -681,5 +681,6 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putFloat",[FuncCall("getInt",[])])]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Function: putFloat", inspect.stack()[0].function))
+        # wrong at putFloat(getInt())
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(putFloat,[FuncCall(getInt,[])])", inspect.stack()[0].function))
 
