@@ -684,3 +684,73 @@ type TIEN interface {VoTien ();}
         # wrong at putFloat(getInt())
         self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(putFloat,[FuncCall(getInt,[])])", inspect.stack()[0].function))
 
+    def test_065(self):
+        """
+        type TIEN struct {a [2]int;}
+        type VO interface {foo() int;}
+
+        func (v TIEN) foo() int {return 1;}
+
+        func foo(a VO) {
+            var b = TIEN{a: [2]int{1, 2}};
+            foo(b)
+        }
+        """
+        input = Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",Id("VO"))],VoidType(),Block([VarDecl("b", None,StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),FuncCall("foo",[Id("b")])]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(foo,[Id(b)])", inspect.stack()[0].function))
+
+    def test_066(self):
+        """
+        type TIEN struct {a [2]int;}
+        type VO interface {foo() int;}
+
+        func (v TIEN) foo() int {return 1;}
+
+        func foo(a VO) {
+            var b = nil;
+            foo(nil)
+        }
+        """
+        input = Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",Id("VO"))],VoidType(),Block([VarDecl("b", None,NilLiteral()),FuncCall("foo",[NilLiteral()])]))])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_067(self):
+        """
+        type TIEN struct {a [2]int;}
+
+        func foo() TIEN {
+            return nil
+        }
+        """
+        input = Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[]),FuncDecl("foo",[],Id("TIEN"),Block([Return(NilLiteral())]))])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_068(self):
+        """
+        func foo() int {
+            var a = 1;
+            if (a < 3) {
+                var a = 1;
+            } else if(a > 2) {
+                var a = 2;
+            }
+            return a;
+        }
+        """
+        input = Program([FuncDecl("foo",[],IntType(),Block([VarDecl("a", None,IntLiteral(1)),If(BinaryOp("<", Id("a"), IntLiteral(3)), Block([VarDecl("a", None,IntLiteral(1))]), If(BinaryOp(">", Id("a"), IntLiteral(2)), Block([VarDecl("a", None,IntLiteral(2))]), None)),Return(Id("a"))]))])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_069(self):
+        """
+        var A = 1;
+        type A struct {a int;}
+        """
+        input = Program([VarDecl("A", None,IntLiteral(1)),StructType("A",[("a",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: A", inspect.stack()[0].function))
+
+
+
+
+
+
+
