@@ -306,6 +306,21 @@ class StaticChecker(BaseVisitor,Utils):
         self.function_current = old_function
 
     def visitVarDecl(self, ast: VarDecl, c: List[List[Symbol]]) -> Symbol:
+        # First check if name already exists as a type
+        type_res = self.lookup(ast.varName, self.list_type, lambda x: x.name)
+        if type_res is not None:
+            # Check the program order to determine correct error message
+            for decl in self.ast.decl:
+                # If we find a type declaration with the same name first, report Redeclared Variable
+                if isinstance(decl, (StructType, InterfaceType)) and decl.name == ast.varName:
+                    raise Redeclared(Variable(), ast.varName)
+                # If we find this variable declaration first, break the loop
+                elif decl == ast:
+                    break
+            # Default case (shouldn't reach here)
+            raise Redeclared(Variable(), ast.varName)
+
+        # Then check if it's already declared in the current scope
         res = self.lookup(ast.varName, c[0], lambda x: x.name)
         if res is not None:
             raise Redeclared(Variable(), ast.varName)
