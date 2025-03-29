@@ -1586,3 +1586,11 @@ type TIEN interface {VoTien ();}
         """
         input = Program([VarDecl("A", None, IntLiteral(1)), StructType("A", [("a", IntType())], [])])
         self.assertTrue(TestChecker.test(input, "Redeclared Type: A", inspect.stack()[0].function))
+
+    def test_151(self):
+        """
+        const A = 2;
+        type A interface {foo();}
+        """
+        input = Program([VarDecl("A", None, IntLiteral(1)), StructType("A", [("a", IntType())], [])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: A", inspect.stack()[0].function))

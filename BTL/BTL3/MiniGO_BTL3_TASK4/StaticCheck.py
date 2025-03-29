@@ -207,6 +207,13 @@ class StaticChecker(BaseVisitor,Utils):
         if not res is None:
             raise Redeclared(StaticErrorType(), ast.name)
 
+        # Also check if the name conflicts with any global variables or constants
+        for decl in self.ast.decl:
+            if isinstance(decl, VarDecl) and decl.varName == ast.name:
+                raise Redeclared(StaticErrorType(), ast.name)
+            elif isinstance(decl, ConstDecl) and decl.conName == ast.name:
+                raise Redeclared(StaticErrorType(), ast.name)
+
         def visitElements(element: Tuple[str,Type], c: List[Tuple[str,Type]]) -> Tuple[str,Type]:
             fieldName, fieldType = element
             for name, _ in c:
