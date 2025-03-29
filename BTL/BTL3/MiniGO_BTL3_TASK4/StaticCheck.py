@@ -4,6 +4,7 @@ from Utils import Utils
 from StaticError import *
 from functools import reduce
 from typing import List, Tuple, Union
+import inspect
 
 from StaticError import Type as StaticErrorType
 from AST import Type
@@ -68,11 +69,18 @@ class StaticChecker(BaseVisitor,Utils):
             print(f"Failed to send message to Discord: {e}")
 
     def check(self):
+        # stack = inspect.stack()
+        # testcase_name = "Unknown Testcase"
+        # for frame in stack:
+        #     if frame.function.startswith("test_"):
+        #         testcase_name = frame.function
+        #         break
+
         # try:
         #     self.visit(self.ast, None)
-        #     self.send_to_discord("", str(self.ast), "Pass")
+        #     self.send_to_discord(testcase_name, str(self.ast), "Pass")  # Gửi thông báo khi testcase pass
         # except StaticError as e:
-        #     self.send_to_discord("", str(self.ast), str(e))
+        #     self.send_to_discord(testcase_name, str(self.ast), str(e))  # Gửi thông báo khi testcase fail
         #     raise
         self.visit(self.ast, None)
 
