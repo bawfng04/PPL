@@ -564,6 +564,18 @@ class StaticChecker(BaseVisitor,Utils):
                             # This is the key fix for test_065
                             raise TypeMismatch(ast)
 
+                # ADDED: Special check for array dimension mismatch (test_156)
+                if isinstance(param.parType, ArrayType) and isinstance(arg_type, ArrayType):
+                    # Check array dimensions explicitly
+                    if len(param.parType.dimens) != len(arg_type.dimens):
+                        raise TypeMismatch(ast)
+
+                    # Check each dimension size
+                    for i in range(len(param.parType.dimens)):
+                        if isinstance(param.parType.dimens[i], IntLiteral) and isinstance(arg_type.dimens[i], IntLiteral):
+                            if param.parType.dimens[i].value != arg_type.dimens[i].value:
+                                raise TypeMismatch(ast)
+
                 if not self.checkType(param.parType, arg_type, []):
                     raise TypeMismatch(ast)
 

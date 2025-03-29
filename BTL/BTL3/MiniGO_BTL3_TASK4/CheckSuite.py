@@ -1632,4 +1632,13 @@ type TIEN interface {VoTien ();}
         var a [2] I1 = b;
         """
         input = Program([StructType("S1",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([Return(None)]))),VarDecl("b",ArrayType([IntLiteral(2)],Id("S1")), None),VarDecl("a",ArrayType([IntLiteral(2)],Id("I1")),Id("b"))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,ArrayType(I1,[IntLiteral(2)]),Id(b))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,ArrayType(Id(I1),[IntLiteral(2)]),Id(b))", inspect.stack()[0].function))
+
+    def test_156(self):
+        """
+        func votien(a  [2]int ) {
+            votien([3] int {1,2,3})
+        }
+        """
+        input = Program([FuncDecl("votien",[ParamDecl("a",ArrayType([IntLiteral(2)],IntType()))],VoidType(),Block([FuncCall("votien",[ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(votien,[ArrayLiteral([IntLiteral(3)],IntType,[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])", inspect.stack()[0].function))
