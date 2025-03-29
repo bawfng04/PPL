@@ -672,29 +672,42 @@ class StaticChecker(BaseVisitor,Utils):
     def visitReturn(self, ast, c: List[List[Symbol]]) -> None:
         expected = self.function_current.retType
 
-        # Handle nil return for struct/interface return types
-        if ast.expr and isinstance(ast.expr, NilLiteral):
-            # If expected return type is a struct or interface (directly or by name), allow nil
-            if isinstance(expected, Id):
-                resolved_type = self.lookup(expected.name, self.list_type, lambda x: x.name)
-                if resolved_type and isinstance(resolved_type, (StructType, InterfaceType)):
-                    return None
-            elif isinstance(expected, (StructType, InterfaceType)):
-                return None
+        # First check if the expression exists and is valid
+        if ast.expr:
+            try:
+                # Try to resolve the expression type first
+                # This will raise Undeclared if an identifier doesn't exist
+                actual = self.visit(ast.expr, c)
 
-        # Rest of your existing code
-        if isinstance(expected, VoidType) and ast.expr is not None:
-            # returning a value in a void function: error on the sub-expression if it's a FuncCall
-            if isinstance(ast.expr, FuncCall):
-                raise TypeMismatch(ast.expr)
-            raise TypeMismatch(ast)
-        if not isinstance(expected, VoidType) and ast.expr is None:
-            raise TypeMismatch(ast)
-        if ast.expr is not None:
-            actual = self.visit(ast.expr, c)
-            if not self.checkType(expected, actual, []):
-                if isinstance(ast.expr, FuncCall):
-                    raise TypeMismatch(ast.expr)
+                # Handle nil return for struct/interface return types
+                if isinstance(ast.expr, NilLiteral):
+                    # If expected return type is a struct or interface (directly or by name), allow nil
+                    if isinstance(expected, Id):
+                        resolved_type = self.lookup(expected.name, self.list_type, lambda x: x.name)
+                        if resolved_type and isinstance(resolved_type, (StructType, InterfaceType)):
+                            return None
+                    elif isinstance(expected, (StructType, InterfaceType)):
+                        return None
+
+                # Now check type compatibility
+                if isinstance(expected, VoidType):
+                    # returning a value in a void function: error on the sub-expression if it's a FuncCall
+                    if isinstance(ast.expr, FuncCall):
+                        raise TypeMismatch(ast.expr)
+                    raise TypeMismatch(ast)
+
+                # Check if the return type matches the expected type
+                if not self.checkType(expected, actual, []):
+                    if isinstance(ast.expr, FuncCall):
+                        raise TypeMismatch(ast.expr)
+                    raise TypeMismatch(ast)
+
+            except Undeclared:
+                # Let the Undeclared exception propagate up
+                raise
+        else:
+            # No expression provided (just 'return;')
+            if not isinstance(expected, VoidType):
                 raise TypeMismatch(ast)
 
     def visitBinaryOp(self, ast: BinaryOp, c: List[List[Symbol]]):

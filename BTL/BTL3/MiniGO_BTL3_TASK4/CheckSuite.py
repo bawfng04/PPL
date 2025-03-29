@@ -1618,5 +1618,6 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("A",[],VoidType(),Block([Return(Id("A"))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(Funcall(A,[]))", inspect.stack()[0].function))
+        # output is NOT "Type Mismatch: Return(Id(A))"
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: A", inspect.stack()[0].function))
 
