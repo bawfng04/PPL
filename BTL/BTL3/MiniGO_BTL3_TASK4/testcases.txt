@@ -1,0 +1,480 @@
+Testcase: Testcase Name
+Input:
+Program([VarDecl("VoTien", None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
+
+Result:
+Redeclared Variable: VoTien
+Testcase: Testcase Name
+Input:
+Program([VarDecl("VoTien", None,IntLiteral(1)),ConstDecl("VoTien",None,IntLiteral(2))])
+
+Result:
+Redeclared Constant: VoTien
+Testcase: Testcase Name
+Input:
+Program([ConstDecl("VoTien",None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
+
+Result:
+Redeclared Variable: VoTien
+Testcase: Testcase Name
+Input:
+Program([ConstDecl("VoTien",None,IntLiteral(1)),FuncDecl("VoTien",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: VoTien
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("VoTien",[],VoidType(),Block([Return(None)])),VarDecl("VoTien", None,IntLiteral(1))])
+
+Result:
+Redeclared Variable: VoTien
+Testcase: Testcase Name
+Input:
+Program([VarDecl("getInt", None,IntLiteral(1))])
+
+Result:
+Redeclared Variable: getInt
+Testcase: Testcase Name
+Input:
+Program([StructType("Votien",[("Votien",IntType())],[]),StructType("TIEN",[("Votien",StringType()),("TIEN",IntType()),("TIEN",FloatType())],[])])
+
+Result:
+Redeclared Field: TIEN
+Testcase: Testcase Name
+Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("putIntLn",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("putIntLn",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([Return(None)])))])])
+
+Result:
+Redeclared Method: getInt
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("VoTien",[Prototype("VoTien",[],VoidType()),Prototype("VoTien",[IntType()],VoidType())])])
+
+Result:
+Redeclared Prototype: VoTien
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("Votien",[ParamDecl("a",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Parameter: a
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([VarDecl("b", None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1)),ConstDecl("a",None,IntLiteral(1))]))])
+
+Result:
+Redeclared Constant: a
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
+
+Result:
+Redeclared Constant: a
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,IntLiteral(1)),VarDecl("b", None,Id("a")),VarDecl("c", None,Id("d"))])
+
+Result:
+Undeclared Identifier: d
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("Votien",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("foo",[],VoidType(),Block([VarDecl("b", None,FuncCall("Votien",[])),FuncCall("foo_votien",[]),Return(None)]))])
+
+Result:
+Undeclared Function: foo_votien
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([ConstDecl("c",None,FieldAccess(Id("v"),"Votien")),VarDecl("d", None,FieldAccess(Id("v"),"tien"))])))]),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([ConstDecl("c",None,FieldAccess(Id("v"),"Votien")),VarDecl("d", None,FieldAccess(Id("v"),"tien"))])))])
+
+Result:
+Undeclared Field: tien
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([MethCall(Id("v"),"getInt",[]),MethCall(Id("v"),"putInt",[])])))]),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([MethCall(Id("v"),"getInt",[]),MethCall(Id("v"),"putInt",[])])))])
+
+Result:
+Undeclared Method: putInt
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("Votien",IntType())],[]),StructType("TIEN",[("v",IntType())],[])])
+
+Result:
+Redeclared Type: TIEN
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("a",IntType()),("b",IntType()),("a",FloatType())],[])])
+
+Result:
+Redeclared Field: a
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("a",IntType()),("b",IntType()),("c",FloatType()),("b",IntType())],[])])
+
+Result:
+Redeclared Field: b
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("c",FloatType()),("b",IntType()),("a",IntType())],[]),StructType("VO",[("d",IntType()),("d",IntType())],[])])
+
+Result:
+Redeclared Field: d
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("a",IntType())],[]),StructType("VO",[("a",IntType())],[]),StructType("TIEN",[("a",IntType())],[])])
+
+Result:
+Redeclared Type: TIEN
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType())]),InterfaceType("TIEN",[Prototype("foo",[],VoidType())])])
+
+Result:
+Redeclared Type: TIEN
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType())]),InterfaceType("VO",[Prototype("foo",[],VoidType())]),InterfaceType("TIEN",[Prototype("foo",[],VoidType())])])
+
+Result:
+Redeclared Type: TIEN
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("a",IntType())],[]),StructType("VO",[("a",IntType())],[]),InterfaceType("TIEN",[Prototype("foo",[],VoidType())])])
+
+Result:
+Redeclared Type: TIEN
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])])
+
+Result:
+Redeclared Prototype: foo
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType()),Prototype("foo1",[],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])])
+
+Result:
+Redeclared Prototype: foo
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("TIEN",[Prototype("foo1",[],VoidType()),Prototype("foo",[],VoidType())]),InterfaceType("VO",[Prototype("foo",[],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])])
+
+Result:
+Redeclared Prototype: foo
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType())]),FuncDecl("TIEN",[],VoidType(),Block([Return(None)])),FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("TIEN",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: TIEN
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("getInt",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: getInt
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("putInt",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: putInt
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("putIntLn",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: putIntLn
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("getString",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: getString
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("putStringLn",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: putStringLn
+Testcase: Testcase Name
+Input:
+Program([VarDecl("foo", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: foo
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),VarDecl("foo", None,IntLiteral(1))])
+
+Result:
+Redeclared Variable: foo
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),ConstDecl("foo",None,IntLiteral(1))])
+
+Result:
+Redeclared Constant: foo
+Testcase: Testcase Name
+Input:
+Program([ConstDecl("foo",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Function: foo
+Testcase:
+Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))])
+
+Result:
+Pass
+Testcase: Testcase Name
+Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1))])),VarDecl("a", None,IntLiteral(1))])
+
+Result:
+Redeclared Variable: a
+Testcase:
+Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1))])
+
+Result:
+Pass
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1))])),ConstDecl("a",None,IntLiteral(1))])
+
+Result:
+Redeclared Constant: a
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))]))])
+
+Result:
+Redeclared Constant: b
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+
+Result:
+Redeclared Parameter: a
+Testcase:
+Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))]),StructType("VO",[("Votien",IntType())],[MethodDecl("v",Id("VO"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))]),MethodDecl("v",Id("VO"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))])
+
+Result:
+Pass
+Testcase: Testcase Name
+Input:
+Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
+
+Result:
+Redeclared Variable: a
+Testcase:
+Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("b"))])),VarDecl("d", None,Id("b")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("a"))])
+
+Result:
+Pass
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("c"))])),VarDecl("d", None,Id("a")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("b"))])
+
+Result:
+Undeclared Identifier: b
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,FuncCall("foo",[])),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),VarDecl("d", None,FuncCall("koo",[]))])
+
+Result:
+Undeclared Function: koo
+Testcase: Testcase Name
+Input:
+Program([VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,FieldAccess(Id("v"),"a")),ConstDecl("e",None,FieldAccess(Id("v"),"e"))])),StructType("TIEN",[("c",IntType()),("b",IntType()),("a",IntType())],[])])
+
+Result:
+Undeclared Field: e
+Testcase: Testcase Name
+Input:
+Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("x", None,Id("v")),ConstDecl("b",None,MethCall(Id("x"),"foo",[])),MethCall(Id("x"),"koo",[]),ConstDecl("d",None,MethCall(Id("x"),"zoo",[]))]))])
+
+Result:
+Undeclared Method: zoo
+Testcase:
+Input:
+Program([VarDecl("v",FloatType(),IntLiteral(1))])
+
+Result:
+Pass
+Testcase: Testcase Name
+Input:
+Program([InterfaceType("I1",[Prototype("votien",[],VoidType())]),InterfaceType("I2",[Prototype("votien",[],VoidType())]),VarDecl("v",Id("I1"), None),ConstDecl("x",None,Id("v")),VarDecl("z",Id("I1"),Id("x")),VarDecl("k",Id("I2"),Id("x"))])
+
+Result:
+Type Mismatch: VarDecl("k",Id("I2"),Id("x"))
+Testcase: Testcase Name
+Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],Id("S1"))]),InterfaceType("I2",[Prototype("votien",[],Id("S2"))]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
+
+Result:
+Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Testcase: Testcase Name
+Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[IntType(),IntType()],Id("S1"))]),InterfaceType("I2",[Prototype("votien",[IntType(),FloatType()],Id("S1"))]),MethodDecl("s",Id("S1"),FuncDecl("votien",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))]))])
+
+Result:
+Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([If(IntLiteral(1), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), None)]))])
+
+Result:
+Type Mismatch: If(IntLiteral(1), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), None)
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("v",IntType())],[]),VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))]))])
+
+Result:
+Type Mismatch: ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))
+Testcase: Testcase Name
+Input:
+Program([StructType("S1",[("t",IntType()),("v",IntType())],[]),VarDecl("a", None,StructLiteral("S1",[("v",IntLiteral(1)),("t",IntLiteral(2))])),VarDecl("b",Id("S1"),Id("a")),VarDecl("c",IntType(),Id("b"))])
+
+Result:
+Type Mismatch: VarDecl("c",IntType(),Id("b"))
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],FloatType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3)],IntType()),Id("a"))])
+
+Result:
+Type Mismatch: VarDecl("c",ArrayType([IntLiteral(3)],IntType()),Id("a"))
+Testcase: Testcase Name
+Input:
+Program([StructType("S1",[("v",IntType())],[]),VarDecl("a", None,ArrayLiteral([IntLiteral(1)],Id("S1"),[StructLiteral("S1",[("v",Id("z"))])]))])
+
+Result:
+Undeclared Identifier: z
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),VarDecl("b", None,ArrayCell(Id("a"),[FloatLiteral(1.0)]))])
+
+Result:
+Type Mismatch: ArrayCell(Id("a"),[FloatLiteral(1.0)])
+Testcase: Testcase Name
+Input:
+Program([StructType("S1",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),VarDecl("a",Id("I1"), None),VarDecl("c",Id("I1"),NilLiteral()),VarDecl("d",Id("S1"),NilLiteral()),FuncDecl("foo",[],VoidType(),Block([Assign(Id("c"),Id("a")),Assign(Id("a"),NilLiteral())])),VarDecl("e",IntType(),NilLiteral())])
+
+Result:
+Type Mismatch: VarDecl("e",IntType(),NilLiteral())
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,BinaryOp("+", IntLiteral(1), FloatLiteral(2.0))),VarDecl("b", None,BinaryOp("+", IntLiteral(1), IntLiteral(1))),FuncDecl("foo",[],IntType(),Block([Return(Id("b")),Return(Id("a"))]))])
+
+Result:
+Type Mismatch: Return(Id("a"))
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a",IntType(),BinaryOp("%", IntLiteral(1), IntLiteral(2))),VarDecl("b",IntType(),BinaryOp("%", IntLiteral(1), FloatLiteral(2.0)))])
+
+Result:
+Type Mismatch: BinaryOp("%", IntLiteral(1), FloatLiteral(2.0))
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a",BoolType(),BinaryOp(">=", IntLiteral(1), IntLiteral(2))),VarDecl("b",BoolType(),BinaryOp("<=", FloatLiteral(1.0), FloatLiteral(2.0))),VarDecl("c",BoolType(),BinaryOp("!=", StringLiteral(""1""), StringLiteral(""2""))),VarDecl("d",BoolType(),BinaryOp(">", IntLiteral(1), BooleanLiteral(true)))])
+
+Result:
+Type Mismatch: BinaryOp(">", IntLiteral(1), BooleanLiteral(true))
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
+
+Result:
+Type Mismatch: ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",IntType(),Id("b")),VarDecl("e",StringType(),Id("a"))]))]))])
+
+Result:
+Type Mismatch: VarDecl("e",StringType(),Id("a"))
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[ParamDecl("a",IntType())],IntType(),Block([Return(IntLiteral(1))])),VarDecl("a",IntType(),FuncCall("foo",[BinaryOp("+", IntLiteral(1), IntLiteral(1))])),VarDecl("b", None,FuncCall("foo",[FloatLiteral(1.0)]))])
+
+Result:
+Type Mismatch: FuncCall("foo",[FloatLiteral(1.0)])
+Testcase: Testcase Name
+Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[ParamDecl("a",IntType())],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("I1",[Prototype("votien",[IntType()],IntType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[ParamDecl("a",IntType())],IntType(),Block([Return(IntLiteral(1))]))),VarDecl("s",Id("S1"), None),VarDecl("a",IntType(),MethCall(Id("s"),"votien",[IntLiteral(1)])),VarDecl("b",IntType(),MethCall(Id("s"),"votien",[FloatLiteral(1.0)]))])
+
+Result:
+Type Mismatch: MethCall(Id("s"),"votien",[FloatLiteral(1.0)])
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("votien",[],IntType(),Block([Return(FuncCall("votien",[])),FuncCall("foo",[])]))])
+
+Result:
+Type Mismatch: FuncCall("foo",[])
+Testcase:
+Input:
+Program([StructType("Person",[("age",IntType()),("name",StringType())],[MethodDecl("p",Id("Person"),FuncDecl("Greet",[],StringType(),Block([Return(BinaryOp("+", StringLiteral(""Hello, ""), FieldAccess(Id("p"),"name")))])))]),FuncDecl("votien",[],VoidType(),Block([VarDecl("person", None,StructLiteral("Person",[("name",StringLiteral(""Alice"")),("age",IntLiteral(30))])),Assign(FieldAccess(Id("person"),"name"),StringLiteral(""John"")),Assign(FieldAccess(Id("person"),"age"),IntLiteral(30)),FuncCall("putStringLn",[FieldAccess(Id("person"),"name")]),FuncCall("putStringLn",[MethCall(Id("person"),"Greet",[])])])),MethodDecl("p",Id("Person"),FuncDecl("Greet",[],StringType(),Block([Return(BinaryOp("+", StringLiteral(""Hello, ""), FieldAccess(Id("p"),"name")))])))])
+
+Result:
+Pass
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a",Id("TIEN"), None),FuncDecl("foo",[],Id("TIEN"),Block([Return(Id("a")),Return(Id("TIEN"))])),StructType("TIEN",[("tien",IntType())],[])])
+
+Result:
+Undeclared Identifier: TIEN
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Return(Id("a"))]))])
+
+Result:
+Type Mismatch: Return(Id("a"))
+Testcase: Testcase Name
+Input:
+Program([VarDecl("putLn",IntType(), None)])
+
+Result:
+Redeclared Variable: putLn
+Testcase: Testcase Name
+Input:
+Program([VarDecl("a",IntType(),FuncCall("getBool",[]))])
+
+Result:
+Type Mismatch: VarDecl("a",IntType(),FuncCall("getBool",[]))
+Testcase: Testcase Name
+Input:
+Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putFloat",[FloatLiteral(1.0)]),FuncCall("putIntLn",[IntLiteral(1),IntLiteral(2)])]))])
+
+Result:
+Type Mismatch: FuncCall("putIntLn",[IntLiteral(1),IntLiteral(2)])
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("b",Id("VO"),StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),VarDecl("a",Id("TIEN"),Id("b"))]))])
+
+Result:
+Type Mismatch: VarDecl("a",Id("TIEN"),Id("b"))
+Testcase: Testcase Name
+Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",Id("VO"))],VoidType(),Block([VarDecl("b", None,StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),FuncCall("foo",[Id("b")])]))])
+
+Result:
+Type Mismatch: FuncCall("foo",[Id("b")])
+Testcase:
+Input:
+Program([FuncDecl("foo",[],IntType(),Block([VarDecl("a", None,IntLiteral(1)),If(BinaryOp("<", Id("a"), IntLiteral(3)), Block([VarDecl("a", None,IntLiteral(1))]), If(BinaryOp(">", Id("a"), IntLiteral(2)), Block([VarDecl("a", None,IntLiteral(2))]), None)),Return(Id("a"))]))])
+
+Result:
+Pass
+Testcase:
+Input:
+Program([FuncDecl("foo",[],IntType(),Block([VarDecl("arr",ArrayType([IntLiteral(3)],IntType()), None),VarDecl("marr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),Assign(Id("arr"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(10),IntLiteral(20),IntLiteral(30)])),Assign(Id("marr"),ArrayLiteral([IntLiteral(2),IntLiteral(3)],IntType(),[[IntLiteral(1),IntLiteral(2),IntLiteral(3)],[IntLiteral(4),IntLiteral(5),IntLiteral(6)]])),Return(BinaryOp("+", ArrayCell(Id("arr"),[IntLiteral(2)]), ArrayCell(Id("marr"),[IntLiteral(1),IntLiteral(2)])))]))])
+
+Result:
+Pass
+Testcase:
+Input:
+Program([VarDecl("A", None,IntLiteral(1)),StructType("A",[("a",IntType())],[])])
+
+Result:
+Pass

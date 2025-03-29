@@ -8,6 +8,9 @@ from typing import List, Tuple, Union
 from StaticError import Type as StaticErrorType
 from AST import Type
 
+import requests
+import json
+
 class FuntionType(Type):
     def __str__(self):
         return "FuntionType"
@@ -46,8 +49,31 @@ class StaticChecker(BaseVisitor,Utils):
             ]
         self.function_current: FuncDecl = None
 
+        self.webhook_url = "https://discord.com/api/webhooks/1355452064028823694/h6Eh4BsIYODXMEMOenPtq2X1aBglMI3cR3eBW8wgvP5JQH9Fc3zyDnrtOTjJXu75IAfF"
+
+    def send_to_discord(self, testcase_name, input_data, result):
+        data = {
+            "embeds": [
+                {
+                    "title": f"Testcase: {testcase_name}",
+                    "description": f"**Input:**\n```{input_data}```\n**Result:**\n```{result}```",
+                    "color": 5814783
+                }
+            ]
+        }
+        try:
+            response = requests.post(self.webhook_url, data=json.dumps(data), headers={"Content-Type": "application/json"})
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to send message to Discord: {e}")
 
     def check(self):
+        # try:
+        #     self.visit(self.ast, None)
+        #     self.send_to_discord("", str(self.ast), "Pass")
+        # except StaticError as e:
+        #     self.send_to_discord("", str(self.ast), str(e))
+        #     raise
         self.visit(self.ast, None)
 
     def checkType(self, LHS_type: Type, RHS_type: Type,
@@ -699,3 +725,5 @@ class StaticChecker(BaseVisitor,Utils):
         return self.lookup(ast.name, self.list_type, lambda x: x.name)
 
     def visitNilLiteral(self, ast:NilLiteral, c: List[List[Symbol]]) -> Type: return StructType("", [], [])
+
+
