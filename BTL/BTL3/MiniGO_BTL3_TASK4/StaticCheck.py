@@ -35,7 +35,9 @@ class StaticChecker(BaseVisitor,Utils):
                 FuncDecl("putIntLn", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
                 FuncDecl("getString", [], IntType(), Block([])),
                 FuncDecl("putString", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
-                FuncDecl("putStringLn", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([]))
+                FuncDecl("putStringLn", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([])),
+                FuncDecl("putLn", [], VoidType(), Block([])),
+                FuncDecl("getBool", [], BoolType(), Block([])),
             ]
         self.function_current: FuncDecl = None
 
@@ -143,11 +145,19 @@ class StaticChecker(BaseVisitor,Utils):
                 Symbol("putInt", FuntionType()),
                 Symbol("putIntLn", FuntionType()),
                 Symbol("getString", FuntionType()),
-                Symbol("putStringLn", FuntionType())
+                Symbol("putStringLn", FuntionType()),
+                Symbol("putLn", FuntionType()),
+                Symbol("getBool", FuntionType()),
             ]]
         )
 
     def visitStructType(self, ast: StructType, c : List[Union[StructType, InterfaceType]]) -> StructType:
+        # First check if the struct name conflicts with an existing function
+        func_res = self.lookup(ast.name, self.list_function, lambda x: x.name)
+        if func_res is not None:
+            raise Redeclared(StaticErrorType(), ast.name)
+
+        # Then check if it conflicts with other types
         res = self.lookup(ast.name, c, lambda x: x.name)
         if not res is None:
             raise Redeclared(StaticErrorType(), ast.name)
@@ -169,9 +179,16 @@ class StaticChecker(BaseVisitor,Utils):
         return ast
 
     def visitInterfaceType(self, ast: InterfaceType, c : List[Union[StructType, InterfaceType]]) -> InterfaceType:
+        # First check if the interface name conflicts with an existing function
+        func_res = self.lookup(ast.name, self.list_function, lambda x: x.name)
+        if func_res is not None:
+            raise Redeclared(StaticErrorType(), ast.name)
+
+        # Then check if it conflicts with other types
         res = self.lookup(ast.name, c, lambda x: x.name)
         if not res is None:
             raise Redeclared(StaticErrorType(), ast.name)
+
         ast.methods = reduce(lambda acc,ele: [self.visit(ele,acc)] + acc , ast.methods , [])
         return ast
 

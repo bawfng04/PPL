@@ -120,6 +120,12 @@ class StaticChecker(BaseVisitor,Utils):
         )
 
     def visitStructType(self, ast: StructType, c : List[Union[StructType, InterfaceType]]) -> StructType:
+        # First check if the struct name conflicts with an existing function
+        func_res = self.lookup(ast.name, self.list_function, lambda x: x.name)
+        if func_res is not None:
+            raise Redeclared(StaticErrorType(), ast.name)
+
+        # Then check if it conflicts with other types
         res = self.lookup(ast.name, c, lambda x: x.name)
         if not res is None:
             raise Redeclared(StaticErrorType(), ast.name)

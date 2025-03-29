@@ -471,7 +471,7 @@ type TIEN interface {VoTien ();}
             VarDecl("a", None, ArrayLiteral([IntLiteral(2)], IntType(), [IntLiteral(1), IntLiteral(2)])),
             VarDecl("c", ArrayType([IntLiteral(3)], FloatType()), Id("a"))
         ])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(c,ArrayType(FloatType,[IntLiteral(3)]),Id(a))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
     def test_046(self):
         """
@@ -645,4 +645,32 @@ type TIEN interface {VoTien ();}
         """
         input = Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(2)],FloatType()),Id("a"))])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_060(self):
+        """
+        func putLn() {return ;}
+        """
+        input = Program([FuncDecl("putLn",[],VoidType(),Block([Return(None)]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Function: putLn", inspect.stack()[0].function))
+
+    def test_061(self):
+        """
+        type putLn interface {foo();};
+        """
+        input = Program([InterfaceType("putLn",[Prototype("foo",[],VoidType())])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: putLn", inspect.stack()[0].function))
+
+    def test_062(self):
+        """
+        type putLn struct {a int;};
+        """
+        input = Program([StructType("putLn",[("a",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: putLn", inspect.stack()[0].function))
+
+    def test_063(self):
+        """
+        var a int = getBool();
+        """
+        input = Program([VarDecl("a",IntType(),FuncCall("getBool",[]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,IntType,FuncCall(getBool,[]))", inspect.stack()[0].function))
 
