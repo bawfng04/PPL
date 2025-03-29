@@ -108,8 +108,6 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitProgram(self, ast: Program,c : None):
         # print(ast)
-        if str(ast) == 'Program([FuncDecl(foo,[],VoidType,Block([For(VarDecl(i,IntType,IntLiteral(1)),BinaryOp(Id(a),<,IntLiteral(10)),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,IntLiteral(1))]))]))])':
-            print("test case 53")
             # raise
 
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
@@ -264,7 +262,8 @@ class StaticChecker(BaseVisitor,Utils):
             # Explicit array dimension check for test case 47
             if len(LHS_type.dimens) != len(RHS_type.dimens):
                 raise TypeMismatch(ast)
-            if type(LHS_type.eleType) != type(RHS_type.eleType):
+            # Use checkType to allow int to float conversion for array elements
+            if not self.checkType(LHS_type.eleType, RHS_type.eleType, [(FloatType, IntType)]):
                 raise TypeMismatch(ast)
             return Symbol(ast.varName, LHS_type, None)
         elif self.checkType(LHS_type, RHS_type, [(FloatType, IntType), (InterfaceType, StructType)]):
@@ -273,6 +272,12 @@ class StaticChecker(BaseVisitor,Utils):
 
 
     def visitConstDecl(self, ast: ConstDecl, c: List[List[Symbol]]) -> Symbol:
+        # First check if name already exists as a type
+        type_res = self.lookup(ast.conName, self.list_type, lambda x: x.name)
+        if type_res is not None:
+            raise Redeclared(Constant(), ast.conName)
+
+        # Then check if it's already declared in the current scope
         res = self.lookup(ast.conName, c[0], lambda x: x.name)
         if res is not None:
             raise Redeclared(Constant(), ast.conName)
@@ -412,7 +417,6 @@ class StaticChecker(BaseVisitor,Utils):
         raise Undeclared(Identifier(), ast.name)
 
     def visitFuncCall(self, ast: FuncCall, c: Union[List[List[Symbol]], Tuple[List[List[Symbol]], bool]]) -> Type:
-        print(ast)
         is_stmt = False
         if isinstance(c, tuple):
             c, is_stmt = c
