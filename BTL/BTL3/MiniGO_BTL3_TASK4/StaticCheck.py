@@ -307,18 +307,15 @@ class StaticChecker(BaseVisitor,Utils):
         self.function_current = old_function
 
     def visitVarDecl(self, ast: VarDecl, c: List[List[Symbol]]) -> Symbol:
-        # First check if name already exists as a type
+        # First check if name already exists as a type (existing code)
         type_res = self.lookup(ast.varName, self.list_type, lambda x: x.name)
         if type_res is not None:
-            # Check the program order to determine correct error message
+            # Existing code for redeclaration check
             for decl in self.ast.decl:
-                # If we find a type declaration with the same name first, report Redeclared Variable
                 if isinstance(decl, (StructType, InterfaceType)) and decl.name == ast.varName:
                     raise Redeclared(Variable(), ast.varName)
-                # If we find this variable declaration first, break the loop
                 elif decl == ast:
                     break
-            # Default case (shouldn't reach here)
             raise Redeclared(Variable(), ast.varName)
 
         # Then check if it's already declared in the current scope
@@ -355,9 +352,23 @@ class StaticChecker(BaseVisitor,Utils):
         elif LHS_type is None:
             return Symbol(ast.varName, RHS_type, None)
         elif isinstance(LHS_type, ArrayType) and isinstance(RHS_type, ArrayType):
-            # Explicit array dimension check for test case 47
+            # Explicit array dimension check
             if len(LHS_type.dimens) != len(RHS_type.dimens):
                 raise TypeMismatch(ast)
+
+            # NEW CODE: Special case for arrays of interfaces and structs
+            # If array element types are different, check if they're interfaces/structs
+            if isinstance(LHS_type.eleType, Id) and isinstance(RHS_type.eleType, Id):
+                lhs_resolved = self.lookup(LHS_type.eleType.name, self.list_type, lambda x: x.name)
+                rhs_resolved = self.lookup(RHS_type.eleType.name, self.list_type, lambda x: x.name)
+
+                # If LHS is an interface type and RHS is a struct type, we need additional checks
+                if lhs_resolved and rhs_resolved:
+                    if isinstance(lhs_resolved, InterfaceType) and isinstance(rhs_resolved, StructType):
+                        # Arrays of interfaces and structs aren't directly compatible
+                        # This is the case in test_155
+                        raise TypeMismatch(ast)
+
             # Use checkType to allow int to float conversion for array elements
             if not self.checkType(LHS_type.eleType, RHS_type.eleType, [(FloatType, IntType)]):
                 raise TypeMismatch(ast)
