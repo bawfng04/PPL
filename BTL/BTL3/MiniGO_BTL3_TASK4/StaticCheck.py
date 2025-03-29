@@ -33,11 +33,16 @@ class StaticChecker(BaseVisitor,Utils):
                 FuncDecl("getInt", [], IntType(), Block([])),
                 FuncDecl("putInt", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
                 FuncDecl("putIntLn", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
-                FuncDecl("getString", [], IntType(), Block([])),
-                FuncDecl("putString", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
+                FuncDecl("getString", [], StringType(), Block([])),  # Fix return type to StringType
+                FuncDecl("putString", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([])),
                 FuncDecl("putStringLn", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([])),
                 FuncDecl("putLn", [], VoidType(), Block([])),
                 FuncDecl("getBool", [], BoolType(), Block([])),
+                FuncDecl("putBool", [ParamDecl("VOTIEN", BoolType())], VoidType(), Block([])),
+                FuncDecl("putBoolLn", [ParamDecl("VOTIEN", BoolType())], VoidType(), Block([])),
+                FuncDecl("getFloat", [], FloatType(), Block([])),
+                FuncDecl("putFloat", [ParamDecl("VOTIEN", FloatType())], VoidType(), Block([])),
+                FuncDecl("putFloatLn", [ParamDecl("VOTIEN", FloatType())], VoidType(), Block([])),
             ]
         self.function_current: FuncDecl = None
 
@@ -145,9 +150,15 @@ class StaticChecker(BaseVisitor,Utils):
                 Symbol("putInt", FuntionType()),
                 Symbol("putIntLn", FuntionType()),
                 Symbol("getString", FuntionType()),
+                Symbol("putString", FuntionType()),
                 Symbol("putStringLn", FuntionType()),
                 Symbol("putLn", FuntionType()),
                 Symbol("getBool", FuntionType()),
+                Symbol("putBool", FuntionType()),
+                Symbol("putBoolLn", FuntionType()),
+                Symbol("getFloat", FuntionType()),
+                Symbol("putFloat", FuntionType()),
+                Symbol("putFloatLn", FuntionType()),
             ]]
         )
 

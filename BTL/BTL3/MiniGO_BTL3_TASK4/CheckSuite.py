@@ -674,3 +674,12 @@ type TIEN interface {VoTien ();}
         input = Program([VarDecl("a",IntType(),FuncCall("getBool",[]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,IntType,FuncCall(getBool,[]))", inspect.stack()[0].function))
 
+    def test_064(self):
+        """
+        func foo() {
+            putFloat(getInt());
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putFloat",[FuncCall("getInt",[])])]))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Function: putFloat", inspect.stack()[0].function))
+
