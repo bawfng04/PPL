@@ -1610,3 +1610,13 @@ type TIEN interface {VoTien ();}
         """
         input = Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),VarDecl("A", None,IntLiteral(1))])
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: A", inspect.stack()[0].function))
+
+    def test_154(self):
+        """
+        func A() {
+            return A;
+        }
+        """
+        input = Program([FuncDecl("A",[],VoidType(),Block([Return(Id("A"))]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(Funcall(A,[]))", inspect.stack()[0].function))
+

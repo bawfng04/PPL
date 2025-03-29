@@ -149,6 +149,7 @@ class StaticChecker(BaseVisitor,Utils):
 
     def visitProgram(self, ast: Program,c : None):
         # print(ast)
+
             # raise
 
         def visitMethodDecl(ast: MethodDecl, c: StructType) -> MethodDecl:
