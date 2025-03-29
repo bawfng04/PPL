@@ -9,8 +9,6 @@ import inspect
 from StaticError import Type as StaticErrorType
 from AST import Type
 
-import requests
-import json
 
 class FuntionType(Type):
     def __str__(self):
@@ -50,38 +48,8 @@ class StaticChecker(BaseVisitor,Utils):
             ]
         self.function_current: FuncDecl = None
 
-        self.webhook_url = "https://discord.com/api/webhooks/1355452064028823694/h6Eh4BsIYODXMEMOenPtq2X1aBglMI3cR3eBW8wgvP5JQH9Fc3zyDnrtOTjJXu75IAfF"
-
-    def send_to_discord(self, testcase_name, input_data, result):
-        data = {
-            "embeds": [
-                {
-                    "title": f"Testcase: {testcase_name}",
-                    "description": f"**Input:**\n```{input_data}```\n**Result:**\n```{result}```",
-                    "color": 5814783
-                }
-            ]
-        }
-        try:
-            response = requests.post(self.webhook_url, data=json.dumps(data), headers={"Content-Type": "application/json"})
-            response.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            print(f"Failed to send message to Discord: {e}")
 
     def check(self):
-        # stack = inspect.stack()
-        # testcase_name = "Unknown Testcase"
-        # for frame in stack:
-        #     if frame.function.startswith("test_"):
-        #         testcase_name = frame.function
-        #         break
-
-        # try:
-        #     self.visit(self.ast, None)
-        #     self.send_to_discord(testcase_name, str(self.ast), "Pass")  # Gửi thông báo khi testcase pass
-        # except StaticError as e:
-        #     self.send_to_discord(testcase_name, str(self.ast), str(e))  # Gửi thông báo khi testcase fail
-        #     raise
         self.visit(self.ast, None)
 
     def checkType(self, LHS_type: Type, RHS_type: Type,
@@ -655,8 +623,25 @@ class StaticChecker(BaseVisitor,Utils):
         return ast
 
     def visitAssign(self, ast: Assign, c: List[List[Symbol]]) -> None:
-        LHS_type = self.visit(ast.lhs, c)
+        try:
+            LHS_type = self.visit(ast.lhs, c)
+        except Undeclared:
+            # This is a short variable declaration (a := 1)
+            if isinstance(ast.lhs, Id):
+                # Check if the name already exists in the current scope
+                res = self.lookup(ast.lhs.name, c[0], lambda x: x.name)
+                if res is not None:
+                    raise Redeclared(Variable(), ast.lhs.name)
 
+                # Create a new variable in the current scope
+                RHS_type = self.visit(ast.rhs, c)
+                c[0].insert(0, Symbol(ast.lhs.name, RHS_type, None))
+                return None
+            else:
+                # Only simple identifiers can be used in short variable declarations
+                raise
+
+        # Normal assignment case (existing variable)
         # Handle nil literals in assignment
         if isinstance(ast.rhs, NilLiteral):
             # Allow nil assignment only to reference types
