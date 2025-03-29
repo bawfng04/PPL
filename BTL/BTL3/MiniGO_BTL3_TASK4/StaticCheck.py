@@ -230,7 +230,7 @@ class StaticChecker(BaseVisitor,Utils):
                 raise Redeclared(Prototype(), ast.name)
         return ast
 
-    def visitInterfaceType(self, ast: InterfaceType, c : List[Union[StructType, InterfaceType]]) -> InterfaceType:
+    def visitInterfaceType(self, ast: InterfaceType, c: List[Union[StructType, InterfaceType]]) -> InterfaceType:
         # First check if the interface name conflicts with an existing function
         func_res = self.lookup(ast.name, self.list_function, lambda x: x.name)
         if func_res is not None:
@@ -240,6 +240,17 @@ class StaticChecker(BaseVisitor,Utils):
         res = self.lookup(ast.name, c, lambda x: x.name)
         if not res is None:
             raise Redeclared(StaticErrorType(), ast.name)
+
+        # Also check if the name conflicts with any global variables or constants
+        # THIS IS THE KEY PART TO CHANGE
+        for decl in self.ast.decl:
+            if decl == ast:  # If we've reached the current declaration, stop checking
+                break
+
+            if isinstance(decl, VarDecl) and decl.varName == ast.name:
+                raise Redeclared(StaticErrorType(), ast.name)
+            elif isinstance(decl, ConstDecl) and decl.conName == ast.name:
+                raise Redeclared(StaticErrorType(), ast.name)
 
         ast.methods = reduce(lambda acc,ele: [self.visit(ele,acc)] + acc , ast.methods , [])
         return ast
@@ -344,6 +355,15 @@ class StaticChecker(BaseVisitor,Utils):
         # First check if name already exists as a type
         type_res = self.lookup(ast.conName, self.list_type, lambda x: x.name)
         if type_res is not None:
+            # Check the program order to determine correct error message
+            for decl in self.ast.decl:
+                # If we find a type declaration with the same name first, report Redeclared Constant
+                if isinstance(decl, (StructType, InterfaceType)) and decl.name == ast.conName:
+                    raise Redeclared(Constant(), ast.conName)
+                # If we find this constant declaration first, break the loop
+                elif decl == ast:
+                    break
+            # Default case (shouldn't reach here)
             raise Redeclared(Constant(), ast.conName)
 
         # Then check if it's already declared in the current scope
@@ -351,6 +371,7 @@ class StaticChecker(BaseVisitor,Utils):
         if res is not None:
             raise Redeclared(Constant(), ast.conName)
 
+        # Rest of your method remains the same
         LHS_type = ast.conType if ast.conType else None
         RHS_type = self.visit(ast.iniExpr, c) if ast.iniExpr else None
 
@@ -361,6 +382,7 @@ class StaticChecker(BaseVisitor,Utils):
         elif self.checkType(LHS_type, RHS_type, [(FloatType, IntType), (InterfaceType, StructType)]):
             return Symbol(ast.conName, LHS_type, ast.iniExpr)
         raise TypeMismatch(ast)
+
 
     def visitBlock(self, ast: Block, c: List[List[Symbol]]) -> None:
         # Create a new scope for the block
