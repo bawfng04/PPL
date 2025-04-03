@@ -1,0 +1,8 @@
+ 
+func (v TIEN) putIntLn () {return;}
+func (v TIEN) getInt () {return;}
+func (v TIEN) getInt () {return;}
+type TIEN struct {
+    Votien int;
+}
+        
