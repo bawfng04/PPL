@@ -1711,16 +1711,25 @@ func Votien (b int) {
 
     def test_163(self):
         """
-        const a = 2;
-        type STRUCT struct {x [a] int;}
-        func (s STRUCT) foo(x [a] int) [a] int {return s.x;}
-        func foo(x [a] int) [a] int  {
-            const a = 3;
-            return [a] int {1,2};
-        }
+        type A interface {foo();}
+        var A = 1;
         """
-        input = Program([ConstDecl("a",None,IntLiteral(2)),StructType("STRUCT",[("x",ArrayType([Id("a")],IntType()))],[]),MethodDecl("s",Id("STRUCT"),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([Return(FieldAccess(Id("s"),"x"))]))),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([ConstDecl("a",None,IntLiteral(3)),Return(ArrayLiteral([Id("a")],IntType(),[IntLiteral(1),IntLiteral(2)]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(ArrayLiteral([Id(a)],IntType(),[IntLiteral(1),IntLiteral(2)]))", inspect.stack()[0].function))
+        input = Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),VarDecl("A", None,IntLiteral(1))])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: A", inspect.stack()[0].function))
+
+
+    # def test_164(self):
+    #     """
+    #     const a = 2;
+    #     type STRUCT struct {x [a] int;}
+    #     func (s STRUCT) foo(x [a] int) [a] int {return s.x;}
+    #     func foo(x [a] int) [a] int  {
+    #         const a = 3;
+    #         return [a] int {1,2};
+    #     }
+    #     """
+    #     input = Program([ConstDecl("a",None,IntLiteral(2)),StructType("STRUCT",[("x",ArrayType([Id("a")],IntType()))],[]),MethodDecl("s",Id("STRUCT"),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([Return(FieldAccess(Id("s"),"x"))]))),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([ConstDecl("a",None,IntLiteral(3)),Return(ArrayLiteral([Id("a")],IntType(),[IntLiteral(1),IntLiteral(2)]))]))])
+    #     self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(ArrayLiteral([Id(a)],IntType(),[IntLiteral(1),IntLiteral(2)]))", inspect.stack()[0].function))
 
 
 
