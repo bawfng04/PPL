@@ -1699,5 +1699,25 @@ func Votien (b int) {
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
+    def test_162(self):
+        """
+        var v TIEN;
+        func (v TIEN) foo (v int) int {
+            return v;
+        }
+        """
+        input = Program([VarDecl("v",Id("TIEN"), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_162(self):
+        """
+        var v TIEN;
+        func (v TIEN) foo (v int) int {
+            return v;
+        }
+        """
+        input = Program([VarDecl("v",Id("TIEN"), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
 
 

@@ -254,20 +254,17 @@ class StaticChecker(BaseVisitor,Utils):
         old_function = self.function_current
         self.function_current = ast.fun
 
-        # Create parameter scope with the receiver
-        receiver_symbol = Symbol(ast.receiver, ast.recType, None)
-        param_symbols = [receiver_symbol]  # Add receiver to param list first
-
-        # Process parameters - but don't check for conflicts with receiver
+        # Process parameters first
         param_list = []
         for param in ast.fun.params:
-            # Check for duplicate parameter names among the parameters themselves
-            # This is already handled in visitParamDecl, so we don't need to check here
-            sym = self.visit(param, param_list)  # Use a separate list for param checking
-            param_symbols.append(sym)
+            sym = self.visit(param, param_list)
             param_list.append(sym)
 
-        # Visit function body with new scope
+        # Add receiver after parameters (so parameters shadow receiver if names conflict)
+        receiver_symbol = Symbol(ast.receiver, ast.recType, None)
+        param_symbols = param_list + [receiver_symbol]
+
+        # Visit function body with the new scope
         self.visit(ast.fun.body, [param_symbols] + c)
 
         # Restore function context
@@ -413,10 +410,10 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(ast.loop, new_scope)
 
     def visitForStep(self, ast: ForStep, c: List[List[Symbol]]) -> None:
-        # Create a new scope for the for-loop init and condition.
+        # Create a new scope for the for-loop init and condition
         loop_scope = [[]] + c
 
-        # Process initialization and add its symbol if needed.
+        # Process initialization and add its symbol if needed
         if isinstance(ast.init, VarDecl):
             init_sym = self.visit(ast.init, loop_scope)
             if isinstance(init_sym, Symbol):
@@ -429,9 +426,26 @@ class StaticChecker(BaseVisitor,Utils):
 
         # Check if condition is boolean - if not, throw error with the entire ForStep
         if not isinstance(cond_type, BoolType):
-            raise TypeMismatch(ast)  # Report error on the entire ForStep statement
+            raise TypeMismatch(ast)
 
-        # Process loop body without introducing a new inner block scope.
+        # Process update expression - important for short variable declarations
+        # For short variable declarations (like b := 2), visit with loop_scope
+        # and potentially add the new symbol to the scope
+        if isinstance(ast.upda, Assign) and isinstance(ast.upda.lhs, Id):
+            try:
+                # Try to see if the variable exists
+                self.visit(ast.upda.lhs, loop_scope)
+            except Undeclared:
+                # It's a short variable declaration - add it to scope
+                rhs_type = self.visit(ast.upda.rhs, loop_scope)
+                loop_scope[0].append(Symbol(ast.upda.lhs.name, rhs_type, None))
+            else:
+                # Regular assignment
+                self.visit(ast.upda, loop_scope)
+        else:
+            self.visit(ast.upda, loop_scope)
+
+        # Process loop body with the same scope that includes any variables from update
         if isinstance(ast.loop, Block):
             for stmt in ast.loop.member:
                 result = self.visit(stmt, loop_scope)
@@ -441,9 +455,6 @@ class StaticChecker(BaseVisitor,Utils):
             result = self.visit(ast.loop, loop_scope)
             if isinstance(result, Symbol):
                 loop_scope[0].append(result)
-
-        # Process update expression in the same scope.
-        self.visit(ast.upda, loop_scope)
 
 
 
