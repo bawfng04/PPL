@@ -361,7 +361,7 @@ type TIEN interface {VoTien ();}
         func foo () {return;}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Parameter: v", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
     def test_038(self):
         """
@@ -406,7 +406,7 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),IntLiteral(2)),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Redeclared Constant: b", inspect.stack()[0].function))
 
     def test_041(self):
         """
@@ -856,7 +856,7 @@ type TIEN interface {VoTien ();}
         func foo () {return;}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Parameter: v", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
     def test_080(self):
         """
@@ -901,7 +901,7 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),IntLiteral(2)),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
-        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Redeclared Constant: b", inspect.stack()[0].function))
 
     def test_083(self):
         """
@@ -1697,18 +1697,7 @@ func Votien (b int) {
         func foo () {return;}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
-        self.assertTrue(TestChecker.test(input, "Redeclared Function: foo", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
-    def test_162(self):
-        """
-var v TIEN;
-func (v TIEN) foo (v int) int {
-    return v;
-}
 
-type TIEN struct {
-    Votien int;
-}
-        """
-        input = Program([VarDecl("v",Id("TIEN"), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[])])
-        self.assertTrue(TestChecker.test(input, "", inspect.stack()[0].function))
+

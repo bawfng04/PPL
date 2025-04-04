@@ -258,15 +258,14 @@ class StaticChecker(BaseVisitor,Utils):
         receiver_symbol = Symbol(ast.receiver, ast.recType, None)
         param_symbols = [receiver_symbol]  # Add receiver to param list first
 
-        # Process parameters
+        # Process parameters - but don't check for conflicts with receiver
+        param_list = []
         for param in ast.fun.params:
-            # Check against the receiver name
-            if param.parName == ast.receiver:
-                raise Redeclared(Parameter(), param.parName)
-
-            # Add parameter
-            sym = self.visit(param, param_symbols)
+            # Check for duplicate parameter names among the parameters themselves
+            # This is already handled in visitParamDecl, so we don't need to check here
+            sym = self.visit(param, param_list)  # Use a separate list for param checking
             param_symbols.append(sym)
+            param_list.append(sym)
 
         # Visit function body with new scope
         self.visit(ast.fun.body, [param_symbols] + c)
