@@ -1709,15 +1709,18 @@ func Votien (b int) {
         input = Program([VarDecl("v",Id("TIEN"), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[])])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
-    def test_162(self):
+    def test_163(self):
         """
-        var v TIEN;
-        func (v TIEN) foo (v int) int {
-            return v;
+        const a = 2;
+        type STRUCT struct {x [a] int;}
+        func (s STRUCT) foo(x [a] int) [a] int {return s.x;}
+        func foo(x [a] int) [a] int  {
+            const a = 3;
+            return [a] int {1,2};
         }
         """
-        input = Program([VarDecl("v",Id("TIEN"), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[])])
-        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+        input = Program([ConstDecl("a",None,IntLiteral(2)),StructType("STRUCT",[("x",ArrayType([Id("a")],IntType()))],[]),MethodDecl("s",Id("STRUCT"),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([Return(FieldAccess(Id("s"),"x"))]))),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([ConstDecl("a",None,IntLiteral(3)),Return(ArrayLiteral([Id("a")],IntType(),[IntLiteral(1),IntLiteral(2)]))]))])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(ArrayLiteral([Id(a)],IntType(),[IntLiteral(1),IntLiteral(2)]))", inspect.stack()[0].function))
 
 
 
