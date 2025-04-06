@@ -1717,6 +1717,31 @@ func Votien (b int) {
         input = Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),VarDecl("A", None,IntLiteral(1))])
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: A", inspect.stack()[0].function))
 
+
+    def test_164(self):
+        """
+func (v TIEN) VO () {return ;}
+func (v TIEN) Tien () {return ;}
+type TIEN struct {
+    Votien int;
+    Tien int;
+}
+        """
+        input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, """Redeclared Field: Tien""", inspect.stack()[0].function))
+
+    def test_165(self):
+        """
+func foo(a int) {
+    foo(1);
+    var foo = 1;
+    foo(2); // error
+}
+        """
+        input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
+        self.assertTrue(TestChecker.test(input, """Undeclared Function: foo""", inspect.stack()[0].function))
+
+
     # def test_164(self):
     #     """
     #     const a = 2;

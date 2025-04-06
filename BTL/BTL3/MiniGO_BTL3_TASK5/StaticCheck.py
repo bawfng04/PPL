@@ -47,6 +47,7 @@ class StaticChecker(BaseVisitor,Utils):
                 FuncDecl("putFloatLn", [ParamDecl("VOTIEN", FloatType())], VoidType(), Block([])),
             ]
         self.function_current: FuncDecl = None
+        self.struct_methods = {}
 
 
     def check(self):
@@ -164,6 +165,22 @@ class StaticChecker(BaseVisitor,Utils):
                 Symbol("putFloatLn", FuntionType()),
             ]]
         )
+
+        for decl in ast.decl:
+            if isinstance(decl, MethodDecl):
+                struct_name = decl.recType.name
+                if struct_name not in self.struct_methods:
+                    self.struct_methods[struct_name] = set()
+                self.struct_methods[struct_name].add(decl.fun.name)
+
+        # Now when processing structs, we can check field names against method names
+        for struct_decl in filter(lambda x: isinstance(x, StructType), ast.decl):
+            if struct_decl.name in self.struct_methods:
+                # Check each field against method names
+                for fieldName, _ in struct_decl.elements:
+                    if fieldName in self.struct_methods[struct_decl.name]:
+                        raise Redeclared(Field(), fieldName)
+
 
     def visitStructType(self, ast: StructType, c : List[Union[StructType, InterfaceType]]) -> StructType:
         # First check if the struct name conflicts with an existing function
@@ -516,6 +533,13 @@ class StaticChecker(BaseVisitor,Utils):
         is_stmt = False
         if isinstance(c, tuple):
             c, is_stmt = c
+
+        for scope in c:
+            var_res = self.lookup(ast.funName, scope, lambda x: x.name)
+            if var_res and not isinstance(var_res.mtype, FuntionType):
+                # A variable with the same name exists, can't call it as a function
+                raise Undeclared(Function(), ast.funName)
+
 
         res = self.lookup(ast.funName, self.list_function, lambda x: x.name)
         if res:
