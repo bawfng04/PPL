@@ -1739,7 +1739,7 @@ func foo(a int) {
 }
         """
         input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
-        self.assertTrue(TestChecker.test(input, "Undeclared Function: foo", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
     def test_166(self):
         """
@@ -1762,20 +1762,15 @@ func (v TIEN) Votien () {return ;}
         input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType())],[])])
         self.assertTrue(TestChecker.test(input, "Redeclared Field: Votien", inspect.stack()[0].function))
 
-
-
-    # def test_164(self):
-    #     """
-    #     const a = 2;
-    #     type STRUCT struct {x [a] int;}
-    #     func (s STRUCT) foo(x [a] int) [a] int {return s.x;}
-    #     func foo(x [a] int) [a] int  {
-    #         const a = 3;
-    #         return [a] int {1,2};
-    #     }
-    #     """
-    #     input = Program([ConstDecl("a",None,IntLiteral(2)),StructType("STRUCT",[("x",ArrayType([Id("a")],IntType()))],[]),MethodDecl("s",Id("STRUCT"),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([Return(FieldAccess(Id("s"),"x"))]))),FuncDecl("foo",[ParamDecl("x",ArrayType([Id("a")],IntType()))],ArrayType([Id("a")],IntType()),Block([ConstDecl("a",None,IntLiteral(3)),Return(ArrayLiteral([Id("a")],IntType(),[IntLiteral(1),IntLiteral(2)]))]))])
-    #     self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(ArrayLiteral([Id(a)],IntType(),[IntLiteral(1),IntLiteral(2)]))", inspect.stack()[0].function))
-
+    def test_168(self):
+        """
+        func foo(a int) {
+            foo(1);
+            var foo = 1;
+            foo(2);
+        }
+        """
+        input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
 

@@ -558,11 +558,11 @@ class StaticChecker(BaseVisitor,Utils):
         if isinstance(c, tuple):
             c, is_stmt = c
 
-        for scope in c:
-            var_res = self.lookup(ast.funName, scope, lambda x: x.name)
-            if var_res and not isinstance(var_res.mtype, FuntionType):
-                # A variable with the same name exists, can't call it as a function
-                raise Undeclared(Function(), ast.funName)
+        # for scope in c:
+        #     var_res = self.lookup(ast.funName, scope, lambda x: x.name)
+        #     if var_res and not isinstance(var_res.mtype, FuntionType):
+        #         # A variable with the same name exists, can't call it as a function
+        #         raise Undeclared(Function(), ast.funName)
 
 
         res = self.lookup(ast.funName, self.list_function, lambda x: x.name)
