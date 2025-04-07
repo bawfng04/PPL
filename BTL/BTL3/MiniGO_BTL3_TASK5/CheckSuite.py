@@ -1720,33 +1720,33 @@ func Votien (b int) {
 
     def test_164(self):
         """
-func (v TIEN) VO () {return ;}
-func (v TIEN) Tien () {return ;}
-type TIEN struct {
-    Votien int;
-    Tien int;
-}
+        func (v TIEN) VO () {return ;}
+        func (v TIEN) Tien () {return ;}
+        type TIEN struct {
+            Votien int;
+            Tien int;
+        }
         """
         input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
         self.assertTrue(TestChecker.test(input, "Redeclared Method: Tien", inspect.stack()[0].function))
 
     def test_165(self):
         """
-func foo(a int) {
-    foo(1);
-    var foo = 1;
-    foo(2); // error
-}
+        func foo(a int) {
+            foo(1);
+            var foo = 1;
+            foo(2); // error
+        }
         """
         input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
         self.assertTrue(TestChecker.test(input, "Undeclared Function: foo", inspect.stack()[0].function))
 
     def test_166(self):
         """
-type TIEN struct {
-    Votien int;
-}
-func (v TIEN) Votien () {return ;}
+        type TIEN struct {
+            Votien int;
+        }
+        func (v TIEN) Votien () {return ;}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)])))])
         self.assertTrue(TestChecker.test(input, "Redeclared Method: Votien", inspect.stack()[0].function))
@@ -1782,12 +1782,12 @@ func (v TIEN) Votien () {return ;}
 
     def test_170(self):
         """
-func (v TIEN) VO () {return ;}
-func (v TIEN) Tien () {return ;}
-type TIEN struct {
-    Votien int;
-    Tien int;
-}
+        func (v TIEN) VO () {return ;}
+        func (v TIEN) Tien () {return ;}
+        type TIEN struct {
+            Votien int;
+            Tien int;
+        }
         """
         input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
         self.assertTrue(TestChecker.test(input, "Redeclared Method: Tien", inspect.stack()[0].function))
@@ -1804,22 +1804,22 @@ type TIEN struct {
 
     def test_172(self):
         """
-func (v TIEN) VO () {return ;}
-func (v TIEN) Tien () {return ;}
-type TIEN struct {
-    Votien int;
-    Tien int;
-}
+        func (v TIEN) VO () {return ;}
+        func (v TIEN) Tien () {return ;}
+        type TIEN struct {
+            Votien int;
+            Tien int;
+        }
         """
         input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
         self.assertTrue(TestChecker.test(input, """Redeclared Method: Tien""", inspect.stack()[0].function))
 
     def test_173(self):
         input = """
-func foo() int {
-    const foo = 1;
-    return foo()
-}
+        func foo() int {
+            const foo = 1;
+            return foo()
+        }
         """
         input = Program([FuncDecl("foo",[],IntType(),Block([ConstDecl("foo",None,IntLiteral(1)),Return(FuncCall("foo",[]))]))])
         self.assertTrue(TestChecker.test(input, """Undeclared Function: foo""", inspect.stack()[0].function))

@@ -482,6 +482,12 @@ class StaticCheck(Visitor):
 #             return o[ctx.name]
 #         raise UndeclaredIdentifier(ctx.name)
 
+# class Assign: #lhs:Id,rhs:Exp
+# Biến chỉ khai báo tên, không khai báo kiểu (VarDecl chỉ có name)
+# Phân biệt toán tử cho số nguyên và số thực
+# Số nguyên: +, -, *, /
+# Số thực: +., -., *., /.
+
 class StaticCheck(Visitor):
 
     def visitProgram(self,ctx:Program,o):
@@ -517,10 +523,10 @@ class StaticCheck(Visitor):
         rtype = self.visit(ctx.e2,o)
 
         if ctx.op in ["+", "-", "*", "/"]:
-            if ltype == "none":
+            if ltype == "none": # nếu ltype là none thì gán cho nó kiểu int
                 o[ctx.e1.name] = "int"
                 ltype = "int"
-            if rtype == "none":
+            if rtype == "none": # nếu rtype là none thì gán cho nó kiểu int
                 o[ctx.e2.name] = "int"
                 rtype = "int"
             if ltype == "int" and rtype == "int":
@@ -1119,3 +1125,478 @@ class StaticCheck(Visitor):
 
         # If not found, raise exception
         raise UndeclaredIdentifier(ctx.name)
+
+
+
+
+
+
+
+
+
+
+
+
+# 3 c2
+def NoType(): return NoType # Make them act like singletons for comparison
+def IntType(): return IntType
+def FloatType(): return FloatType
+def BoolType(): return BoolType
+
+# Symbol class to store variable info
+class Symbol:
+    def __init__(self, name, typ):
+        self.name = name
+        self.typ = typ # Will be one of NoType, IntType, FloatType, BoolType
+
+class StaticCheck(Visitor):
+
+    # Helper function to find a symbol in the environment
+    def findSymbol(self, name, env):
+        for sym in env:
+            if sym.name == name:
+                return sym
+        return None
+
+    # Helper function for type inference (updates symbol type if NoType)
+    # Returns True if inference happened, False otherwise
+    def inferType(self, id_node: Id, target_type, env):
+        if not isinstance(id_node, Id):
+             return False # Can only infer Ids
+        sym = self.findSymbol(id_node.name, env)
+        if sym and sym.typ is NoType:
+            sym.typ = target_type
+            return True
+        return False
+
+    # Visit Program: Create environment from declarations, then check statements
+    def visitProgram(self, ctx: Program, o):
+        # o is initially unused, we create the environment here
+        env = []
+        for decl in ctx.decl:
+            # Check for redeclaration (optional but good practice)
+            if self.findSymbol(decl.name, env):
+                # Assuming RedeclaredVariable is defined elsewhere
+                # raise RedeclaredVariable(decl.name)
+                pass # Prompt doesn't require this check
+            env.append(self.visit(decl, env)) # Pass env for context if needed by visitVarDecl
+
+        # Check statements using the created environment
+        for stmt in ctx.stmts:
+            self.visit(stmt, env)
+
+    # Visit Variable Declaration: Create a Symbol with NoType initially
+    def visitVarDecl(self, ctx: VarDecl, o):
+        # o is the environment being built
+        return Symbol(ctx.name, NoType)
+
+    # Visit Assignment Statement: Check/infer types of LHS and RHS
+    def visitAssign(self, ctx: Assign, o):
+        env = o # o is the environment (list of Symbols)
+
+        # Visit RHS first to evaluate its type and potentially trigger inference
+        rhs_type = self.visit(ctx.rhs, env)
+
+        # LHS must be an Identifier
+        if not isinstance(ctx.lhs, Id):
+             # This case should ideally be caught by the parser/AST construction
+             raise Exception("LHS of assignment must be an Identifier") # Or a more specific error
+
+        # Find the LHS symbol in the environment
+        lhs_sym = self.findSymbol(ctx.lhs.name, env)
+        if not lhs_sym:
+            raise UndeclaredIdentifier(ctx.lhs.name)
+
+        lhs_type = lhs_sym.typ
+
+        # Type Checking and Inference Logic:
+        if lhs_type is NoType and rhs_type is NoType:
+            # Case 1: Cannot infer type (e.g., x = y where both are unknown)
+            raise TypeCannotBeInferred(ctx)
+        elif lhs_type is NoType:
+            # Case 2: Infer LHS type from RHS type
+            lhs_sym.typ = rhs_type
+        elif rhs_type is NoType:
+            # Case 3: Infer RHS type from LHS type (only if RHS is an Id)
+            if isinstance(ctx.rhs, Id):
+                inferred = self.inferType(ctx.rhs, lhs_type, env)
+                if not inferred:
+                    # If inference didn't happen (e.g., RHS already had a conflicting type),
+                    # we'll fall through to the mismatch check.
+                    # If RHS *still* has NoType after trying, it means inference failed structurally.
+                    current_rhs_type = self.visit(ctx.rhs, env) # Recheck RHS type
+                    if current_rhs_type is NoType:
+                         raise TypeCannotBeInferred(ctx)
+                    # If it now has a type, but not lhs_type, check mismatch below
+            else:
+                # RHS is an expression that resulted in NoType, and LHS has a type.
+                # This implies the expression itself couldn't be resolved.
+                 raise TypeCannotBeInferred(ctx)
+
+        # Case 4: Both LHS and RHS have types (after potential inference). Check for mismatch.
+        # Re-evaluate types after potential inference above
+        lhs_type = lhs_sym.typ # Get potentially updated LHS type
+        rhs_type = self.visit(ctx.rhs, env) # Get potentially updated RHS type
+
+        if lhs_type is not rhs_type:
+            raise TypeMismatchInStatement(ctx)
+
+        # Assignment statement doesn't return a value/type
+        return None
+
+    # Visit Binary Operation: Check operand types, infer if needed, return result type
+    def visitBinOp(self, ctx: BinOp, o):
+        env = o
+        op = ctx.op
+        left_e, right_e = ctx.e1, ctx.e2
+
+        # Determine expected operand type and result type based on operator rules
+        if op in ["+", "-", "*", "/"]:
+            expected_type = IntType
+            result_type = IntType
+        elif op in ["+.", "-.", "*.", "/."]:
+            expected_type = FloatType
+            result_type = FloatType
+        elif op in [">", "="]:
+            expected_type = IntType
+            result_type = BoolType
+        elif op in [">.", "=."]:
+            expected_type = FloatType
+            result_type = BoolType
+        elif op in ["&&", "||", ">b", "=b"]:
+            expected_type = BoolType
+            result_type = BoolType
+        else:
+            # Should not happen with a valid AST
+            raise Exception(f"Unhandled binary operator: {op}")
+
+        # Visit operands to get their types
+        left_type = self.visit(left_e, env)
+        right_type = self.visit(right_e, env)
+
+        # Inference phase
+        if left_type is NoType:
+            self.inferType(left_e, expected_type, env)
+            left_type = self.visit(left_e, env) # Re-check type after potential inference
+
+        if right_type is NoType:
+            self.inferType(right_e, expected_type, env)
+            right_type = self.visit(right_e, env) # Re-check type after potential inference
+
+        # Checking phase
+        if left_type is not expected_type or right_type is not expected_type:
+            raise TypeMismatchInExpression(ctx)
+
+        return result_type
+
+    # Visit Unary Operation: Check operand type, infer if needed, return result type
+    def visitUnOp(self, ctx: UnOp, o):
+        env = o
+        op = ctx.op
+        expr_e = ctx.e
+
+        # Determine expected operand type and result type based on operator rules
+        if op == "-":
+            expected_type = IntType
+            result_type = IntType
+        elif op == "-.":
+            expected_type = FloatType
+            result_type = FloatType
+        elif op == "!":
+            expected_type = BoolType
+            result_type = BoolType
+        elif op == "i2f":
+            expected_type = IntType
+            result_type = FloatType
+        elif op == "floor":
+            expected_type = FloatType
+            result_type = IntType
+        else:
+            # Should not happen with a valid AST
+            raise Exception(f"Unhandled unary operator: {op}")
+
+        # Visit operand to get its type
+        expr_type = self.visit(expr_e, env)
+
+        # Inference phase
+        if expr_type is NoType:
+            self.inferType(expr_e, expected_type, env)
+            expr_type = self.visit(expr_e, env) # Re-check type after potential inference
+
+        # Checking phase
+        if expr_type is not expected_type:
+            raise TypeMismatchInExpression(ctx)
+
+        return result_type
+
+    # Visit Integer Literal: Return IntType
+    def visitIntLit(self, ctx: IntLit, o):
+        return IntType
+
+    # Visit Float Literal: Return FloatType
+    def visitFloatLit(self, ctx: FloatLit, o):
+        return FloatType
+
+    # Visit Boolean Literal: Return BoolType
+    def visitBoolLit(self, ctx: BoolLit, o):
+        return BoolType
+
+    # Visit Identifier: Look up in environment, return its type
+    def visitId(self, ctx: Id, o):
+        env = o # o is the environment
+        sym = self.findSymbol(ctx.name, env)
+        if not sym:
+            raise UndeclaredIdentifier(ctx.name)
+        # Return the current type of the symbol (could be NoType)
+        return sym.typ
+
+
+
+    #4 c2
+
+def NoType(): return NoType
+def IntType(): return IntType
+def FloatType(): return FloatType
+def BoolType(): return BoolType
+
+# Symbol class to store variable info
+class Symbol:
+    def __init__(self, name, typ):
+        self.name = name
+        self.typ = typ # Will be one of NoType, IntType, FloatType, BoolType
+
+# ---------------- START OF SOLUTION CODE ------------------
+# Your code starts at line 110
+
+class StaticCheck(Visitor):
+
+    # Helper to check for redeclaration ONLY in the current (innermost) scope
+    def checkRedeclaration(self, name, current_scope):
+        for sym in current_scope:
+            if sym.name == name:
+                return True
+        return False
+
+    # Helper to find a symbol by searching scopes from innermost to outermost
+    def findSymbol(self, name, env):
+        # env is List[List[Symbol]], representing scopes
+        for scope in reversed(env): # Search from innermost (last) to outermost (first)
+            for sym in scope:
+                if sym.name == name:
+                    return sym
+        return None
+
+    # Helper function for type inference (updates symbol type if NoType)
+    # Returns True if inference happened, False otherwise
+    def inferType(self, id_node: Id, target_type, env):
+        if not isinstance(id_node, Id):
+             return False # Can only infer Ids
+        sym = self.findSymbol(id_node.name, env)
+        # We only infer if the symbol exists and its current type is NoType
+        if sym and sym.typ is NoType:
+            sym.typ = target_type
+            return True
+        return False
+
+    # Visit Program: Setup global scope, visit declarations and statements
+    def visitProgram(self, ctx: Program, o):
+        # o is initially unused. env is the environment: a list of scopes (lists of Symbols)
+        env = [[]] # Start with one empty list representing the global scope
+
+        # Visit global declarations
+        for decl in ctx.decl:
+            self.visit(decl, env) # Pass the whole env
+
+        # Visit global statements
+        for stmt in ctx.stmts:
+            self.visit(stmt, env)
+
+    # Visit Variable Declaration: Check for redeclaration in the current scope, add symbol
+    def visitVarDecl(self, ctx: VarDecl, o):
+        env = o # env is List[List[Symbol]]
+        current_scope = env[-1] # The innermost scope is the last list
+
+        # Check for redeclaration in the *current* scope only
+        if self.checkRedeclaration(ctx.name, current_scope):
+            raise Redeclared(ctx) # Pass the VarDecl node itself
+
+        # Add the new symbol to the current scope
+        new_symbol = Symbol(ctx.name, NoType)
+        current_scope.append(new_symbol)
+        # Return the symbol (optional, depends if caller needs it)
+        return new_symbol
+
+    # Visit Block: Create a new scope, visit decls/stmts, then destroy the scope
+    def visitBlock(self, ctx: Block, o):
+        env = o # env is List[List[Symbol]]
+
+        # --- Enter Scope ---
+        env.append([]) # Add a new empty scope for this block
+
+        # Visit local declarations within the new scope
+        for decl in ctx.decl:
+            self.visit(decl, env) # visitVarDecl will add to env[-1]
+
+        # Visit local statements within the new scope
+        for stmt in ctx.stmts:
+            self.visit(stmt, env)
+
+        # --- Exit Scope ---
+        env.pop() # Remove the scope created for this block
+
+    # Visit Assignment Statement: Check/infer types of LHS and RHS using scoped lookup
+    def visitAssign(self, ctx: Assign, o):
+        env = o # env is List[List[Symbol]]
+
+        # Visit RHS first to evaluate its type and potentially trigger inference
+        rhs_type = self.visit(ctx.rhs, env)
+
+        # LHS must be an Identifier (parser should guarantee this, but check is safe)
+        if not isinstance(ctx.lhs, Id):
+             # This case should ideally be caught by the parser/AST construction
+             raise Exception("LHS of assignment must be an Identifier") # Or a more specific error
+
+        # Find the LHS symbol using scoped lookup
+        lhs_sym = self.findSymbol(ctx.lhs.name, env)
+        if not lhs_sym:
+            raise UndeclaredIdentifier(ctx.lhs.name)
+
+        lhs_type = lhs_sym.typ
+
+        # Type Checking and Inference Logic (same logic as before, but using scoped find/infer):
+        if lhs_type is NoType and rhs_type is NoType:
+            # Case 1: Cannot infer type (e.g., x = y where both are unknown)
+            raise TypeCannotBeInferred(ctx)
+        elif lhs_type is NoType:
+            # Case 2: Infer LHS type from RHS type
+            lhs_sym.typ = rhs_type
+        elif rhs_type is NoType:
+            # Case 3: Infer RHS type from LHS type (only if RHS is an Id)
+            # Note: inferType uses findSymbol internally for scoped lookup
+            inferred = self.inferType(ctx.rhs, lhs_type, env)
+            # If inference didn't resolve RHS type, raise error
+            if not inferred:
+                 current_rhs_type = self.visit(ctx.rhs, env) # Re-check RHS type
+                 if current_rhs_type is NoType:
+                      raise TypeCannotBeInferred(ctx)
+                 # If it now has a type, the mismatch will be caught below.
+        # Case 4: Both have types (potentially after inference). Check for mismatch.
+        # Re-evaluate types after potential inference above might change things
+        lhs_type = lhs_sym.typ # Get potentially updated LHS type
+        rhs_type = self.visit(ctx.rhs, env) # Get potentially updated RHS type
+
+        if lhs_type is not rhs_type:
+            raise TypeMismatchInStatement(ctx)
+
+        # Assignment statement doesn't return a value/type
+        return None
+
+    # Visit Binary Operation: Check operand types, infer if needed, return result type
+    def visitBinOp(self, ctx: BinOp, o):
+        env = o # env is List[List[Symbol]]
+        op = ctx.op
+        left_e, right_e = ctx.e1, ctx.e2
+
+        # Determine expected operand type and result type based on operator rules
+        if op in ["+", "-", "*", "/"]:
+            expected_type = IntType
+            result_type = IntType
+        elif op in ["+.", "-.", "*.", "/."]:
+            expected_type = FloatType
+            result_type = FloatType
+        elif op in [">", "="]:
+            expected_type = IntType
+            result_type = BoolType
+        elif op in [">.", "=."]:
+            expected_type = FloatType
+            result_type = BoolType
+        elif op in ["&&", "||", ">b", "=b"]:
+            expected_type = BoolType
+            result_type = BoolType
+        else:
+            raise Exception(f"Unhandled binary operator: {op}") # Should not happen
+
+        # Visit operands to get their types (uses scoped env implicitly)
+        left_type = self.visit(left_e, env)
+        right_type = self.visit(right_e, env)
+
+        # Inference phase (uses scoped inferType)
+        if left_type is NoType:
+            self.inferType(left_e, expected_type, env)
+            left_type = self.visit(left_e, env) # Re-check type
+
+        if right_type is NoType:
+            self.inferType(right_e, expected_type, env)
+            right_type = self.visit(right_e, env) # Re-check type
+
+        # Checking phase
+        if left_type is NoType or right_type is NoType:
+            # If inference failed to resolve types, it's an error here
+            raise TypeMismatchInExpression(ctx)
+        if left_type is not expected_type or right_type is not expected_type:
+            raise TypeMismatchInExpression(ctx)
+
+        return result_type
+
+    # Visit Unary Operation: Check operand type, infer if needed, return result type
+    def visitUnOp(self, ctx: UnOp, o):
+        env = o # env is List[List[Symbol]]
+        op = ctx.op
+        expr_e = ctx.e
+
+        # Determine expected operand type and result type based on operator rules
+        if op == "-":
+            expected_type = IntType
+            result_type = IntType
+        elif op == "-.":
+            expected_type = FloatType
+            result_type = FloatType
+        elif op == "!":
+            expected_type = BoolType
+            result_type = BoolType
+        elif op == "i2f":
+            expected_type = IntType
+            result_type = FloatType
+        elif op == "floor":
+            expected_type = FloatType
+            result_type = IntType
+        else:
+            raise Exception(f"Unhandled unary operator: {op}") # Should not happen
+
+        # Visit operand to get its type (uses scoped env implicitly)
+        expr_type = self.visit(expr_e, env)
+
+        # Inference phase (uses scoped inferType)
+        if expr_type is NoType:
+            self.inferType(expr_e, expected_type, env)
+            expr_type = self.visit(expr_e, env) # Re-check type
+
+        # Checking phase
+        if expr_type is NoType:
+             # If inference failed to resolve type, it's an error here
+            raise TypeMismatchInExpression(ctx)
+        if expr_type is not expected_type:
+            raise TypeMismatchInExpression(ctx)
+
+        return result_type
+
+    # Visit Integer Literal: Return IntType
+    def visitIntLit(self, ctx: IntLit, o):
+        return IntType
+
+    # Visit Float Literal: Return FloatType
+    def visitFloatLit(self, ctx: FloatLit, o):
+        return FloatType
+
+    # Visit Boolean Literal: Return BoolType
+    def visitBoolLit(self, ctx: BoolLit, o):
+        return BoolType
+
+    # Visit Identifier: Look up using scoped search, return its type
+    def visitId(self, ctx: Id, o):
+        env = o # env is List[List[Symbol]]
+        sym = self.findSymbol(ctx.name, env) # Use the scoped search helper
+        if not sym:
+            raise UndeclaredIdentifier(ctx.name)
+        # Return the current type of the symbol (could be NoType if not yet inferred)
+        return sym.typ
