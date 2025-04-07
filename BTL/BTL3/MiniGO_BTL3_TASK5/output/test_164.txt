@@ -1,1 +1,1 @@
-Redeclared Method: Tien
+Redeclared Field: Tien
