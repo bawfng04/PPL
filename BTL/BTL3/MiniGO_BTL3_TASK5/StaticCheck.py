@@ -179,7 +179,7 @@ class StaticChecker(BaseVisitor,Utils):
                 # Check each field against method names
                 for fieldName, _ in struct_decl.elements:
                     if fieldName in self.struct_methods[struct_decl.name]:
-                        raise Redeclared(Field(), fieldName)
+                        raise Redeclared(Method(), fieldName)  # Changed from Field() to Method()
 
 
     def visitStructType(self, ast: StructType, c : List[Union[StructType, InterfaceType]]) -> StructType:
