@@ -1739,7 +1739,7 @@ func foo(a int) {
 }
         """
         input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
-        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Function: foo", inspect.stack()[0].function))
 
     def test_166(self):
         """
@@ -1770,7 +1770,7 @@ func (v TIEN) Votien () {return ;}
         }
         """
         input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
-        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Function: foo", inspect.stack()[0].function))
 
     def test_169(self):
         """
@@ -1802,13 +1802,27 @@ type TIEN struct {
         input = Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("foo"),IntLiteral(1)),FuncCall("foo",[])]))])
         self.assertTrue(TestChecker.test(input, "Undeclared Function: foo", inspect.stack()[0].function))
 
+    def test_172(self):
+        """
+func (v TIEN) VO () {return ;}
+func (v TIEN) Tien () {return ;}
+type TIEN struct {
+    Votien int;
+    Tien int;
+}
+        """
+        input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, """Redeclared Method: Tien""", inspect.stack()[0].function))
 
-
-
-
-
-
-
+    def test_173(self):
+        input = """
+func foo() int {
+    const foo = 1;
+    return foo()
+}
+        """
+        input = Program([FuncDecl("foo",[],IntType(),Block([ConstDecl("foo",None,IntLiteral(1)),Return(FuncCall("foo",[]))]))])
+        self.assertTrue(TestChecker.test(input, """Undeclared Function: foo""", inspect.stack()[0].function))
 
 
 
