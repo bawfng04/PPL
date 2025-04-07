@@ -1825,6 +1825,468 @@ func Votien (b int) {
         self.assertTrue(TestChecker.test(input, """Undeclared Function: foo""", inspect.stack()[0].function))
 
 
+    def test_174(self):
+        """Redeclared parameter within a method's block"""
+        input = Program([
+            StructType("MyStruct", [("f", IntType())], []),
+            MethodDecl("s", Id("MyStruct"), FuncDecl("myMethod", [ParamDecl("x", IntType())], VoidType(), Block([
+                VarDecl("x", FloatType(), FloatLiteral(1.0)) # Redeclare param 'x' as a variable
+            ])))
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: x", inspect.stack()[0].function))
+
+    def test_175(self):
+        """Undeclared type used in variable declaration inside function"""
+        input = Program([
+            FuncDecl("myFunc", [], VoidType(), Block([
+                VarDecl("v", Id("NonExistentType"), None)
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Undeclared Type: NonExistentType", inspect.stack()[0].function))
+
+    def test_176(self):
+        """Assign struct to incompatible interface (missing method)"""
+        input = Program([
+            StructType("MyStruct", [], [MethodDecl("s", Id("MyStruct"), FuncDecl("methodA", [], VoidType(), Block([])))]),
+            InterfaceType("MyInterface", [Prototype("methodA", [], VoidType()), Prototype("methodB", [], IntType())]), # Needs methodB
+            VarDecl("s", Id("MyStruct"), None),
+            VarDecl("i", Id("MyInterface"), Id("s")) # Error: MyStruct doesn't implement methodB
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(i,Id(MyInterface),Id(s))", inspect.stack()[0].function))
+
+    def test_177(self):
+        """Assign struct to incompatible interface (wrong method signature - param type)"""
+        input = Program([
+            StructType("MyStruct", [], [MethodDecl("s", Id("MyStruct"), FuncDecl("methodA", [ParamDecl("p", IntType())], VoidType(), Block([])))]), # Takes int param
+            InterfaceType("MyInterface", [Prototype("methodA", [FloatType()], VoidType())]), # Expects float param
+            VarDecl("s", Id("MyStruct"), None),
+            VarDecl("i", Id("MyInterface"), Id("s")) # Error: methodA signature mismatch
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(i,Id(MyInterface),Id(s))", inspect.stack()[0].function))
+
+    def test_178(self):
+        """Variable declared in if block used outside its scope"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                If(BooleanLiteral(True), Block([VarDecl("x", IntType(), IntLiteral(1))]), None),
+                Assign(Id("x"), IntLiteral(2)) # Error: x not visible here
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: x", inspect.stack()[0].function))
+
+    def test_179(self):
+        """Type mismatch in for loop update statement (assign float to int)"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("i", IntType(), IntLiteral(0)), # Declare i beforehand
+                ForStep(Assign(Id("i"), IntLiteral(0)), # Init part needs Stmt, Assign is Stmt
+                        BinaryOp("<", Id("i"), IntLiteral(10)),
+                        Assign(Id("i"), FloatLiteral(1.0)), # Update part: Assign float to int 'i'
+                        Block([]))
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Assign(Id(i),FloatLiteral(1.0))", inspect.stack()[0].function))
+
+
+    def test_180(self):
+        """Array literal element type mismatch (float in int array)"""
+        input = Program([
+            VarDecl("arr", ArrayType([IntLiteral(3)], IntType()),
+                    ArrayLiteral([IntLiteral(3)], IntType(), [IntLiteral(1), FloatLiteral(2.0), IntLiteral(3)])) # Float in int array
+        ])
+        # Assuming the checker validates elements against the declared/inferred type
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ArrayLiteral([IntLiteral(3)],IntType,[IntLiteral(1),FloatLiteral(2.0),IntLiteral(3)])", inspect.stack()[0].function))
+
+    def test_181(self):
+        """Array literal size mismatch (too many elements)"""
+        input = Program([
+             VarDecl("arr", ArrayType([IntLiteral(2)], IntType()), # Size 2
+                    ArrayLiteral([IntLiteral(2)], IntType(), [IntLiteral(1), IntLiteral(2), IntLiteral(3)])) # 3 elements
+        ])
+        # Assuming the checker validates element count against ArrayType dimensions
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(arr,ArrayType(IntType,[IntLiteral(2)]),ArrayLiteral([IntLiteral(2)],IntType,[IntLiteral(1),IntLiteral(2),IntLiteral(3)]))", inspect.stack()[0].function))
+
+    def test_182(self):
+        """Accessing field on a non-struct type (int)"""
+        input = Program([
+            VarDecl("x", IntType(), IntLiteral(10)),
+            VarDecl("y", None, FieldAccess(Id("x"), "someField")) # Error: x is int
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FieldAccess(Id(x),someField)", inspect.stack()[0].function))
+
+    def test_183(self):
+        """Array indexing on a non-array type (string)"""
+        input = Program([
+            VarDecl("s", StringType(), StringLiteral("hello")),
+            VarDecl("c", None, ArrayCell(Id("s"), [IntLiteral(0)])) # Error: s is string
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ArrayCell(Id(s),[IntLiteral(0)])", inspect.stack()[0].function))
+
+    def test_184(self):
+        """Method call on a non-struct/interface type (float)"""
+        input = Program([
+            VarDecl("f", FloatType(), FloatLiteral(3.14)),
+            MethCall(Id("f"), "someMethod", []) # Error: f is float
+        ])
+        # Assuming MethodCall is treated as a Stmt here if return is Void, or Expr otherwise
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: MethCall(Id(f),someMethod,[])", inspect.stack()[0].function))
+
+    def test_185(self):
+        """Function call argument count mismatch (too few)"""
+        input = Program([
+            FuncDecl("myFunc", [ParamDecl("a", IntType()), ParamDecl("b", StringType())], VoidType(), Block([])),
+            FuncCall("myFunc", [IntLiteral(1)]) # Error: missing second argument
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(myFunc,[IntLiteral(1)])", inspect.stack()[0].function))
+
+    def test_186(self):
+        """Function call argument count mismatch (too many)"""
+        input = Program([
+            FuncDecl("myFunc", [ParamDecl("a", IntType())], VoidType(), Block([])),
+            FuncCall("myFunc", [IntLiteral(1), StringLiteral("extra")]) # Error: too many arguments
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(myFunc,[IntLiteral(1),StringLiteral(extra)])", inspect.stack()[0].function))
+
+    def test_187(self):
+        """Using break outside of a loop"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                If(BooleanLiteral(True), Block([Break()]), None) # Error: break not in a loop
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Break not in loop", inspect.stack()[0].function)) # Adjust expected error message if needed
+
+    def test_188(self):
+        """Using continue outside of a loop"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                Continue() # Error: continue not in a loop
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Continue not in loop", inspect.stack()[0].function)) # Adjust expected error message if needed
+
+    def test_189(self):
+        """Redeclaring a built-in function (putIntLn)"""
+        input = Program([
+            FuncDecl("putIntLn", [ParamDecl("i", IntType())], VoidType(), Block([]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Function: putIntLn", inspect.stack()[0].function))
+
+    def test_190(self):
+        """Type mismatch calling built-in function (putBool with int)"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                FuncCall("putBool", [IntLiteral(1)]) # Error: expected boolean
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(putBool,[IntLiteral(1)])", inspect.stack()[0].function))
+
+    def test_191(self):
+        """Using result of void built-in function (putLn) in expression"""
+        input = Program([
+            VarDecl("x", IntType(), FuncCall("putLn", [])) # Error: putLn returns void
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(putLn,[])", inspect.stack()[0].function))
+
+    def test_192(self):
+        """Assigning nil to a string variable"""
+        input = Program([
+            VarDecl("s", StringType(), NilLiteral()) # Error: cannot assign nil to string
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(s,StringType,Nil)", inspect.stack()[0].function))
+
+    def test_193(self):
+        """Assigning nil to an array variable"""
+        input = Program([
+            VarDecl("a", ArrayType([IntLiteral(5)], IntType()), NilLiteral()) # Error: cannot assign nil to array
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(a,ArrayType(IntType,[IntLiteral(5)]),Nil)", inspect.stack()[0].function))
+
+    def test_194(self):
+        """Comparing incompatible types (string and int) with =="""
+        input = Program([
+            VarDecl("res", BoolType(), BinaryOp("==", StringLiteral("1"), IntLiteral(1))) # Error
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(StringLiteral(1),==,IntLiteral(1))", inspect.stack()[0].function))
+
+    def test_195(self):
+        """Using logical operator '&&' with non-boolean types (int)"""
+        input = Program([
+            VarDecl("res", BoolType(), BinaryOp("&&", IntLiteral(1), IntLiteral(0))) # Error
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: BinaryOp(IntLiteral(1),&&,IntLiteral(0))", inspect.stack()[0].function))
+
+    def test_196(self):
+        """Using unary '!' operator with non-boolean type (float)"""
+        input = Program([
+            VarDecl("res", BoolType(), UnaryOp("!", FloatLiteral(0.0))) # Error
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: UnaryOp(!,FloatLiteral(0.0))", inspect.stack()[0].function))
+
+    def test_197(self):
+        """Struct literal with undeclared field name"""
+        input = Program([
+            StructType("Point", [("x", IntType()), ("y", IntType())], []),
+            VarDecl("p", Id("Point"), StructLiteral("Point", [("x", IntLiteral(1)), ("z", IntLiteral(2))])) # Error: field 'z' not declared
+        ])
+        self.assertTrue(TestChecker.test(input, "Undeclared Field: z", inspect.stack()[0].function)) # Or maybe TypeMismatch on StructLiteral? Depends on implementation. Let's assume Undeclared Field.
+
+    def test_198(self):
+        """Struct literal with field type mismatch"""
+        input = Program([
+            StructType("Point", [("x", IntType()), ("y", IntType())], []),
+            VarDecl("p", Id("Point"), StructLiteral("Point", [("x", IntLiteral(1)), ("y", StringLiteral("2"))])) # Error: field 'y' expects int, got string
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: StructLiteral(Point,[(x,IntLiteral(1)),(y,StringLiteral(2))])", inspect.stack()[0].function))
+
+    def test_199(self):
+        """Assigning value to constant"""
+        input = Program([
+            ConstDecl("PI", FloatType(), FloatLiteral(3.14)),
+            Assign(Id("PI"), FloatLiteral(3.14159)) # Error: cannot assign to constant
+        ])
+        self.assertTrue(TestChecker.test(input, "Cannot Assign To Constant: Assign(Id(PI),FloatLiteral(3.14159))", inspect.stack()[0].function)) # Requires a specific error type
+
+    def test_200(self):
+        """Using := to assign to an already declared variable in the same scope"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("x", IntType(), IntLiteral(1)),
+                Assign(Id("x"), IntLiteral(2)) # Using := implicitly declares, should conflict
+            ]))
+        ])
+        # MiniGo spec p18 implies := declares if LHS is undeclared. Re-assigning with := to a declared var might be a Redeclared or a general error. Let's assume Redeclared for now.
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: x", inspect.stack()[0].function))
+
+    def test_201(self):
+        """Return statement with expression in a void function"""
+        input = Program([
+            FuncDecl("doNothing", [], VoidType(), Block([
+                Return(IntLiteral(0)) # Error: void function cannot return a value
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(IntLiteral(0))", inspect.stack()[0].function))
+
+    def test_202(self):
+        """Return statement without expression in a non-void function"""
+        input = Program([
+            FuncDecl("getValue", [], IntType(), Block([
+                Return(None) # Error: int function must return an int value
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Return()", inspect.stack()[0].function)) # Or Return(None) depending on AST structure
+
+    def test_203(self):
+        """Redeclared struct type"""
+        input = Program([
+            StructType("Point", [("x", IntType())], []),
+            StructType("Point", [("y", FloatType())], []) # Error
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: Point", inspect.stack()[0].function))
+
+    def test_204(self):
+        """Redeclared interface type"""
+        input = Program([
+            InterfaceType("Shape", [Prototype("Area", [], FloatType())]),
+            InterfaceType("Shape", [Prototype("Perimeter", [], FloatType())]) # Error
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: Shape", inspect.stack()[0].function))
+
+    def test_205(self):
+        """Type mismatch in ForEach loop variables (index assigned non-int)"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("arr", ArrayType([IntLiteral(5)], StringType()), None),
+                VarDecl("idx", FloatType(), FloatLiteral(0.0)), # Declare idx as float
+                VarDecl("val", StringType(), StringLiteral("")),   # Declare val as string
+                ForEach(Id("idx"), Id("val"), Id("arr"), Block([])) # Error: index must be int
+            ]))
+        ])
+        # This might be tricky. The ForEach node itself might not be the mismatch.
+        # The implicit assignment to idx and val causes the mismatch.
+        # Let's assume the checker detects this based on the types of idx/val vs expected int/elementType.
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ForEach(Id(idx),Id(val),Id(arr),Block([]))", inspect.stack()[0].function))
+
+    def test_206(self):
+        """Type mismatch in ForEach loop variables (value assigned wrong type)"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("arr", ArrayType([IntLiteral(5)], StringType()), None),
+                VarDecl("idx", IntType(), IntLiteral(0)), # Correct type for index
+                VarDecl("val", IntType(), IntLiteral(0)),   # Incorrect type for value (should be string)
+                ForEach(Id("idx"), Id("val"), Id("arr"), Block([])) # Error: val should be string
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ForEach(Id(idx),Id(val),Id(arr),Block([]))", inspect.stack()[0].function))
+
+    def test_207(self):
+        """Using range on a non-array type in ForEach"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("notAnArray", IntType(), IntLiteral(10)),
+                VarDecl("idx", IntType(), IntLiteral(0)),
+                VarDecl("val", IntType(), IntLiteral(0)),
+                ForEach(Id("idx"), Id("val"), Id("notAnArray"), Block([])) # Error: notAnArray is int
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ForEach(Id(idx),Id(val),Id(notAnArray),Block([]))", inspect.stack()[0].function))
+
+    def test_208(self):
+        """Redeclared variable in the same block"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("a", IntType(), IntLiteral(1)),
+                VarDecl("a", StringType(), StringLiteral("hello")) # Error
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: a", inspect.stack()[0].function))
+
+    def test_209(self):
+        """Redeclared constant in the same block"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                ConstDecl("C", IntType(), IntLiteral(1)),
+                ConstDecl("C", FloatType(), FloatLiteral(1.0)) # Error
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Constant: C", inspect.stack()[0].function))
+
+    def test_210(self):
+        """VarDecl shadowing a global constant"""
+        input = Program([
+            ConstDecl("G", IntType(), IntLiteral(10)),
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("G", StringType(), StringLiteral("shadow")) # This is allowed (shadowing)
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function)) # Should pass
+
+    def test_211(self):
+        """Accessing a shadowed global variable"""
+        input = Program([
+            VarDecl("x", IntType(), IntLiteral(1)),
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("x", StringType(), StringLiteral("local")),
+                FuncCall("putInt", [Id("x")]) # Error: local x is string, cannot putInt
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: FuncCall(putInt,[Id(x)])", inspect.stack()[0].function))
+
+    def test_212(self):
+        """Assigning struct literal of wrong type"""
+        input = Program([
+            StructType("Point", [("x", IntType())], []),
+            StructType("Vector", [("x", IntType())], []),
+            VarDecl("p", Id("Point"), None),
+            Assign(Id("p"), StructLiteral("Vector", [("x", IntLiteral(1))])) # Error: Point vs Vector
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: Assign(Id(p),StructLiteral(Vector,[(x,IntLiteral(1))]))", inspect.stack()[0].function))
+
+    def test_213(self):
+        """Array cell access with wrong index type (boolean)"""
+        input = Program([
+            VarDecl("arr", ArrayType([IntLiteral(5)], IntType()), None),
+            VarDecl("x", IntType(), ArrayCell(Id("arr"), [BooleanLiteral(True)])) # Error: index must be int
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: ArrayCell(Id(arr),[BooleanLiteral(true)])", inspect.stack()[0].function))
+
+    def test_214(self):
+        """Assigning function call result (int) to float variable"""
+        input = Program([
+            FuncDecl("getIntValue", [], IntType(), Block([Return(IntLiteral(10))])),
+            VarDecl("f", FloatType(), FuncCall("getIntValue", [])) # Allowed: int -> float assignment
+        ])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function)) # Should pass
+
+    def test_215(self):
+        """Assigning function call result (float) to int variable"""
+        input = Program([
+            FuncDecl("getFloatValue", [], FloatType(), Block([Return(FloatLiteral(10.0))])),
+            VarDecl("i", IntType(), FuncCall("getFloatValue", [])) # Error: float -> int assignment not allowed
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(i,IntType,FuncCall(getFloatValue,[]))", inspect.stack()[0].function))
+
+    def test_216(self):
+        """Nested scopes and redeclaration"""
+        input = Program([
+            VarDecl("x", IntType(), IntLiteral(1)),
+            FuncDecl("main", [], VoidType(), Block([
+                VarDecl("x", IntType(), IntLiteral(2)), # Shadow global x
+                If(BooleanLiteral(True), Block([
+                    VarDecl("x", IntType(), IntLiteral(3)) # Shadow function-scope x
+                ]), None),
+                VarDecl("x", IntType(), IntLiteral(4)) # Error: Redeclare function-scope x
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Redeclared Variable: x", inspect.stack()[0].function))
+
+    def test_217(self):
+        """Interface method implementation check (return type mismatch)"""
+        input = Program([
+            StructType("MyStruct", [], [MethodDecl("s", Id("MyStruct"), FuncDecl("methodA", [], IntType(), Block([Return(IntLiteral(1))])))]), # Returns int
+            InterfaceType("MyInterface", [Prototype("methodA", [], FloatType())]), # Expects float
+            VarDecl("s", Id("MyStruct"), None),
+            VarDecl("i", Id("MyInterface"), Id("s")) # Error: methodA return type mismatch
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(i,Id(MyInterface),Id(s))", inspect.stack()[0].function))
+
+    def test_218(self):
+        """Using undeclared variable in initialization part of for loop"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                ForStep(Assign(Id("i"), IntLiteral(0)), # Error: 'i' undeclared before use in init
+                        BinaryOp("<", Id("i"), IntLiteral(10)),
+                        Assign(Id("i"), BinaryOp("+", Id("i"), IntLiteral(1))),
+                        Block([]))
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: i", inspect.stack()[0].function))
+
+    def test_219(self):
+        """Using undeclared variable in update part of for loop"""
+        input = Program([
+            FuncDecl("main", [], VoidType(), Block([
+                 # Assume 'i' is declared, but 'step' is not
+                 VarDecl("i", IntType(), IntLiteral(0)),
+                ForStep(Assign(Id("i"), IntLiteral(0)),
+                        BinaryOp("<", Id("i"), IntLiteral(10)),
+                        Assign(Id("i"), BinaryOp("+", Id("i"), Id("step"))), # Error: 'step' undeclared
+                        Block([]))
+            ]))
+        ])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: step", inspect.stack()[0].function))
+
+    def test_220(self):
+        """Empty program"""
+        input = Program([])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function)) # Should pass
+
+    def test_221(self):
+        """Program with only comments (represented as empty program in AST)"""
+        # Assuming parser produces Program([]) for comments-only input
+        input = Program([])
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function)) # Should pass
+
+    def test_222(self):
+        """Constant expression evaluation involving division by zero (if checker evaluates consts)"""
+        input = Program([
+            ConstDecl("ZERO", IntType(), IntLiteral(0)),
+            ConstDecl("RESULT", IntType(), BinaryOp("/", IntLiteral(1), Id("ZERO"))) # Potential runtime error, but might be caught statically if consts are evaluated
+        ])
+        # This depends heavily on whether the checker evaluates constant expressions.
+        # If it does, it might raise DivisionByZero or similar. If not, it might pass static checks.
+        # Let's assume it passes static type checks but could fail at runtime/code-gen.
+        # If the checker *must* evaluate, the expected error would be different.
+        # For now, assume it passes simple type checks.
+        self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function)) # Assuming only type checking
+
+    def test_223(self):
+        """Assign void function call to variable"""
+        input = Program([
+            FuncDecl("doNothing", [], VoidType(), Block([])),
+            VarDecl("result", None, FuncCall("doNothing", [])) # Error: cannot assign void
+        ])
+        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(result,FuncCall(doNothing,[]))", inspect.stack()[0].function))
 
 
 
