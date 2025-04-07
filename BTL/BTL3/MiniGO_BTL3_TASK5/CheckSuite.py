@@ -1773,4 +1773,13 @@ func (v TIEN) Votien () {return ;}
         input = Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1)),FuncCall("foo",[IntLiteral(2)])]))])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
+    def test_169(self):
+        """
+        type TIEN struct {Votien int;}
+        type TIEN struct {v int;}
+        """
+        input = Program([StructType("TIEN",[("Votien",IntType())],[]),StructType("TIEN",[("v",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Type: TIEN", inspect.stack()[0].function))
+
+
 
