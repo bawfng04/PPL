@@ -1728,7 +1728,7 @@ type TIEN struct {
 }
         """
         input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
-        self.assertTrue(TestChecker.test(input, "Redeclared Field: Tien", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Redeclared Method: Tien", inspect.stack()[0].function))
 
     def test_165(self):
         """
@@ -1751,7 +1751,6 @@ func (v TIEN) Votien () {return ;}
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)])))])
         self.assertTrue(TestChecker.test(input, "Redeclared Method: Votien", inspect.stack()[0].function))
 
-
     def test_167(self):
         """
         func (v TIEN) Votien () {return ;}
@@ -1760,7 +1759,7 @@ func (v TIEN) Votien () {return ;}
         }
         """
         input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType())],[])])
-        self.assertTrue(TestChecker.test(input, "Redeclared Field: Votien", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Redeclared Method: Votien", inspect.stack()[0].function))
 
     def test_168(self):
         """
@@ -1780,6 +1779,38 @@ func (v TIEN) Votien () {return ;}
         """
         input = Program([StructType("TIEN",[("Votien",IntType())],[]),StructType("TIEN",[("v",IntType())],[])])
         self.assertTrue(TestChecker.test(input, "Redeclared Type: TIEN", inspect.stack()[0].function))
+
+    def test_170(self):
+        """
+func (v TIEN) VO () {return ;}
+func (v TIEN) Tien () {return ;}
+type TIEN struct {
+    Votien int;
+    Tien int;
+}
+        """
+        input = Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType()),("Tien",IntType())],[])])
+        self.assertTrue(TestChecker.test(input, "Redeclared Method: Tien", inspect.stack()[0].function))
+
+    def test_171(self):
+        """
+        func foo() {
+            foo := 1;
+            foo()
+        }
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("foo"),IntLiteral(1)),FuncCall("foo",[])]))])
+        self.assertTrue(TestChecker.test(input, "Undeclared Function: foo", inspect.stack()[0].function))
+
+
+
+
+
+
+
+
+
+
 
 
 

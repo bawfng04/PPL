@@ -174,36 +174,12 @@ class StaticChecker(BaseVisitor,Utils):
                     self.struct_methods[struct_name] = set()
                 self.struct_methods[struct_name].add(decl.fun.name)
 
-        # Store method declarations with their position in the program
-        method_positions = {}
-        for i, decl in enumerate(ast.decl):
-            if isinstance(decl, MethodDecl):
-                struct_name = decl.recType.name
-                method_name = decl.fun.name
-                if struct_name not in method_positions:
-                    method_positions[struct_name] = {}
-                method_positions[struct_name][method_name] = i
-
-        # Store struct positions
-        struct_positions = {}
-        for i, decl in enumerate(ast.decl):
-            if isinstance(decl, StructType):
-                struct_positions[decl.name] = i
-
-        # Now when processing structs, check field names against method names with position awareness
         for struct_decl in filter(lambda x: isinstance(x, StructType), ast.decl):
             if struct_decl.name in self.struct_methods:
-                struct_pos = struct_positions[struct_decl.name]
                 # Check each field against method names
                 for fieldName, _ in struct_decl.elements:
                     if fieldName in self.struct_methods[struct_decl.name]:
-                        method_pos = method_positions[struct_decl.name][fieldName]
-                        if method_pos < struct_pos:
-                            # Method was declared first
-                            raise Redeclared(Field(), fieldName)
-                        else:
-                            # Field was declared first (or struct contains field)
-                            raise Redeclared(Method(), fieldName)
+                        raise Redeclared(Method(), fieldName)  # Changed from Field() to Method()
 
 
     def visitStructType(self, ast: StructType, c : List[Union[StructType, InterfaceType]]) -> StructType:
