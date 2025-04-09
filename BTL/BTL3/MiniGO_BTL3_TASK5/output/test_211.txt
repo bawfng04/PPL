@@ -1,1 +1,1 @@
-Type Mismatch: FuncCall(putInt,[Id(x)])
+Redeclared Method: foo

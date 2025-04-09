@@ -1,1 +1,1 @@
-Type Mismatch: Return(IntLiteral(0))
+Type Mismatch: VarDecl(i,Id(MyInterface),Id(s))

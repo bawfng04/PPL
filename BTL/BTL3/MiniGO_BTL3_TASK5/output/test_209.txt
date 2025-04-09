@@ -1,1 +1,1 @@
-Redeclared Constant: C
+Undeclared Function: foo

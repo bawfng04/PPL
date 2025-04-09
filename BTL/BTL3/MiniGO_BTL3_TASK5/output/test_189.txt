@@ -1,1 +1,1 @@
-Redeclared Function: putIntLn
+Type Mismatch: BinaryOp(IntLiteral(1),&&,IntLiteral(0))

@@ -1,1 +1,1 @@
-Type Mismatch: FuncCall(putBool,[IntLiteral(1)])
+Type Mismatch: UnaryOp(!,FloatLiteral(0.0))

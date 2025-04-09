@@ -1,1 +1,1 @@
-Type Mismatch: BinaryOp(IntLiteral(1),&&,IntLiteral(0))
+Type Mismatch: ForEach(Id(idx),Id(val),Id(notAnArray),Block([]))

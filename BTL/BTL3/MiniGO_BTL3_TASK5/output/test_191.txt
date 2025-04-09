@@ -1,1 +1,1 @@
-Type Mismatch: FuncCall(putLn,[])
+Type Mismatch: Return(IntLiteral(0))

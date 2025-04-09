@@ -1,1 +1,1 @@
-Type Mismatch: VarDecl(s,StringType,Nil)
+Type Mismatch: Return()

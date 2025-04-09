@@ -1,1 +1,1 @@
-Type Mismatch: VarDecl(i,Id(MyInterface),Id(s))
+VOTIEN

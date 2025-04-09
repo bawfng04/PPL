@@ -1,1 +1,1 @@
-Type Mismatch: BinaryOp(StringLiteral(1),==,IntLiteral(1))
+Redeclared Type: Shape

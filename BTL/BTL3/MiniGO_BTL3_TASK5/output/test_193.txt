@@ -1,1 +1,1 @@
-Type Mismatch: VarDecl(a,ArrayType(IntType,[IntLiteral(5)]),Nil)
+Redeclared Type: Point

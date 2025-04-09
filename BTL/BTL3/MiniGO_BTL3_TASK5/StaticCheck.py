@@ -33,18 +33,18 @@ class StaticChecker(BaseVisitor,Utils):
         self.list_type: List[Union[StructType, InterfaceType]] = []
         self.list_function: List[FuncDecl] =  [
                 FuncDecl("getInt", [], IntType(), Block([])),
-                FuncDecl("putInt", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
-                FuncDecl("putIntLn", [ParamDecl("VOTIEN", IntType())], VoidType(), Block([])),
-                FuncDecl("getString", [], StringType(), Block([])),  # Fix return type to StringType
-                FuncDecl("putString", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([])),
-                FuncDecl("putStringLn", [ParamDecl("VOTIEN", StringType())], VoidType(), Block([])),
+                FuncDecl("putInt", [ParamDecl("", IntType())], VoidType(), Block([])),
+                FuncDecl("putIntLn", [ParamDecl("", IntType())], VoidType(), Block([])),
+                FuncDecl("getString", [], StringType(), Block([])),
+                FuncDecl("putString", [ParamDecl("", StringType())], VoidType(), Block([])),
+                FuncDecl("putStringLn", [ParamDecl("", StringType())], VoidType(), Block([])),
                 FuncDecl("putLn", [], VoidType(), Block([])),
                 FuncDecl("getBool", [], BoolType(), Block([])),
-                FuncDecl("putBool", [ParamDecl("VOTIEN", BoolType())], VoidType(), Block([])),
-                FuncDecl("putBoolLn", [ParamDecl("VOTIEN", BoolType())], VoidType(), Block([])),
+                FuncDecl("putBool", [ParamDecl("", BoolType())], VoidType(), Block([])),
+                FuncDecl("putBoolLn", [ParamDecl("", BoolType())], VoidType(), Block([])),
                 FuncDecl("getFloat", [], FloatType(), Block([])),
-                FuncDecl("putFloat", [ParamDecl("VOTIEN", FloatType())], VoidType(), Block([])),
-                FuncDecl("putFloatLn", [ParamDecl("VOTIEN", FloatType())], VoidType(), Block([])),
+                FuncDecl("putFloat", [ParamDecl("", FloatType())], VoidType(), Block([])),
+                FuncDecl("putFloatLn", [ParamDecl("", FloatType())], VoidType(), Block([])),
             ]
         self.function_current: FuncDecl = None
         self.struct_methods = {}
@@ -254,7 +254,7 @@ class StaticChecker(BaseVisitor,Utils):
         self.function_current = old_function
         return Symbol(ast.name, FuntionType())
 
-    def visitParamDecl(self, ast: ParamDecl, c: list[Symbol]) -> Symbol:
+    def visitParamDecl(self, ast: ParamDecl, c: List[Symbol]) -> Symbol:
         res = self.lookup(ast.parName, c, lambda x: x.name)
         if not res is None:
             raise Redeclared(Parameter(), ast.parName)
