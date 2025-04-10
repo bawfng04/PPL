@@ -485,44 +485,63 @@ class StaticChecker(BaseVisitor,Utils):
     #     self.visit(Block([ast.init] + ast.loop.member + [ast.upda]), c)
 
     def visitForEach(self, ast: ForEach, c: List[List[Symbol]]) -> None:
-        # Get the type of the array being iterated
+        # 1. Check the array type
         arr_type = self.visit(ast.arr, c)
-
-        # Check if it's an array type
         if not isinstance(arr_type, ArrayType):
-            raise TypeMismatch(ast)
+            raise TypeMismatch(ast) # Error on the whole ForEach statement if arr is not an array
 
-        # Create a new scope for the loop variables
-        loop_scope = [[]] + c
+        # 2. Check the index variable: must exist, be assignable (LHS), and be IntType
+        try:
+            # visit(ast.idx, c) checks for existence and returns its type
+            idx_type = self.visit(ast.idx, c)
 
-        # Calculate types for index and value variables
-        idx_type = IntType()  # Index is always an int
+            # Ensure the index variable is assignable (should be an Id which inherits LHS)
+            if not isinstance(ast.idx, LHS):
+                raise TypeMismatch(ast) # Index variable must be assignable (LHS)
 
-        # For multi-dimensional arrays, the element is an array of the remaining dimensions
-        if len(arr_type.dimens) > 1:
-            # Element type is an array with all dimensions except the first one
-            value_type = ArrayType(arr_type.dimens[1:], arr_type.eleType)
-        else:
-            # For 1D arrays, the element is the element type
-            value_type = arr_type.eleType
+            # Ensure the index variable's type is exactly IntType
+            if not isinstance(idx_type, IntType):
+                raise TypeMismatch(ast) # Index variable must be of IntType
 
-        # Add idx and value variables to the loop scope
-        loop_scope[0].append(Symbol(ast.idx.name, idx_type, None))
-        loop_scope[0].append(Symbol(ast.value.name, value_type, None))
+        except Undeclared as e:
+            # If visit(ast.idx, c) raised Undeclared, let it propagate.
+            # This handles cases like test_299 where 'c' might be used as index.
+            raise e
 
-        # Create a NEW scope for the loop body statements
-        body_scope = [[]] + loop_scope
+        # 3. Check the value variable: must exist, be assignable (LHS), and compatible with element type
+        try:
+            # visit(ast.value, c) checks for existence and returns its type
+            value_type_actual = self.visit(ast.value, c) # This is the type of the *variable* 'value'
 
-        # Visit the loop body with the body_scope
-        if isinstance(ast.loop, Block):
-            for stmt in ast.loop.member:
-                result = self.visit(stmt, body_scope)
-                if isinstance(result, Symbol):
-                    body_scope[0].append(result)
-        else:
-            result = self.visit(ast.loop, body_scope)
-            if isinstance(result, Symbol):
-                body_scope[0].append(result)
+            # Ensure the value variable is assignable (should be an Id which inherits LHS)
+            if not isinstance(ast.value, LHS):
+                raise TypeMismatch(ast) # Value variable must be assignable (LHS)
+
+            # Determine the expected type of elements being iterated over
+            if len(arr_type.dimens) > 1:
+                # For multi-dimensional arrays, the element is an array of the remaining dimensions
+                value_type_expected = ArrayType(arr_type.dimens[1:], arr_type.eleType)
+            else:
+                # For 1D arrays, the element is just the element type
+                value_type_expected = arr_type.eleType
+
+            # Check if the existing value variable can accept the element type
+            # We use checkType with standard assignment rules (int->float, struct->interface)
+            if not self.checkType(value_type_actual, value_type_expected, [(FloatType, IntType), (InterfaceType, StructType)]):
+                # If types are not compatible for assignment
+                raise TypeMismatch(ast) # Type mismatch for the value variable assignment
+
+        except Undeclared as e:
+            # If visit(ast.value, c) raised Undeclared, let it propagate.
+            # This handles test_299 correctly where 'c' is the undeclared value variable.
+            raise e # Re-raise the Undeclared error
+
+        # 4. Visit the loop body in its own new scope
+        # Create a new scope specifically for the statements inside the loop block
+        body_scope = [[]] + c
+        # Visit the loop body (assuming ast.loop is a Block)
+        # visitBlock should handle adding its own declarations to body_scope[0]
+        self.visit(ast.loop, body_scope)
 
     def visitId(self, ast: Id, c: List[List[Symbol]]) -> Type:
         res = next(filter(None, (self.lookup(ast.name, scope, lambda x: x.name) for scope in c)), None)

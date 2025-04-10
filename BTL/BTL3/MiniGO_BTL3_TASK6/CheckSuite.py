@@ -592,7 +592,7 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",ArrayType([IntLiteral(2)],IntType()),Id("b")),VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,ArrayType(StringType,[IntLiteral(2)]),Id(a))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: a", inspect.stack()[0].function))
 
     def test_056(self):
         """
@@ -1001,7 +1001,7 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",ArrayType([IntLiteral(3)],IntType()),Id("b")),VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,ArrayType(StringType,[IntLiteral(2)]),Id(a))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: a", inspect.stack()[0].function))
 
     def test_092(self):
         """
@@ -1362,7 +1362,7 @@ type TIEN interface {VoTien ();}
         var d = b;
         """
         input = Program([VarDecl("a", None, IntLiteral(1)), FuncDecl("foo", [], VoidType(), Block([ConstDecl("b", None, IntLiteral(1)), ForEach(Id("a"), Id("c"), ArrayLiteral([IntLiteral(3)], IntType(), [IntLiteral(1), IntLiteral(2), IntLiteral(3)]), Block([VarDecl("d", None, Id("c"))])), VarDecl("d", None, Id("a")), VarDecl("a", None, IntLiteral(1))])), VarDecl("d", None, Id("b"))])
-        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: b", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: c", inspect.stack()[0].function))
 
     def test_131(self):
         """
@@ -1577,7 +1577,7 @@ type TIEN interface {VoTien ();}
         }
         """
         input = Program([FuncDecl("foo", [], VoidType(), Block([VarDecl("arr", ArrayType([IntLiteral(2)], IntType()), None), ForEach(Id("a"), Id("b"), Id("arr"), Block([VarDecl("c", IntType(), Id("a")), VarDecl("d", IntType(), Id("b")), VarDecl("e", StringType(), Id("a"))]))]))])
-        self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(e,StringType,Id(a))", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: a", inspect.stack()[0].function))
 
     def test_150(self):
         """
@@ -2657,7 +2657,7 @@ func Votien (b int) {
         }
         """
         input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([VarDecl("array", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),ForEach(Id("index"),Id("value"),Id("array"),Block([ForEach(Id("index"),Id("value"),Id("brray"),Block([VarDecl("brray", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))]))]))]))])
-        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: brray", inspect.stack()[0].function))
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: index", inspect.stack()[0].function))
 
 
 
@@ -3066,5 +3066,22 @@ func foo() {
         }
         var d = b;
         """
-        input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,IntLiteral(1)),VarDecl("b", None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("b", None,IntLiteral(1))]))]))])
+        input = Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("c"))])),VarDecl("d", None,Id("a")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("b"))])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: c", inspect.stack()[0].function))
+
+
+    def test_300(self):
+        """
+        var a = 1;
+        func foo () {
+            const b = 1;
+            for a, c := range [3]int{1, 2, 3} {
+                var d = c;
+            }
+            var d = a;
+            var a = 1;
+        }
+        var d = b;
+        """
+        input = Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("c"))])),VarDecl("d", None,Id("a")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("b"))])
         self.assertTrue(TestChecker.test(input, "Undeclared Identifier: c", inspect.stack()[0].function))
