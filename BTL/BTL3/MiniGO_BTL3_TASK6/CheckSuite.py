@@ -3052,3 +3052,19 @@ func foo() {
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,IntLiteral(1)),VarDecl("b", None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("b", None,IntLiteral(1))]))]))])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
+
+    def test_299(self):
+        """
+        var a = 1;
+        func foo () {
+            const b = 1;
+            for a, c := range [3]int{1, 2, 3} {
+                var d = c;
+            }
+            var d = a;
+            var a = 1;
+        }
+        var d = b;
+        """
+        input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,IntLiteral(1)),VarDecl("b", None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("b", None,IntLiteral(1))]))]))])
+        self.assertTrue(TestChecker.test(input, "Undeclared Identifier: c", inspect.stack()[0].function))

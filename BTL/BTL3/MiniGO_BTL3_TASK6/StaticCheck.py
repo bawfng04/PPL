@@ -492,12 +492,10 @@ class StaticChecker(BaseVisitor,Utils):
         if not isinstance(arr_type, ArrayType):
             raise TypeMismatch(ast)
 
-        # Create a new scope for the loop
+        # Create a new scope for the loop variables
         loop_scope = [[]] + c
 
-        # For a 2D array [2][3]int:
-        # - First index variable (a) is an integer
-        # - Second variable (b) is a [3]int array
+        # Calculate types for index and value variables
         idx_type = IntType()  # Index is always an int
 
         # For multi-dimensional arrays, the element is an array of the remaining dimensions
@@ -512,16 +510,19 @@ class StaticChecker(BaseVisitor,Utils):
         loop_scope[0].append(Symbol(ast.idx.name, idx_type, None))
         loop_scope[0].append(Symbol(ast.value.name, value_type, None))
 
-        # Visit the loop body
+        # Create a NEW scope for the loop body statements
+        body_scope = [[]] + loop_scope
+
+        # Visit the loop body with the body_scope
         if isinstance(ast.loop, Block):
             for stmt in ast.loop.member:
-                result = self.visit(stmt, loop_scope)
+                result = self.visit(stmt, body_scope)
                 if isinstance(result, Symbol):
-                    loop_scope[0].append(result)
+                    body_scope[0].append(result)
         else:
-            result = self.visit(ast.loop, loop_scope)
+            result = self.visit(ast.loop, body_scope)
             if isinstance(result, Symbol):
-                loop_scope[0].append(result)
+                body_scope[0].append(result)
 
     def visitId(self, ast: Id, c: List[List[Symbol]]) -> Type:
         res = next(filter(None, (self.lookup(ast.name, scope, lambda x: x.name) for scope in c)), None)
