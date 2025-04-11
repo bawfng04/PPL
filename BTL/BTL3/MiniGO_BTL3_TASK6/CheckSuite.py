@@ -453,7 +453,6 @@ type TIEN interface {VoTien ();}
         input = Program([StructType("S1",[("votien",IntType())],[]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],Id("S1"))]),InterfaceType("I2",[Prototype("votien",[],Id("S2"))]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: VarDecl(d,Id(I2),Id(a))", inspect.stack()[0].function))
 
-
     def test_044(self):
         """
         var a = [2] int {1, 2}
@@ -556,7 +555,6 @@ type TIEN interface {VoTien ();}
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("i"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.)),Block([Return(None)]))]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: Assign(Id(i),FloatLiteral(1.0))", inspect.stack()[0].function))
 
-
     def test_053(self):
         """
         func foo(){
@@ -578,7 +576,6 @@ type TIEN interface {VoTien ();}
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: For(VarDecl(i,IntType,IntLiteral(1)),Id(i),Assign(Id(i),FloatLiteral(1.0)),Block([VarDecl(a,IntLiteral(1))]))", inspect.stack()[0].function))
-
 
     def test_055(self):
         """
@@ -608,7 +605,6 @@ type TIEN interface {VoTien ();}
         """
         input = Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("foo1",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("foo2",[],FloatType(),Block([Return(IntLiteral(2))]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: Return(IntLiteral(2))", inspect.stack()[0].function))
-
 
     def test_057(self):
         """
@@ -739,7 +735,6 @@ type TIEN interface {VoTien ();}
         """
         input = Program([FuncDecl("foo",[],IntType(),Block([VarDecl("a", None,IntLiteral(1)),If(BinaryOp("<", Id("a"), IntLiteral(3)), Block([VarDecl("a", None,IntLiteral(1))]), If(BinaryOp(">", Id("a"), IntLiteral(2)), Block([VarDecl("a", None,IntLiteral(2))]), None)),Return(Id("a"))]))])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
-
 
     def test_069(self):
         """
@@ -1687,7 +1682,6 @@ func Votien (b int) {
         input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("c"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), Id("c"))),Block([ConstDecl("c",None,IntLiteral(2))]))]))])
         self.assertTrue(TestChecker.test(input, """Undeclared Identifier: c""", inspect.stack()[0].function))
 
-
     def test_161(self):
         """
         type TIEN struct {
@@ -1716,7 +1710,6 @@ func Votien (b int) {
         """
         input = Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),VarDecl("A", None,IntLiteral(1))])
         self.assertTrue(TestChecker.test(input, "Redeclared Variable: A", inspect.stack()[0].function))
-
 
     def test_164(self):
         """
@@ -1864,7 +1857,6 @@ func Votien (b int) {
         input = Program([FuncDecl("foo",[],IntType(),Block([ConstDecl("foo",None,IntLiteral(1)),Return(FuncCall("foo",[]))]))])
         self.assertTrue(TestChecker.test(input, """Undeclared Function: foo""", inspect.stack()[0].function))
 
-
     def test_178(self):
         """Type mismatch in for loop update statement (assign float to int)"""
         input = Program([
@@ -1905,7 +1897,6 @@ func Votien (b int) {
         """
         input = Program([FuncDecl("foo",[],IntType(),Block([ConstDecl("foo",None,IntLiteral(1)),Return(FuncCall("foo",[]))]))])
         self.assertTrue(TestChecker.test(input, """Undeclared Function: foo""", inspect.stack()[0].function))
-
 
     def test_182(self):
         """Accessing field on a non-struct type (int)"""
@@ -2348,7 +2339,6 @@ func Votien (b int) {
         input = Program([FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
         self.assertTrue(TestChecker.test(input, "VOTIEN", inspect.stack()[0].function))
 
-
     def test_231(self):
         """
         func A () int { return A; }
@@ -2658,8 +2648,6 @@ func Votien (b int) {
         """
         input = Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([VarDecl("array", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),ForEach(Id("index"),Id("value"),Id("array"),Block([ForEach(Id("index"),Id("value"),Id("brray"),Block([VarDecl("brray", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))]))]))]))])
         self.assertTrue(TestChecker.test(input, "Undeclared Identifier: index", inspect.stack()[0].function))
-
-
 
     def test_263(self):
         """
@@ -3030,7 +3018,6 @@ func foo() {
         input = Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,Id("foo"))]))])
         self.assertTrue(TestChecker.test(input, """Undeclared Identifier: foo""", inspect.stack()[0].function))
 
-
     def test_297(self):
         """
 func foo() {
@@ -3195,3 +3182,916 @@ func foo() {
                 inspect.stack()[0].function,
             )
         )
+
+    def test_306(self):
+        input = Program([VarDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 306))
+
+    def test_307(self):
+        input = Program([VarDecl("VoTien", None, IntLiteral(1)), ConstDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Constant: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 307))
+
+    def test_308(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 308))
+
+    def test_309(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), FuncDecl("VoTien", [], VoidType(), Block([Return(None)]))])
+        expect = "Redeclared Function: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 309))
+
+    def test_310(self):
+        input = Program([FuncDecl("VoTien", [], VoidType(), Block([Return(None)])), VarDecl("VoTien", None, IntLiteral(1))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 310))
+
+    def test_311(self):
+        input = Program([VarDecl("getInt", None, IntLiteral(1))])
+        expect = "Redeclared Variable: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 311))
+
+    def test_312(self):
+        input = Program([
+            StructType("Votien", [("Votien", IntType())], []),
+            StructType("TIEN", [("Votien", StringType()), ("TIEN", IntType()), ("TIEN", FloatType())], [])
+        ])
+        expect = "Redeclared Field: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 312))
+
+    def test_313(self):
+        input = Program([
+            MethodDecl("v", Id("TIEN"), FuncDecl("putIntLn", [], VoidType(), Block([Return(None)]))),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([Return(None)]))),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([Return(None)]))),
+            StructType("TIEN", [("Votien", IntType())], [])
+        ])
+        expect = "Redeclared Method: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 313))
+
+    def test_314(self):
+        input = Program([
+            InterfaceType("VoTien", [
+                Prototype("VoTien", [], VoidType()),
+                Prototype("VoTien", [IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 314))
+
+    def test_315(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("a", IntType()), ParamDecl("a", IntType())], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 315))
+
+    def test_316(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                VarDecl("b", None, IntLiteral(1)),
+                VarDecl("a", None, IntLiteral(1)),
+                ConstDecl("a", None, IntLiteral(1))
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 316))
+
+    def test_317(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                ForStep(
+                    VarDecl("a", None, IntLiteral(1)),
+                    BinaryOp("<", Id("a"), IntLiteral(1)),
+                    Assign(Id("a"), BinaryOp("+", Id("a"), IntLiteral(1))),
+                    Block([ConstDecl("a", None, IntLiteral(2))])
+                )
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 317))
+
+    def test_318(self):
+        input = Program([
+            VarDecl("a", None, IntLiteral(1)),
+            VarDecl("b", None, Id("a")),
+            VarDecl("c", None, Id("d"))
+        ])
+        expect = "Undeclared Identifier: d"
+        self.assertTrue(TestChecker.test(input, expect, 318))
+
+    def test_319(self):
+        input = Program([
+            FuncDecl("Votien", [], IntType(), Block([Return(IntLiteral(1))])),
+            FuncDecl("foo", [], VoidType(), Block([
+                VarDecl("b", None, FuncCall("Votien", [])),
+                FuncCall("foo_votine", []),
+                Return(None)
+            ]))
+        ])
+        expect = "Undeclared Function: foo_votine"
+        self.assertTrue(TestChecker.test(input, expect, 319))
+
+    def test_320(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                ConstDecl("c", None, FieldAccess(Id("v"), "Votien")),
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 320))
+
+    def test_321(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                MethCall(Id("v"), "getInt", []),
+                MethCall(Id("v"), "putInt", [])
+            ])))
+        ])
+        expect = "Undeclared Method: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 321))
+
+    def test_322(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 322))
+
+    def test_323(self):
+        input = Program([
+            StructType("TIEN", [("a", IntType())], []),
+            StructType("VO", [("a", IntType())], []),
+            InterfaceType("TIEN", [Prototype("foo", [], VoidType())])
+        ])
+        expect = "Redeclared Type: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 323))
+
+    def test_324(self):
+        input = Program([
+            InterfaceType("TIEN", [
+                Prototype("foo", [], VoidType()),
+                Prototype("foo", [IntType(), IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: foo"
+        self.assertTrue(TestChecker.test(input, expect, 324))
+
+    def test_325(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 325))
+
+    def test_326(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 326))
+
+    def test_327(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                ConstDecl("c", None, FieldAccess(Id("v"), "Votien")),
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 327))
+
+    def test_328(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                MethCall(Id("v"), "getInt", []),
+                MethCall(Id("v"), "putInt", [])
+            ])))
+        ])
+        expect = "Undeclared Method: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 328))
+
+    def test_329(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 329))
+
+    def test_330(self):
+        input = Program([
+            StructType("TIEN", [("a", IntType())], []),
+            StructType("VO", [("a", IntType())], []),
+            InterfaceType("TIEN", [Prototype("foo", [], VoidType())])
+        ])
+        expect = "Redeclared Type: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 330))
+
+    def test_331(self):
+        input = Program([
+            InterfaceType("TIEN", [
+                Prototype("foo", [], VoidType()),
+                Prototype("foo", [IntType(), IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: foo"
+        self.assertTrue(TestChecker.test(input, expect, 331))
+
+    def test_332(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 332))
+
+    def test_333(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 333))
+
+    def test_335(self):
+        input = Program([VarDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 335))
+
+    def test_336(self):
+        input = Program([VarDecl("VoTien", None, IntLiteral(1)), ConstDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Constant: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 336))
+
+    def test_337(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 337))
+
+    def test_338(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), FuncDecl("VoTien", [], VoidType(), Block([Return(None)]))])
+        expect = "Redeclared Function: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 338))
+
+    def test_339(self):
+        input = Program([FuncDecl("VoTien", [], VoidType(), Block([Return(None)])), VarDecl("VoTien", None, IntLiteral(1))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 339))
+
+    def test_340(self):
+        input = Program([VarDecl("getInt", None, IntLiteral(1))])
+        expect = "Redeclared Variable: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 340))
+
+    def test_341(self):
+        input = Program([
+            StructType("Votien", [("Votien", IntType())], []),
+            StructType("TIEN", [("Votien", StringType()), ("TIEN", IntType()), ("TIEN", FloatType())], [])
+        ])
+        expect = "Redeclared Field: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 341))
+
+    def test_342(self):
+        input = Program([
+            MethodDecl("v", Id("TIEN"), FuncDecl("putIntLn", [], VoidType(), Block([Return(None)]))),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([Return(None)]))),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([Return(None)]))),
+            StructType("TIEN", [("Votien", IntType())], [])
+        ])
+        expect = "Redeclared Method: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 342))
+
+    def test_343(self):
+        input = Program([
+            InterfaceType("VoTien", [
+                Prototype("VoTien", [], VoidType()),
+                Prototype("VoTien", [IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 343))
+
+    def test_344(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("a", IntType()), ParamDecl("a", IntType())], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 344))
+
+    def test_345(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                VarDecl("b", None, IntLiteral(1)),
+                VarDecl("a", None, IntLiteral(1)),
+                ConstDecl("a", None, IntLiteral(1))
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 345))
+
+    def test_346(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                ForStep(
+                    VarDecl("a", None, IntLiteral(1)),
+                    BinaryOp("<", Id("a"), IntLiteral(1)),
+                    Assign(Id("a"), BinaryOp("+", Id("a"), IntLiteral(1))),
+                    Block([ConstDecl("a", None, IntLiteral(2))])
+                )
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 346))
+
+    def test_347(self):
+        input = Program([
+            VarDecl("a", None, IntLiteral(1)),
+            VarDecl("b", None, Id("a")),
+            VarDecl("c", None, Id("d"))
+        ])
+        expect = "Undeclared Identifier: d"
+        self.assertTrue(TestChecker.test(input, expect, 347))
+
+    def test_348(self):
+        input = Program([
+            FuncDecl("Votien", [], IntType(), Block([Return(IntLiteral(1))])),
+            FuncDecl("foo", [], VoidType(), Block([
+                VarDecl("b", None, FuncCall("Votien", [])),
+                FuncCall("foo_votine", []),
+                Return(None)
+            ]))
+        ])
+        expect = "Undeclared Function: foo_votine"
+        self.assertTrue(TestChecker.test(input, expect, 348))
+
+    def test_349(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                ConstDecl("c", None, FieldAccess(Id("v"), "Votien")),
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 349))
+
+    def test_350(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                MethCall(Id("v"), "getInt", []),
+                MethCall(Id("v"), "putInt", [])
+            ])))
+        ])
+        expect = "Undeclared Method: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 350))
+
+    def test_351(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 351))
+
+    def test_352(self):
+        input = Program([
+            StructType("TIEN", [("a", IntType())], []),
+            StructType("VO", [("a", IntType())], []),
+            InterfaceType("TIEN", [Prototype("foo", [], VoidType())])
+        ])
+        expect = "Redeclared Type: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 352))
+
+    def test_353(self):
+        input = Program([
+            InterfaceType("TIEN", [
+                Prototype("foo", [], VoidType()),
+                Prototype("foo", [IntType(), IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: foo"
+        self.assertTrue(TestChecker.test(input, expect, 353))
+
+    def test_354(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 354))
+
+    def test_355(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 355))
+
+    def test_356(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                ConstDecl("c", None, FieldAccess(Id("v"), "Votien")),
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 356))
+
+    def test_357(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                MethCall(Id("v"), "getInt", []),
+                MethCall(Id("v"), "putInt", [])
+            ])))
+        ])
+        expect = "Undeclared Method: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 357))
+
+    def test_358(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 358))
+
+    def test_359(self):
+        input = Program([
+            StructType("TIEN", [("a", IntType())], []),
+            StructType("VO", [("a", IntType())], []),
+            InterfaceType("TIEN", [Prototype("foo", [], VoidType())])
+        ])
+        expect = "Redeclared Type: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 359))
+
+    def test_360(self):
+        input = Program([
+            InterfaceType("TIEN", [
+                Prototype("foo", [], VoidType()),
+                Prototype("foo", [IntType(), IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: foo"
+        self.assertTrue(TestChecker.test(input, expect, 360))
+
+    def test_361(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 361))
+
+    def test_362(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 362))
+
+    def test_363(self):
+        input = Program([VarDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 363))
+
+    def test_364(self):
+        input = Program([VarDecl("VoTien", None, IntLiteral(1)), ConstDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Constant: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 364))
+
+    def test_365(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 365))
+
+    def test_366(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), FuncDecl("VoTien", [], VoidType(), Block([Return(None)]))])
+        expect = "Redeclared Function: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 366))
+
+    def test_367(self):
+        input = Program([FuncDecl("VoTien", [], VoidType(), Block([Return(None)])), VarDecl("VoTien", None, IntLiteral(1))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 367))
+
+    def test_368(self):
+        input = Program([VarDecl("getInt", None, IntLiteral(1))])
+        expect = "Redeclared Variable: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 368))
+
+    def test_369(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), VarDecl("VoTien", None, IntLiteral(2))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 369))
+
+    def test_370(self):
+        input = Program([ConstDecl("VoTien", None, IntLiteral(1)), FuncDecl("VoTien", [], VoidType(), Block([Return(None)]))])
+        expect = "Redeclared Function: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 370))
+
+    def test_371(self):
+        input = Program([FuncDecl("VoTien", [], VoidType(), Block([Return(None)])), VarDecl("VoTien", None, IntLiteral(1))])
+        expect = "Redeclared Variable: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 371))
+
+    def test_372(self):
+        input = Program([VarDecl("getInt", None, IntLiteral(1))])
+        expect = "Redeclared Variable: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 372))
+
+    def test_373(self):
+        input = Program([
+            StructType("Votien", [("Votien", IntType())], []),
+            StructType("TIEN", [("Votien", StringType()), ("TIEN", IntType()), ("TIEN", FloatType())], [])
+        ])
+        expect = "Redeclared Field: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 373))
+
+    def test_374(self):
+        input = Program([
+            MethodDecl("v", Id("TIEN"), FuncDecl("putIntLn", [], VoidType(), Block([Return(None)]))),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([Return(None)]))),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([Return(None)]))),
+            StructType("TIEN", [("Votien", IntType())], [])
+        ])
+        expect = "Redeclared Method: getInt"
+        self.assertTrue(TestChecker.test(input, expect, 374))
+
+    def test_375(self):
+        input = Program([
+            InterfaceType("VoTien", [
+                Prototype("VoTien", [], VoidType()),
+                Prototype("VoTien", [IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 375))
+
+    def test_376(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("a", IntType()), ParamDecl("a", IntType())], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 376))
+
+    def test_377(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                VarDecl("b", None, IntLiteral(1)),
+                VarDecl("a", None, IntLiteral(1)),
+                ConstDecl("a", None, IntLiteral(1))
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 377))
+
+    def test_378(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                ForStep(
+                    VarDecl("a", None, IntLiteral(1)),
+                    BinaryOp("<", Id("a"), IntLiteral(1)),
+                    Assign(Id("a"), BinaryOp("+", Id("a"), IntLiteral(1))),
+                    Block([ConstDecl("a", None, IntLiteral(2))])
+                )
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 378))
+
+    def test_379(self):
+        input = Program([
+            VarDecl("a", None, IntLiteral(1)),
+            VarDecl("b", None, Id("a")),
+            VarDecl("c", None, Id("d"))
+        ])
+        expect = "Undeclared Identifier: d"
+        self.assertTrue(TestChecker.test(input, expect, 379))
+
+    def test_380(self):
+        input = Program([
+            FuncDecl("Votien", [], IntType(), Block([Return(IntLiteral(1))])),
+            FuncDecl("foo", [], VoidType(), Block([
+                VarDecl("b", None, FuncCall("Votien", [])),
+                FuncCall("foo_votine", []),
+                Return(None)
+            ]))
+        ])
+        expect = "Undeclared Function: foo_votine"
+        self.assertTrue(TestChecker.test(input, expect, 380))
+
+    def test_381(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                ConstDecl("c", None, FieldAccess(Id("v"), "Votien")),
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 381))
+
+    def test_382(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                MethCall(Id("v"), "getInt", []),
+                MethCall(Id("v"), "putInt", [])
+            ])))
+        ])
+        expect = "Undeclared Method: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 382))
+
+    def test_383(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 383))
+
+    def test_384(self):
+        input = Program([
+            StructType("TIEN", [("a", IntType())], []),
+            StructType("VO", [("a", IntType())], []),
+            InterfaceType("TIEN", [Prototype("foo", [], VoidType())])
+        ])
+        expect = "Redeclared Type: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 384))
+
+    def test_385(self):
+        input = Program([
+            InterfaceType("TIEN", [
+                Prototype("foo", [], VoidType()),
+                Prototype("foo", [IntType(), IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: foo"
+        self.assertTrue(TestChecker.test(input, expect, 385))
+
+    def test_386(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 386))
+
+    def test_387(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 387))
+
+    def test_388(self):
+        input = Program([
+            InterfaceType("VoTien", [
+                Prototype("VoTien", [], VoidType()),
+                Prototype("VoTien", [IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: VoTien"
+        self.assertTrue(TestChecker.test(input, expect, 388))
+
+    def test_389(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("a", IntType()), ParamDecl("a", IntType())], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 389))
+
+    def test_390(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                VarDecl("b", None, IntLiteral(1)),
+                VarDecl("a", None, IntLiteral(1)),
+                ConstDecl("a", None, IntLiteral(1))
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 390))
+
+    def test_391(self):
+        input = Program([
+            FuncDecl("Votien", [ParamDecl("b", IntType())], VoidType(), Block([
+                ForStep(
+                    VarDecl("a", None, IntLiteral(1)),
+                    BinaryOp("<", Id("a"), IntLiteral(1)),
+                    Assign(Id("a"), BinaryOp("+", Id("a"), IntLiteral(1))),
+                    Block([ConstDecl("a", None, IntLiteral(2))])
+                )
+            ]))
+        ])
+        expect = "Redeclared Constant: a"
+        self.assertTrue(TestChecker.test(input, expect, 391))
+
+    def test_392(self):
+        input = Program([
+            VarDecl("a", None, IntLiteral(1)),
+            VarDecl("b", None, Id("a")),
+            VarDecl("c", None, Id("d"))
+        ])
+        expect = "Undeclared Identifier: d"
+        self.assertTrue(TestChecker.test(input, expect, 392))
+
+    def test_393(self):
+        input = Program([
+            FuncDecl("Votien", [], IntType(), Block([Return(IntLiteral(1))])),
+            FuncDecl("foo", [], VoidType(), Block([
+                VarDecl("b", None, FuncCall("Votien", [])),
+                FuncCall("foo_votine", []),
+                Return(None)
+            ]))
+        ])
+        expect = "Undeclared Function: foo_votine"
+        self.assertTrue(TestChecker.test(input, expect, 393))
+
+    def test_394(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                ConstDecl("c", None, FieldAccess(Id("v"), "Votien")),
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 394))
+
+    def test_395(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                MethCall(Id("v"), "getInt", []),
+                MethCall(Id("v"), "putInt", [])
+            ])))
+        ])
+        expect = "Undeclared Method: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 395))
+
+    def test_396(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("getInt", [], VoidType(), Block([
+                VarDecl("d", None, FieldAccess(Id("v"), "tien"))
+            ])))
+        ])
+        expect = "Undeclared Field: tien"
+        self.assertTrue(TestChecker.test(input, expect, 396))
+
+    def test_397(self):
+        input = Program([
+            StructType("TIEN", [("a", IntType())], []),
+            StructType("VO", [("a", IntType())], []),
+            InterfaceType("TIEN", [Prototype("foo", [], VoidType())])
+        ])
+        expect = "Redeclared Type: TIEN"
+        self.assertTrue(TestChecker.test(input, expect, 397))
+
+    def test_398(self):
+        input = Program([
+            InterfaceType("TIEN", [
+                Prototype("foo", [], VoidType()),
+                Prototype("foo", [IntType(), IntType()], VoidType())
+            ])
+        ])
+        expect = "Redeclared Prototype: foo"
+        self.assertTrue(TestChecker.test(input, expect, 398))
+
+    def test_399(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 399))
+
+    def test_400(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 400))
+
+    def test_401(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 401))
+
+    def test_402(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 402))
+
+    def test_403(self):
+        input = Program([
+            FuncDecl("putInt", [], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Function: putInt"
+        self.assertTrue(TestChecker.test(input, expect, 403))
+
+    def test_404(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 404))
+
+    def test_405(self):
+        input = Program([
+            StructType("TIEN", [("Votien", IntType())], []),
+            MethodDecl("v", Id("TIEN"), FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("b", IntType())
+            ], VoidType(), Block([Return(None)]))),
+            FuncDecl("foo", [
+                ParamDecl("a", IntType()),
+                ParamDecl("a", IntType())
+            ], VoidType(), Block([Return(None)]))
+        ])
+        expect = "Redeclared Parameter: a"
+        self.assertTrue(TestChecker.test(input, expect, 405))
