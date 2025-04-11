@@ -3159,5 +3159,39 @@ func foo() {
         input = Program([StructType("TIEN",[("a",IntType())],[]),InterfaceType("VO",[Prototype("fooA",[],VoidType())]),MethodDecl("v",Id("TIEN"),FuncDecl("fooA",[],VoidType(),Block([Return(None)]))),FuncDecl("Votien",[],VoidType(),Block([VarDecl("array",ArrayType([IntLiteral(3),IntLiteral(3)],Id("TIEN")), None),VarDecl("index",IntType(), None),VarDecl("value",ArrayType([IntLiteral(3)],Id("VO")), None),ForEach(Id("index"),Id("value"),Id("array"),Block([Return(None)]))]))])
         self.assertTrue(TestChecker.test(input, "Type Mismatch: ForEach(Id(index),Id(value),Id(array),Block([Return()]))", inspect.stack()[0].function))
 
+    def test_305(self):
+        """
+        type S1 struct {votien int;}
+        type S2 struct {votien int;}
+        type I1 interface {votien() S1;}
+        type I2 interface {votien() S2;}
 
+        func (s S1) votien() S1 {return s;}
 
+        var a S1;
+        var c I1 = a;
+        var d I2 = a;
+        """
+        input = Program(
+            [
+                StructType("S1", [("votien", IntType())], []),
+                StructType("S2", [("votien", IntType())], []),
+                InterfaceType("I1", [Prototype("votien", [], Id("S1"))]),
+                InterfaceType("I2", [Prototype("votien", [], Id("S2"))]),
+                MethodDecl(
+                    "s",
+                    Id("S1"),
+                    FuncDecl("votien", [], Id("S1"), Block([Return(Id("s"))])),
+                ),
+                VarDecl("a", Id("S1"), None),
+                VarDecl("c", Id("I1"), Id("a")),
+                VarDecl("d", Id("I2"), Id("a")),
+            ]
+        )
+        self.assertTrue(
+            TestChecker.test(
+                input,
+                "Type Mismatch: VarDecl(d,Id(I2),Id(a))",
+                inspect.stack()[0].function,
+            )
+        )
