@@ -4095,3 +4095,34 @@ func foo() {
         ])
         expect = "Redeclared Parameter: a"
         self.assertTrue(TestChecker.test(input, expect, 405))
+
+    def test_406(self):
+        """
+            type S1 struct {votien int;}
+            type I1 interface {votien();}
+
+            func (s S1) votien() {return;}
+
+            var b [2] S1;
+            var a [2] I1 = b;
+            """
+        input = Program(
+            [
+                StructType("S1", [("votien", IntType())], []),
+                InterfaceType("I1", [Prototype("votien", [], VoidType())]),
+                MethodDecl(
+                    "s",
+                    Id("S1"),
+                    FuncDecl("votien", [], VoidType(), Block([Return(None)])),
+                ),
+                VarDecl("b", ArrayType([IntLiteral(2)], Id("S1")), None),
+                VarDecl("a", ArrayType([IntLiteral(2)], Id("I1")), Id("b")),
+            ]
+        )
+        self.assertTrue(
+            TestChecker.test(
+                input,
+                "Type Mismatch: VarDecl(a,ArrayType(Id(I1),[IntLiteral(2)]),Id(b))",
+                inspect.stack()[0].function,
+            )
+        )
