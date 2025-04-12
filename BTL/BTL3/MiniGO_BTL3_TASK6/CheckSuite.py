@@ -4122,7 +4122,7 @@ func foo() {
         self.assertTrue(
             TestChecker.test(
                 input,
-                "Type Mismatch: VarDecl(a,ArrayType(Id(I1),[IntLiteral(2)]),Id(b))",
+                "Type Mismatch: VarDecl(a,ArrayType(Id(I1),[IntLiteral(2)]),Id(b))+",
                 inspect.stack()[0].function,
             )
         )
