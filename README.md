@@ -1,95 +1,94 @@
-# Workspace Overview
+# Principles of Programming Languages - MiniGo Compiler Project
 
-This repository contains multiple directories and files for working with MiniGo (a simplified Go-like language) and related ANTLR-based components. It includes sample assignments, ANTLR grammar definitions, test scripts, Docker configurations, and various template references for building, testing, and running MiniGo code.
+## Overview
+This repository contains assignments, resources, and code for the Principles of Programming Languages (PPL) course, focused on building a compiler for MiniGo, a simplified version of the Go programming language.
 
-## Main Directories
+## About MiniGo
+MiniGo is a teaching language designed for students to practice building a compiler within a limited timeframe. It retains core concepts of Go such as basic data types, structs, and interfaces, but removes more complex features like goroutines and channels. The simplified structure allows students to focus on fundamental concepts of programming language implementation.
 
-- **BTL/**: Contains assignment phases with MiniGo grammar and other code, such as:
-  - **BTL/BTL1/**: Contains phases 1, 2, and 3 of MiniGo assignments.
-    - **MiniGo.g4**: The ANTLR grammar for the MiniGo language.
-  - **BTL/BTL2/**: Contains phase 1 of MiniGo assignments.
-- **Lecture/**: Lecture-related references (if any).
-- **Template/**: Template projects for Lexer and Parser, such as TemplatePPL_Lexer and TemplatePPL_Parser.
-- **temp/**: Tasks and sample scripts. Includes Dockerfiles, test environments, and Python scripts, for example `run.py`.
+## Project Structure
+The project is divided into three main assignments:
 
-## Environment Setup
+1. **Lexer & Recognizer:** Implementing lexical analysis and parsing.
+2. **AST Generation:** Constructing an Abstract Syntax Tree from the parse tree.
+3. **Static Checker:** Performing static semantic analysis on the AST.
 
-1. Install Java (JDK).
-2. Install Python 3.12 or above.
-3. Set an environment variable named `ANTLR_JAR` pointing to your `antlr-4.9.2-complete.jar` file.
-4. (Optional) Use Docker by referring to Dockerfile or Dockerfile.
-
-## How to Build / Run
-
-Several `run.py` files exist in different directories (for example, `run.py` or `temp/Task0/run.py`) with similar usage patterns:
-
-```sh
-python3 run.py gen                             # Generate required files
-python3 run.py test LexerSuite [test_case]     # Run LexerSuite tests
-python3 run.py test ParserSuite [test_case]    # Run ParserSuite tests
-python3 run.py test ASTGenSuite [test_case]    # Run ASTGenSuite tests
-python3 run.py test CheckerSuite [test_case]   # Run CheckerSuite tests
-python3 run.py test CodeGenSuite [test_case]   # Run CodeGenSuite tests
+## Repository Structure
+```
+.
+├── Assignments/           # Assignment specifications and starter code
+│   ├── BTL1/              # Assignment 1 (Lexer and Parser)
+│   ├── BTL2/              # Assignment 2 (AST Generation)
+│   └── BTL3/              # Assignment 3 (Type Checking and Code Generation)
+├── Lectures/              # Course lecture materials
+├── Exams/                 # Midterm and final exam materials
+└── ProgramingCode/        # Additional code examples and resources
 ```
 
-If a specific [test_case] is provided (e.g., test_1), only that test runs; otherwise, all tests in the suite are executed.
+## Development Environment Setup
+1. Install Python 3.12 from https://www.python.org/
+2. Download ANTLR 4.9.2 (antlr-4.9.2-complete.jar) from https://www.antlr.org/download.html
+3. Set an environment variable ANTLR_JAR pointing to the jar file
+4. Install the Python ANTLR runtime:
+   ```
+   pip install antlr4-python3-runtime==4.9.2
+   ```
 
-## Docker Usage
+## Assignment Details
 
-Dockerfiles are provided in temp/Task0/Docker-Ubuntu and temp/Task0/temp. For example:
+### Assignment 1: Lexer & Recognizer
 
-```sh
-# Build the Docker image
-docker build -t my-ubuntu-app .
+* **Goal:** To define the lexical rules (tokens) and grammar rules for the MiniGo language and implement a lexer and parser using ANTLR.
+* **Tasks:**
+  * Define tokens and handle lexical errors (ErrorToken, UnclosedString, IllegalEscapeInString) in `MiniGo.g4`.
+  * Define the context-free grammar for MiniGo in `MiniGo.g4`.
+  * Create test cases (`LexerSuite.py`, `ParserSuite.py`) to validate the lexer and parser.
+* **Key Files:**
+  * `src/main/minigo/parser/MiniGo.g4`: ANTLR grammar file containing lexer and parser rules.
+  * `src/test/LexerSuite.py`: Test cases for the lexer.
+  * `src/test/ParserSuite.py`: Test cases for the parser.
 
-# Run the container
-docker run my-ubuntu-app
+### Assignment 2: AST Generation
+
+* **Goal:** To automatically generate an Abstract Syntax Tree (AST) from the parse tree produced by the ANTLR parser (from Assignment 1).
+* **Tasks:**
+  * Implement the `ASTGeneration` visitor (in `ASTGenerator.py`) to traverse the parse tree.
+  * Construct AST nodes using the predefined classes in `AST.py`.
+  * Ensure the generated AST accurately represents the structure of the MiniGo source code.
+  * Create test cases (`ASTGenSuite.py`) to verify the AST structure for various MiniGo programs.
+* **Key Files:**
+  * `src/main/minigo/astgen/ASTGenerator.py`: Python code using the Visitor pattern to build the AST.
+  * `src/main/minigo/utils/AST.py`: Predefined classes representing the nodes of the AST (Not modified).
+  * `src/main/minigo/utils/Visitor.py`: Base Visitor class (Used in A2 & A3).
+  * `src/test/ASTGenSuite.py`: Test cases for AST generation.
+  * `src/main/minigo/parser/MiniGo.g4`: (Potentially updated from A1).
+
+### Assignment 3: Static Checker
+
+* **Goal:** To implement a static semantic checker that analyzes the AST (from Assignment 2) for semantic errors according to MiniGo's rules.
+* **Tasks:**
+  * Implement the `StaticChecker` visitor (in `StaticCheck.py`) to traverse the AST.
+  * Perform checks for:
+    * Redeclarations (variables, constants, functions, types, parameters, fields, methods, prototypes within the same scope).
+    * Undeclared identifiers (variables, functions, types, fields, methods).
+    * Type mismatches in expressions, assignments, function calls, return statements, loop conditions, etc.
+    * Correct usage of `break` and `continue`.
+    * Function/method call argument compatibility.
+    * Field access validity.
+    * Array indexing validity.
+  * Raise specific exceptions defined in `StaticError.py` upon detecting errors.
+  * Create test cases (`CheckSuite.py`) covering various semantic rules and error conditions.
+* **Key Files:**
+  * `src/main/minigo/checker/StaticCheck.py`: Python code implementing the static semantic checks using the Visitor pattern.
+  * `src/main/minigo/checker/StaticError.py`: Definitions for semantic error exceptions.
+  * `src/test/CheckSuite.py`: Test cases for the static checker.
+  * `src/main/minigo/utils/AST.py`: AST definitions (Input for the checker).
+
+## Running the Code
+The template files include a run.py script with various commands:
+
 ```
-
-Refer to the comments in each Dockerfile for additional instructions (like installing dependencies or sending emails).
-
-## Additional Notes
-
-- Various assignment instructions are found in text files like assignment1.txt.
-- The ANTLR grammar for the MiniGo language (e.g., MiniGo.g4) defines tokens and structures for parsing and lexing MiniGo code.
-- Tests are organized by suites (LexerSuite, ParserSuite, ASTGenSuite, CheckerSuite, CodeGenSuite).
-- For questions about contributing or building, see the run.py scripts or the comments within each directory.
-
-## Ex
-
-Giả sử chúng ta có một chương trình MiniGo đơn giản như sau:
-
-```
-    var x = 10;
-    func main() {
-        var y = 20;
-    }
-```
-
-Cây phân tích cú pháp (parse tree) cho chương trình này sẽ trông như sau:
-
-```
-    program
-    ├── newlines
-    ├── declared (variables_declared)
-    │   └── var_decl (x, 10)
-    ├── more_declared
-    │   └── declared (function_declared)
-    │       └── func_decl (main, [], Block)
-    │           └── block_stmt
-    │               └── block_content
-    │                   └── statement (variables_declared)
-    │                       └── var_decl (y, 20)
-    ├── newlines
-    └── EOF
-```
-
-Hàm visitProgram sẽ chuyển đổi cây phân tích cú pháp này thành cây cú pháp trừu tượng (AST) như sau:
-
-```
-Program
-  ├── VarDecl (x, IntType, 10)
-  └── FuncDecl (main, [], VoidType, Block
-        └── VarDecl (y, IntType, 20)
-      )
+python run.py gen     # Generate ANTLR parser
+python run.py test    # Run test suites
+python run.py clear   # Clear generated files
 ```
