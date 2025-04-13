@@ -1,0 +1,1443 @@
+Test Case: test_001
+# AST Input:
+Program([VarDecl("VoTien", None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
+
+# Expected Output:
+Redeclared Variable: VoTien
+Actual Error: Redeclared Variable: VoTien
+Test Case: test_002
+# AST Input:
+Program([VarDecl("VoTien", None,IntLiteral(1)),ConstDecl("VoTien",None,IntLiteral(2))])
+
+# Expected Output:
+Redeclared Constant: VoTien
+Actual Error: Redeclared Constant: VoTien
+Test Case: test_003
+# AST Input:
+Program([ConstDecl("VoTien",None,IntLiteral(1)),VarDecl("VoTien", None,IntLiteral(2))])
+
+# Expected Output:
+Redeclared Variable: VoTien
+Actual Error: Redeclared Variable: VoTien
+Test Case: test_004
+# AST Input:
+Program([ConstDecl("VoTien",None,IntLiteral(1)),FuncDecl("VoTien",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: VoTien
+Actual Error: Redeclared Function: VoTien
+Test Case: test_005
+# AST Input:
+Program([FuncDecl("VoTien",[],VoidType(),Block([Return(None)])),VarDecl("VoTien", None,IntLiteral(1))])
+
+# Expected Output:
+Redeclared Variable: VoTien
+Actual Error: Redeclared Variable: VoTien
+Test Case: test_006
+# AST Input:
+Program([VarDecl("getInt", None,IntLiteral(1))])
+
+# Expected Output:
+Redeclared Variable: getInt
+Actual Error: Redeclared Variable: getInt
+Test Case: test_007
+# AST Input:
+Program([StructType("Votien",[("Votien",IntType())],[]),StructType("TIEN",[("Votien",StringType()),("TIEN",IntType()),("TIEN",FloatType())],[])])
+
+# Expected Output:
+Redeclared Field: TIEN
+Actual Error: Redeclared Field: TIEN
+Test Case: test_008
+# AST Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("putIntLn",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("putIntLn",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([Return(None)])))])])
+
+# Expected Output:
+Redeclared Method: getInt
+Actual Error: Redeclared Method: getInt
+Test Case: test_009
+# AST Input:
+Program([InterfaceType("VoTien",[Prototype("VoTien",[],VoidType()),Prototype("VoTien",[IntType()],VoidType())])])
+
+# Expected Output:
+Redeclared Prototype: VoTien
+Actual Error: Redeclared Prototype: VoTien
+Test Case: test_010
+# AST Input:
+Program([FuncDecl("Votien",[ParamDecl("a",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Parameter: a
+Actual Error: Redeclared Parameter: a
+Test Case: test_011
+# AST Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([VarDecl("b", None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1)),ConstDecl("a",None,IntLiteral(1))]))])
+
+# Expected Output:
+Redeclared Constant: a
+Actual Error: Redeclared Constant: a
+Test Case: test_012
+# AST Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("a",None,IntLiteral(2))]))]))])
+
+# Expected Output:
+Redeclared Constant: a
+Actual Error: Redeclared Constant: a
+Test Case: test_013
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),VarDecl("b", None,Id("a")),VarDecl("c", None,Id("d"))])
+
+# Expected Output:
+Undeclared Identifier: d
+Actual Error: Undeclared Identifier: d
+Test Case: test_014
+# AST Input:
+Program([FuncDecl("Votien",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("foo",[],VoidType(),Block([VarDecl("b", None,FuncCall("Votien",[])),FuncCall("foo_votien",[]),Return(None)]))])
+
+# Expected Output:
+Undeclared Function: foo_votien
+Actual Error: Undeclared Function: foo_votien
+Test Case: test_015
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([ConstDecl("c",None,FieldAccess(Id("v"),"Votien")),VarDecl("d", None,FieldAccess(Id("v"),"tien"))])))]),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([ConstDecl("c",None,FieldAccess(Id("v"),"Votien")),VarDecl("d", None,FieldAccess(Id("v"),"tien"))])))])
+
+# Expected Output:
+Undeclared Field: tien
+Actual Error: Undeclared Field: tien
+Test Case: test_016
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([MethCall(Id("v"),"getInt",[]),MethCall(Id("v"),"putInt",[])])))]),MethodDecl("v",Id("TIEN"),FuncDecl("getInt",[],VoidType(),Block([MethCall(Id("v"),"getInt",[]),MethCall(Id("v"),"putInt",[])])))])
+
+# Expected Output:
+Undeclared Method: putInt
+Actual Error: Undeclared Method: putInt
+Test Case: test_017
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[]),StructType("TIEN",[("v",IntType())],[])])
+
+# Expected Output:
+Redeclared Type: TIEN
+Actual Error: Redeclared Type: TIEN
+
+
+Test Case: test_018
+# AST Input:
+Program([StructType("TIEN",[("a",IntType()),("b",IntType()),("a",FloatType())],[])])
+
+# Expected Output:
+Redeclared Field: a
+Actual Error: Redeclared Field: a
+Test Case: test_019
+# AST Input:
+Program([StructType("TIEN",[("a",IntType()),("b",IntType()),("c",FloatType()),("b",IntType())],[])])
+
+# Expected Output:
+Redeclared Field: b
+Actual Error: Redeclared Field: b
+Test Case: test_020
+# AST Input:
+Program([StructType("TIEN",[("c",FloatType()),("b",IntType()),("a",IntType())],[]),StructType("VO",[("d",IntType()),("d",IntType())],[])])
+
+# Expected Output:
+Redeclared Field: d
+Actual Error: Redeclared Field: d
+Test Case: test_021
+# AST Input:
+Program([StructType("TIEN",[("a",IntType())],[]),StructType("VO",[("a",IntType())],[]),StructType("TIEN",[("a",IntType())],[])])
+
+# Expected Output:
+Redeclared Type: TIEN
+Actual Error: Redeclared Type: TIEN
+Test Case: test_022
+# AST Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType())]),InterfaceType("TIEN",[Prototype("foo",[],VoidType())])])
+
+# Expected Output:
+Redeclared Type: TIEN
+Actual Error: Redeclared Type: TIEN
+Test Case: test_023
+# AST Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType())]),InterfaceType("VO",[Prototype("foo",[],VoidType())]),InterfaceType("TIEN",[Prototype("foo",[],VoidType())])])
+
+# Expected Output:
+Redeclared Type: TIEN
+Actual Error: Redeclared Type: TIEN
+Test Case: test_024
+# AST Input:
+Program([StructType("TIEN",[("a",IntType())],[]),StructType("VO",[("a",IntType())],[]),InterfaceType("TIEN",[Prototype("foo",[],VoidType())])])
+
+# Expected Output:
+Redeclared Type: TIEN
+Actual Error: Redeclared Type: TIEN
+Test Case: test_025
+# AST Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])])
+
+# Expected Output:
+Redeclared Prototype: foo
+Actual Error: Redeclared Prototype: foo
+Test Case: test_026
+# AST Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType()),Prototype("foo1",[],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])])
+
+# Expected Output:
+Redeclared Prototype: foo
+Actual Error: Redeclared Prototype: foo
+Test Case: test_027
+# AST Input:
+Program([InterfaceType("TIEN",[Prototype("foo1",[],VoidType()),Prototype("foo",[],VoidType())]),InterfaceType("VO",[Prototype("foo",[],VoidType()),Prototype("foo",[IntType(),IntType()],VoidType())])])
+
+# Expected Output:
+Redeclared Prototype: foo
+Actual Error: Redeclared Prototype: foo
+Test Case: test_028
+# AST Input:
+Program([InterfaceType("TIEN",[Prototype("foo",[],VoidType())]),FuncDecl("TIEN",[],VoidType(),Block([Return(None)])),FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("TIEN",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: TIEN
+Actual Error: Redeclared Function: TIEN
+Test Case: test_029
+# AST Input:
+Program([FuncDecl("getInt",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: getInt
+Actual Error: Redeclared Function: getInt
+Test Case: test_030
+# AST Input:
+Program([FuncDecl("putInt",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: putInt
+Actual Error: Redeclared Function: putInt
+Test Case: test_031
+# AST Input:
+Program([FuncDecl("putIntLn",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: putIntLn
+Actual Error: Redeclared Function: putIntLn
+Test Case: test_032
+# AST Input:
+Program([FuncDecl("getString",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: getString
+Actual Error: Redeclared Function: getString
+Test Case: test_033
+# AST Input:
+Program([FuncDecl("putStringLn",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: putStringLn
+Actual Error: Redeclared Function: putStringLn
+Test Case: test_034
+# AST Input:
+Program([VarDecl("foo", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: foo
+Actual Error: Redeclared Function: foo
+Test Case: test_035
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),VarDecl("foo", None,IntLiteral(1))])
+
+# Expected Output:
+Redeclared Variable: foo
+Actual Error: Redeclared Variable: foo
+Test Case: test_036
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),ConstDecl("foo",None,IntLiteral(1))])
+
+# Expected Output:
+Redeclared Constant: foo
+Actual Error: Redeclared Constant: foo
+Test Case: test_037
+# AST Input:
+Program([ConstDecl("foo",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Function: foo
+Actual Error: Redeclared Function: foo
+Test Case: test_038
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))])
+Test Case: test_039
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1))])),VarDecl("a", None,IntLiteral(1))])
+
+# Expected Output:
+Redeclared Variable: a
+Actual Error: Redeclared Variable: a
+Test Case: test_040
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1))])
+Test Case: test_041
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1))])),ConstDecl("a",None,IntLiteral(1))])
+
+# Expected Output:
+Redeclared Constant: a
+Actual Error: Redeclared Constant: a
+Test Case: test_042
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))]))])
+
+# Expected Output:
+Redeclared Constant: b
+Actual Error: Redeclared Constant: b
+Test Case: test_043
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),VarDecl("b", None,IntLiteral(1))]))])
+
+# Expected Output:
+Redeclared Variable: b
+Actual Error: Redeclared Variable: b
+Test Case: test_044
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+Test Case: test_045
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Parameter: a
+Actual Error: Redeclared Parameter: a
+Test Case: test_046
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("a",IntType())],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Parameter: a
+Actual Error: Redeclared Parameter: a
+
+Test Case: test_047
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([Return(None)]))),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType()),ParamDecl("a",FloatType())],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+Redeclared Parameter: a
+Actual Error: Redeclared Parameter: a
+Test Case: test_048
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))]),VarDecl("a", None,IntLiteral(1)),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))])
+Test Case: test_049
+# AST Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))]),StructType("VO",[("Votien",IntType())],[MethodDecl("v",Id("VO"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))]),MethodDecl("v",Id("VO"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([VarDecl("a", None,IntLiteral(1))])))])
+Test Case: test_050
+# AST Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([ConstDecl("v",None,IntLiteral(1)),ConstDecl("a",None,IntLiteral(1))]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([ConstDecl("v",None,IntLiteral(1)),ConstDecl("a",None,IntLiteral(1))])))]),MethodDecl("v",Id("VO"),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1))]))),StructType("VO",[("Votien",IntType())],[MethodDecl("v",Id("VO"),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1))])))]),MethodDecl("v",Id("VO"),FuncDecl("foo",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],VoidType(),Block([ConstDecl("a",None,IntLiteral(1))])))])
+
+# Expected Output:
+Redeclared Method: foo
+Actual Error: Redeclared Method: foo
+Test Case: test_051
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(1)),Assign(Id("b"),IntLiteral(2)),Block([ConstDecl("b",None,IntLiteral(1))]))]))])
+
+# Expected Output:
+Redeclared Constant: b
+Actual Error: Redeclared Constant: b
+Test Case: test_052
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(2)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ForBasic(BinaryOp("<", Id("a"), IntLiteral(1)),Block([ConstDecl("a",None,IntLiteral(1)),ConstDecl("b",None,IntLiteral(1))])),ConstDecl("b",None,IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))]))])
+
+# Expected Output:
+Redeclared Variable: a
+Actual Error: Redeclared Variable: a
+Test Case: test_053
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("b", None,IntLiteral(1))]))]))])
+
+# Expected Output:
+Redeclared Variable: b
+Actual Error: Redeclared Variable: b
+Test Case: test_054
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("a", None,IntLiteral(1))]))]))])
+
+# Expected Output:
+Redeclared Variable: a
+Actual Error: Redeclared Variable: a
+Test Case: test_055
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("c", None,IntLiteral(1))])),VarDecl("a", None,IntLiteral(1))]))])
+Test Case: test_056
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("b"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("b"))])),VarDecl("d", None,Id("b")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("a"))])
+Test Case: test_057
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("e"))])),VarDecl("d", None,Id("b")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("a"))])
+
+# Expected Output:
+Undeclared Identifier: e
+Actual Error: Undeclared Identifier: e
+Test Case: test_058
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("c"))])),VarDecl("d", None,Id("c")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("a"))])
+
+# Expected Output:
+Undeclared Identifier: c
+Actual Error: Undeclared Identifier: c
+Test Case: test_059
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("c"))])),VarDecl("d", None,Id("a")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("b"))])
+
+# Expected Output:
+Undeclared Identifier: b
+Actual Error: Undeclared Identifier: b
+Test Case: test_060
+# AST Input:
+Program([VarDecl("a", None,Id("d")),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,IntLiteral(1)),ForEach(Id("a"),Id("c"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]),Block([VarDecl("d", None,Id("c"))])),VarDecl("d", None,Id("a")),VarDecl("a", None,IntLiteral(1))])),VarDecl("d", None,Id("a"))])
+
+# Expected Output:
+Undeclared Identifier: d
+Actual Error: Undeclared Identifier: d
+Test Case: test_061
+# AST Input:
+Program([VarDecl("a", None,FuncCall("foo",[])),FuncDecl("foo",[],IntType(),Block([VarDecl("a", None,FuncCall("koo",[])),VarDecl("c", None,FuncCall("getInt",[])),FuncCall("putInt",[Id("c")]),FuncCall("putIntLn",[Id("c")]),Return(IntLiteral(1))])),VarDecl("d", None,FuncCall("foo",[])),FuncDecl("koo",[],IntType(),Block([VarDecl("a", None,FuncCall("foo",[])),Return(IntLiteral(1))]))])
+Test Case: test_062
+# AST Input:
+Program([VarDecl("a", None,FuncCall("foo",[])),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),VarDecl("d", None,FuncCall("koo",[]))])
+
+# Expected Output:
+Undeclared Function: koo
+Actual Error: Undeclared Function: koo
+Test Case: test_063
+# AST Input:
+Program([VarDecl("a", None,FuncCall("foo",[])),FuncDecl("foo",[],IntType(),Block([VarDecl("d", None,FuncCall("koo",[])),Return(IntLiteral(1))]))])
+
+# Expected Output:
+Undeclared Function: koo
+Actual Error: Undeclared Function: koo
+Test Case: test_064
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([VarDecl("a", None,FuncCall("foo",[])),VarDecl("d",IntType(),Id("a")),Return(IntLiteral(1))]))])
+Test Case: test_065
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),ConstDecl("b",None,FieldAccess(Id("v"),"b")),StructType("TIEN",[("c",IntType()),("b",IntType()),("a",IntType())],[]),ConstDecl("a",None,FieldAccess(Id("v"),"a")),ConstDecl("e",None,FieldAccess(Id("v"),"e"))])
+
+# Expected Output:
+Undeclared Field: e
+Actual Error: Undeclared Field: e
+Test Case: test_066
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ConstDecl("a",None,FieldAccess(Id("v"),"a")),ConstDecl("e",None,FieldAccess(Id("v"),"e"))])),StructType("TIEN",[("c",IntType()),("b",IntType()),("a",IntType())],[])])
+
+# Expected Output:
+Undeclared Field: e
+Actual Error: Undeclared Field: e
+Test Case: test_067
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([VarDecl("x", None,Id("v")),ConstDecl("a",None,FieldAccess(Id("x"),"a")),ConstDecl("e",None,FieldAccess(Id("x"),"e"))])),StructType("TIEN",[("c",IntType()),("b",IntType()),("a",IntType())],[])])
+
+# Expected Output:
+Undeclared Field: e
+Actual Error: Undeclared Field: e
+Test Case: test_068
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),ConstDecl("b",None,MethCall(Id("v"),"foo",[])),StructType("TIEN",[("a",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("v",Id("TIEN"),FuncDecl("koo",[],IntType(),Block([Return(IntLiteral(1))])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("v",Id("TIEN"),FuncDecl("koo",[],IntType(),Block([Return(IntLiteral(1))]))),ConstDecl("c",None,MethCall(Id("v"),"koo",[])),ConstDecl("d",None,MethCall(Id("v"),"zoo",[]))])
+
+# Expected Output:
+Undeclared Method: zoo
+Actual Error: Undeclared Method: zoo
+Test Case: test_069
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([ConstDecl("b",None,MethCall(Id("v"),"foo",[])),MethCall(Id("v"),"koo",[]),ConstDecl("d",None,MethCall(Id("v"),"zoo",[]))]))])
+
+# Expected Output:
+Undeclared Method: zoo
+Actual Error: Undeclared Method: zoo
+Test Case: test_070
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])])))]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("x", None,Id("v")),ConstDecl("b",None,MethCall(Id("x"),"foo",[])),MethCall(Id("x"),"koo",[]),ConstDecl("d",None,MethCall(Id("x"),"zoo",[]))]))])
+
+# Expected Output:
+Undeclared Method: zoo
+Actual Error: Undeclared Method: zoo
+Test Case: test_071
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),StructType("TIEN",[("a",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),MethodDecl("b",Id("TIEN"),FuncDecl("koo",[],VoidType(),Block([MethCall(Id("b"),"koo",[])]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("x",Id("VO"), None),ConstDecl("b",None,MethCall(Id("x"),"foo",[])),MethCall(Id("x"),"koo",[])]))])
+
+# Expected Output:
+Undeclared Method: koo
+Actual Error: Undeclared Method: koo
+Test Case: test_072
+# AST Input:
+Program([VarDecl("v",IntType(),FloatLiteral(1.02))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("v",IntType(),FloatLiteral(1.02))
+Test Case: test_073
+# AST Input:
+Program([VarDecl("v",FloatType(),IntLiteral(1))])
+Test Case: test_074
+# AST Input:
+Program([VarDecl("v",StringType(),BooleanLiteral(true))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("v",StringType(),BooleanLiteral(true))
+Test Case: test_075
+# AST Input:
+Program([VarDecl("v",StringType(),StringLiteral(""1"")),ConstDecl("x",None,Id("v")),VarDecl("k",StringType(),Id("x")),VarDecl("y",BoolType(),Id("x"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("y",BoolType(),Id("x"))
+Test Case: test_076
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[]),StructType("S2",[("votien",IntType())],[]),VarDecl("v",Id("S1"), None),ConstDecl("x",None,Id("v")),VarDecl("z",Id("S1"),Id("x")),VarDecl("k",Id("S2"),Id("x"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("k",Id("S2"),Id("x"))
+Test Case: test_077
+# AST Input:
+Program([InterfaceType("I1",[Prototype("votien",[],VoidType())]),InterfaceType("I2",[Prototype("votien",[],VoidType())]),VarDecl("v",Id("I1"), None),ConstDecl("x",None,Id("v")),VarDecl("z",Id("I1"),Id("x")),VarDecl("k",Id("I2"),Id("x"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("k",Id("I2"),Id("x"))
+Test Case: test_078
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[],VoidType(),Block([Return(None)])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[],VoidType())]),InterfaceType("I2",[Prototype("votien1",[],VoidType())]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[],VoidType(),Block([Return(None)]))),VarDecl("a",Id("S1"), None),VarDecl("b",Id("S2"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("b"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",Id("I2"),Id("b"))
+
+Test Case: test_079
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[],VoidType(),Block([Return(None)])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[],VoidType())]),InterfaceType("I2",[Prototype("votien1",[],IntType())]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[],VoidType(),Block([Return(None)]))),VarDecl("a",Id("S1"), None),VarDecl("b",Id("S2"), None),VarDecl("c",Id("I2"),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("c",Id("I2"),Id("a"))
+Test Case: test_080
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[],Id("S1"))]),InterfaceType("I2",[Prototype("votien1",[],Id("S2"))]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Test Case: test_081
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[IntType(),IntType()],Id("S1"))]),InterfaceType("I2",[Prototype("votien1",[IntType()],Id("S1"))]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Test Case: test_082
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[IntType(),IntType()],Id("S1"))]),InterfaceType("I2",[Prototype("votien1",[IntType(),FloatType()],Id("S1"))]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Test Case: test_083
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[IntType(),IntType()],Id("S1"))]),InterfaceType("I2",[Prototype("votien1",[IntType(),FloatType()],Id("S1"))]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))]))),VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Test Case: test_084
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))])))]),StructType("S2",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien1",[IntType(),IntType()],Id("S1"))]),InterfaceType("I2",[Prototype("votien1",[IntType(),FloatType()],Id("S1"))]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[ParamDecl("a",IntType()),ParamDecl("b",IntType())],Id("S1"),Block([Return(Id("s"))]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("a",Id("S1"), None),VarDecl("c",Id("I1"),Id("a")),VarDecl("d",Id("I2"),Id("a"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",Id("I2"),Id("a"))
+Test Case: test_085
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("v",IntType(), None),ConstDecl("x",None,Id("v")),VarDecl("k",FloatType(),Id("x")),VarDecl("y",BoolType(),Id("x"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("y",BoolType(),Id("x"))
+Test Case: test_086
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([If(BooleanLiteral(true), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",IntType(),FloatLiteral(1.02))
+Test Case: test_087
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([If(IntLiteral(1), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), None)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: If(IntLiteral(1), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), None)
+Test Case: test_088
+# AST Input:
+Program([StructType("TIEN",[("v",IntType())],[]),VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([If(Id("v"), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), None)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: If(Id("v"), Block([VarDecl("a",FloatType(),FloatLiteral(1.02))]), None)
+Test Case: test_089
+# AST Input:
+Program([StructType("TIEN",[("v",IntType())],[]),VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ForBasic(BooleanLiteral(true),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",IntType(),FloatLiteral(1.02))
+Test Case: test_090
+# AST Input:
+Program([StructType("TIEN",[("v",IntType())],[]),VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))
+Test Case: test_091
+# AST Input:
+Program([StructType("TIEN",[("v",IntType())],[]),VarDecl("v",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: ForBasic(IntLiteral(1),Block([VarDecl("a",IntType(),FloatLiteral(1.02))]))
+Test Case: test_092
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("foo1",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("foo2",[],FloatType(),Block([Return(IntLiteral(2))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(IntLiteral(2))
+Test Case: test_093
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([Return(None)])))]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([Return(None)]))),FuncDecl("foo",[],Id("S1"),Block([VarDecl("a",Id("S1"), None),Return(Id("a"))])),FuncDecl("foo1",[],Id("I1"),Block([VarDecl("a",Id("I1"), None),Return(Id("a"))])),FuncDecl("foo2",[],Id("S1"),Block([VarDecl("b",Id("I1"), None),Return(Id("b"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(Id("b"))
+Test Case: test_094
+# AST Input:
+Program([StructType("S1",[("t",IntType()),("v",IntType())],[]),VarDecl("a", None,StructLiteral("S1",[("v",IntLiteral(1)),("t",IntLiteral(2))])),VarDecl("b",Id("S1"),Id("a")),VarDecl("c",IntType(),Id("b"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("c",IntType(),Id("b"))
+Test Case: test_095
+# AST Input:
+Program([StructType("S1",[("v",IntType())],[]),VarDecl("a", None,StructLiteral("S1",[("v",Id("z"))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: z
+Test Case: test_096
+# AST Input:
+Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(2)],FloatType()),Id("a"))])
+Test Case: test_097
+# AST Input:
+Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],FloatType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3)],IntType()),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("c",ArrayType([IntLiteral(3)],IntType()),Id("a"))
+Test Case: test_098
+# AST Input:
+Program([VarDecl("a", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",ArrayType([IntLiteral(3),IntLiteral(2)],IntType()),Id("a"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("c",ArrayType([IntLiteral(3),IntLiteral(2)],IntType()),Id("a"))
+Test Case: test_099
+# AST Input:
+Program([StructType("S1",[("v",IntType())],[]),VarDecl("a", None,ArrayLiteral([IntLiteral(1)],Id("S1"),[StructLiteral("S1",[("v",Id("z"))])]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: z
+
+Test Case: test_100
+# AST Input:
+Program([StructType("S1",[("v",IntType())],[]),VarDecl("a", None,ArrayLiteral([IntLiteral(1)],Id("S1"),[StructLiteral("S1",[("v",Id("z"))])]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: z
+Test Case: test_101
+# AST Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),VarDecl("b", None,ArrayCell(Id("a"),[IntLiteral(1),IntLiteral(2)])),VarDecl("c",IntType(),Id("b")),VarDecl("d",ArrayType([IntLiteral(1)],StringType()),Id("b"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",ArrayType([IntLiteral(1)],StringType()),Id("b"))
+Test Case: test_102
+# AST Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),VarDecl("b", None,ArrayCell(Id("a"),[IntLiteral(1)])),VarDecl("c",ArrayType([IntLiteral(3)],IntType()),Id("b")),VarDecl("d",ArrayType([IntLiteral(3)],StringType()),Id("b"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("d",ArrayType([IntLiteral(3)],StringType()),Id("b"))
+Test Case: test_103
+# AST Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),VarDecl("b", None,ArrayCell(Id("a"),[FloatLiteral(1.0)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: ArrayCell(Id("a"),[FloatLiteral(1.0)])
+Test Case: test_104
+# AST Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),VarDecl("b", None,ArrayCell(Id("a"),[FloatLiteral(1.0)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: ArrayCell(Id("a"),[FloatLiteral(1.0)])
+Test Case: test_105
+# AST Input:
+Program([StructType("S1",[("x",Id("S1")),("v",IntType())],[]),VarDecl("b",Id("S1"), None),VarDecl("c", None,FieldAccess(FieldAccess(Id("b"),"x"),"v")),VarDecl("d", None,FieldAccess(Id("c"),"x"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FieldAccess(Id("c"),"x")
+Test Case: test_106
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([Return(None)])))]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([Return(None)]))),VarDecl("c",Id("I1"), None),VarDecl("d", None,FieldAccess(Id("c"),"votien"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FieldAccess(Id("c"),"votien")
+Test Case: test_107
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[]),InterfaceType("I1",[Prototype("votien",[],VoidType())]),VarDecl("a",Id("I1"), None),VarDecl("c",Id("I1"),NilLiteral()),VarDecl("d",Id("S1"),NilLiteral()),FuncDecl("foo",[],VoidType(),Block([Assign(Id("c"),Id("a")),Assign(Id("a"),NilLiteral())])),VarDecl("e",IntType(),NilLiteral())])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("e",IntType(),NilLiteral())
+Test Case: test_108
+# AST Input:
+Program([VarDecl("a", None,UnaryOp("-",IntLiteral(1))),VarDecl("b", None,UnaryOp("-",FloatLiteral(1.02))),VarDecl("c", None,UnaryOp("-",BooleanLiteral(true)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: UnaryOp("-",BooleanLiteral(true))
+Test Case: test_109
+# AST Input:
+Program([VarDecl("a", None,UnaryOp("!",BooleanLiteral(true))),VarDecl("b", None,UnaryOp("!",IntLiteral(1)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: UnaryOp("!",IntLiteral(1))
+Test Case: test_110
+# AST Input:
+Program([VarDecl("a", None,BinaryOp("+", StringLiteral(""1""), StringLiteral(""2""))),VarDecl("c",StringType(),Id("a")),VarDecl("b", None,BinaryOp("+", StringLiteral(""1""), IntLiteral(1)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("+", StringLiteral(""1""), IntLiteral(1))
+Test Case: test_111
+# AST Input:
+Program([VarDecl("a", None,BinaryOp("+", IntLiteral(1), FloatLiteral(2.0))),VarDecl("b", None,BinaryOp("+", IntLiteral(1), IntLiteral(1))),FuncDecl("foo",[],IntType(),Block([Return(Id("b")),Return(Id("a"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(Id("a"))
+Test Case: test_112
+# AST Input:
+Program([VarDecl("a", None,BinaryOp("+", IntLiteral(1), BooleanLiteral(true)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("+", IntLiteral(1), BooleanLiteral(true))
+Test Case: test_113
+# AST Input:
+Program([VarDecl("a",FloatType(),BinaryOp("*", IntLiteral(1), FloatLiteral(2.0))),VarDecl("b",IntType(),BinaryOp("/", IntLiteral(1), IntLiteral(2))),VarDecl("c",FloatType(),BinaryOp("/", IntLiteral(1), IntLiteral(2))),FuncDecl("foo",[],IntType(),Block([Return(Id("b")),Return(Id("c"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(Id("c"))
+Test Case: test_114
+# AST Input:
+Program([VarDecl("a", None,BinaryOp("*", IntLiteral(1), StringLiteral(""a"")))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("*", IntLiteral(1), StringLiteral(""a""))
+Test Case: test_115
+# AST Input:
+Program([VarDecl("a",IntType(),BinaryOp("%", IntLiteral(1), IntLiteral(2))),VarDecl("b",IntType(),BinaryOp("%", IntLiteral(1), FloatLiteral(2.0)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("%", IntLiteral(1), FloatLiteral(2.0))
+Test Case: test_116
+# AST Input:
+Program([VarDecl("a",BoolType(),BinaryOp("||", BinaryOp("&&", BooleanLiteral(true), BooleanLiteral(false)), BooleanLiteral(true))),VarDecl("b",BoolType(),BinaryOp("&&", BooleanLiteral(true), IntLiteral(1)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("&&", BooleanLiteral(true), IntLiteral(1))
+Test Case: test_117
+# AST Input:
+Program([VarDecl("a",BoolType(),BinaryOp(">", IntLiteral(1), IntLiteral(2))),VarDecl("b",BoolType(),BinaryOp("<", FloatLiteral(1.0), FloatLiteral(2.0))),VarDecl("c",BoolType(),BinaryOp("==", StringLiteral(""1""), StringLiteral(""2""))),VarDecl("d",BoolType(),BinaryOp(">", IntLiteral(1), FloatLiteral(2.0)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp(">", IntLiteral(1), FloatLiteral(2.0))
+Test Case: test_118
+# AST Input:
+Program([VarDecl("a",BoolType(),BinaryOp(">=", IntLiteral(1), IntLiteral(2))),VarDecl("b",BoolType(),BinaryOp("<=", FloatLiteral(1.0), FloatLiteral(2.0))),VarDecl("c",BoolType(),BinaryOp("!=", StringLiteral(""1""), StringLiteral(""2""))),VarDecl("d",BoolType(),BinaryOp(">", IntLiteral(1), BooleanLiteral(true)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp(">", IntLiteral(1), BooleanLiteral(true))
+Test Case: test_119
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("i"), IntLiteral(10)),Assign(Id("z"),BinaryOp("+", Id("z"), IntLiteral(1))),Block([Return(None)]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: z
+Test Case: test_120
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("i"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.0)),Block([Return(None)]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Assign(Id("i"),FloatLiteral(1.0))
+Test Case: test_121
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),BinaryOp("<", Id("a"), IntLiteral(10)),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: a
+Test Case: test_122
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))
+Test Case: test_123
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: ForStep(VarDecl("i",IntType(),IntLiteral(1)),Id("i"),Assign(Id("i"),FloatLiteral(1.0)),Block([VarDecl("a", None,IntLiteral(1))]))
+Test Case: test_124
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",IntType(),Id("b")),VarDecl("e",StringType(),Id("a"))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("e",StringType(),Id("a"))
+Test Case: test_125
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",IntType(),Id("b")),VarDecl("e",StringType(),Id("a"))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("e",StringType(),Id("a"))
+Test Case: test_126
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",ArrayType([IntLiteral(3)],IntType()),Id("b")),VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))
+Test Case: test_127
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("arr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),ForEach(Id("a"),Id("b"),Id("arr"),Block([VarDecl("c",IntType(),Id("a")),VarDecl("d",ArrayType([IntLiteral(3)],FloatType()),Id("b")),VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("e",ArrayType([IntLiteral(2)],StringType()),Id("a"))
+Test Case: test_128
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),VarDecl("a",FloatType(),FuncCall("foo",[BinaryOp("+", IntLiteral(1), IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[BinaryOp("+", IntLiteral(1), IntLiteral(1))])
+Test Case: test_129
+# AST Input:
+Program([FuncDecl("foo",[ParamDecl("a",IntType())],IntType(),Block([Return(IntLiteral(1))])),VarDecl("a",IntType(),FuncCall("foo",[BinaryOp("+", IntLiteral(1), IntLiteral(1))])),VarDecl("b", None,FuncCall("foo",[FloatLiteral(1.0)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[FloatLiteral(1.0)])
+
+Test Case: test_130
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("I1",[Prototype("votien",[],IntType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([Return(IntLiteral(1))]))),VarDecl("i",Id("I1"), None),VarDecl("s",Id("S1"), None),VarDecl("a",IntType(),MethCall(Id("i"),"votien",[])),VarDecl("b",IntType(),MethCall(Id("s"),"votien",[])),VarDecl("c",IntType(),MethCall(Id("a"),"votien",[]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: MethCall(Id("a"),"votien",[])
+
+Test Case: test_131
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("I1",[Prototype("votien",[],IntType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([Return(IntLiteral(1))]))),VarDecl("s",Id("S1"), None),VarDecl("a",IntType(),MethCall(Id("s"),"votien",[IntLiteral(1)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: MethCall(Id("s"),"votien",[IntLiteral(1)])
+Test Case: test_132
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[ParamDecl("a",IntType())],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("I1",[Prototype("votien",[IntType()],IntType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[ParamDecl("a",IntType())],IntType(),Block([Return(IntLiteral(1))]))),VarDecl("s",Id("S1"), None),VarDecl("a",IntType(),MethCall(Id("s"),"votien",[IntLiteral(1)])),VarDecl("b",IntType(),MethCall(Id("s"),"votien",[FloatLiteral(1.0)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: MethCall(Id("s"),"votien",[FloatLiteral(1.0)])
+Test Case: test_133
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("I1",[Prototype("votien",[],IntType())]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([Return(IntLiteral(1))]))),VarDecl("i",Id("I1"), None),VarDecl("a",IntType(),MethCall(Id("i"),"votien",[IntLiteral(1)]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: MethCall(Id("i"),"votien",[IntLiteral(1)])
+Test Case: test_134
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([MethCall(Id("s"),"votien",[]),Return(IntLiteral(1))])))]),MethodDecl("s",Id("S1"),FuncDecl("votien",[],IntType(),Block([MethCall(Id("s"),"votien",[]),Return(IntLiteral(1))])))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: MethCall(Id("s"),"votien",[])
+Test Case: test_135
+# AST Input:
+Program([StructType("S1",[("votien1",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("vo",[],VoidType(),Block([Return(None)]))),MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([MethCall(Id("s"),"votien",[]),VarDecl("a", None,MethCall(Id("s"),"vo",[]))])))]),MethodDecl("s",Id("S1"),FuncDecl("vo",[],VoidType(),Block([Return(None)]))),MethodDecl("s",Id("S1"),FuncDecl("votien",[],VoidType(),Block([MethCall(Id("s"),"votien",[]),VarDecl("a", None,MethCall(Id("s"),"vo",[]))])))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: MethCall(Id("s"),"vo",[])
+Test Case: test_136
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("votien",[],IntType(),Block([Return(FuncCall("votien",[])),FuncCall("foo",[])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[])
+Test Case: test_137
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("votien",[],IntType(),Block([FuncCall("foo",[]),Return(FuncCall("foo",[]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[])
+Test Case: test_138
+# AST Input:
+Program([FuncDecl("votien",[],VoidType(),Block([Break(),Continue()]))])
+Test Case: test_139
+# AST Input:
+Program([StructType("Person",[("age",IntType()),("name",StringType())],[MethodDecl("p",Id("Person"),FuncDecl("Greet",[],StringType(),Block([Return(BinaryOp("+", StringLiteral(""Hello, ""), FieldAccess(Id("p"),"name")))])))]),FuncDecl("votien",[],VoidType(),Block([VarDecl("person", None,StructLiteral("Person",[("name",StringLiteral(""Alice"")),("age",IntLiteral(30))])),Assign(FieldAccess(Id("person"),"name"),StringLiteral(""John"")),Assign(FieldAccess(Id("person"),"age"),IntLiteral(30)),FuncCall("putStringLn",[FieldAccess(Id("person"),"name")]),FuncCall("putStringLn",[MethCall(Id("person"),"Greet",[])])])),MethodDecl("p",Id("Person"),FuncDecl("Greet",[],StringType(),Block([Return(BinaryOp("+", StringLiteral(""Hello, ""), FieldAccess(Id("p"),"name")))])))])
+Test Case: test_140
+# AST Input:
+Program([VarDecl("a",StringType(), None),FuncDecl("foo",[],VoidType(),Block([VarDecl("a",IntType(),IntLiteral(2)),FuncCall("putIntLn",[Id("a")])]))])
+Test Case: test_141
+# AST Input:
+Program([VarDecl("a",StringType(), None),FuncDecl("foo",[],VoidType(),Block([FuncCall("putIntLn",[Id("a")]),VarDecl("a",IntType(),IntLiteral(2))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("putIntLn",[Id("a")])
+Test Case: test_142
+# AST Input:
+Program([VarDecl("a",Id("TIEN"), None),FuncDecl("foo",[],VoidType(),Block([Assign(FieldAccess(Id("a"),"tien"),BinaryOp("+", FieldAccess(Id("a"),"tien"), IntLiteral(2))),FuncCall("putIntLn",[FieldAccess(Id("a"),"tien")]),FuncCall("foo",[])])),VarDecl("b", None,FuncCall("foo",[])),StructType("TIEN",[("tien",IntType())],[])])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[])
+Test Case: test_143
+# AST Input:
+Program([VarDecl("a",Id("TIEN"), None),FuncDecl("foo",[],Id("TIEN"),Block([Return(Id("a")),Return(Id("TIEN"))])),StructType("TIEN",[("tien",IntType())],[])])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: TIEN
+Test Case: test_144
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(ArrayCell(ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]),[Id("a")]))])),VarDecl("a", None,FuncCall("foo",[]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: a
+Test Case: test_145
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],FloatType(),Block([Return(ArrayCell(ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]),[Id("a")]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(ArrayCell(ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]),[Id("a")]))
+Test Case: test_146
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Return(Id("a"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(Id("a"))
+Test Case: test_147
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Redeclared Function: foo
+Test Case: test_148
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)])),FuncDecl("koo",[],IntType(),Block([Return(FuncCall("foo",[]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[])
+Test Case: test_149
+# AST Input:
+Program([FuncDecl("putLn",[],VoidType(),Block([Return(None)]))])
+
+# Expected Output:
+
+Actual Error: Redeclared Function: putLn
+Test Case: test_150
+# AST Input:
+Program([VarDecl("putLn",IntType(), None)])
+
+# Expected Output:
+
+Actual Error: Redeclared Variable: putLn
+Test Case: test_151
+# AST Input:
+Program([StructType("putLn",[("a",IntType())],[])])
+
+# Expected Output:
+
+Actual Error: Redeclared Type: putLn
+Test Case: test_152
+# AST Input:
+Program([InterfaceType("putLn",[Prototype("foo",[],VoidType())])])
+
+# Expected Output:
+
+Actual Error: Redeclared Type: putLn
+Test Case: test_153
+# AST Input:
+Program([VarDecl("a",IntType(),FuncCall("getBool",[]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",IntType(),FuncCall("getBool",[]))
+Test Case: test_154
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putFloat",[FuncCall("getInt",[])])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("putFloat",[FuncCall("getInt",[])])
+Test Case: test_155
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putLn",[FuncCall("getInt",[])])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("putLn",[FuncCall("getInt",[])])
+Test Case: test_156
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putIntLn",[])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("putIntLn",[])
+Test Case: test_157
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([FuncCall("putFloat",[FloatLiteral(1.0)]),FuncCall("putIntLn",[IntLiteral(1),IntLiteral(2)])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("putIntLn",[IntLiteral(1),IntLiteral(2)])
+Test Case: test_158
+# AST Input:
+Program([FuncDecl("foo",[],ArrayType([IntLiteral(2)],FloatType()),Block([Return(ArrayLiteral([IntLiteral(2)],FloatType(),[FloatLiteral(1.0),FloatLiteral(2.0)])),Return(ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))
+Test Case: test_159
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[],Id("TIEN"),Block([Return(StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))]))])),FuncDecl("coco",[],Id("TIEN"),Block([VarDecl("a",Id("VO"),FuncCall("foo",[])),Return(Id("a"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(Id("a"))
+Test Case: test_160
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("b",Id("VO"),StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),VarDecl("a",Id("TIEN"),Id("b"))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",Id("TIEN"),Id("b"))
+Test Case: test_161
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[],VoidType(),Block([VarDecl("b", None,StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),VarDecl("a",IntType(),ArrayCell(FieldAccess(Id("b"),"a"),[IntLiteral(1)]))]))])
+Test Case: test_162
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",Id("VO"))],VoidType(),Block([VarDecl("b",Id("VO"),StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),FuncCall("foo",[Id("b")])]))])
+Test Case: test_163
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",Id("VO"))],VoidType(),Block([VarDecl("b", None,StructLiteral("TIEN",[("a",ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))])),FuncCall("foo",[Id("b")])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[Id("b")])
+Test Case: test_164
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])))]),InterfaceType("VO",[Prototype("foo",[],IntType())]),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))]))),FuncDecl("foo",[ParamDecl("a",Id("VO"))],VoidType(),Block([VarDecl("b", None,NilLiteral()),FuncCall("foo",[NilLiteral()])]))])
+Test Case: test_165
+# AST Input:
+Program([StructType("TIEN",[("a",ArrayType([IntLiteral(2)],IntType()))],[]),FuncDecl("foo",[],Id("TIEN"),Block([Return(NilLiteral())]))])
+Test Case: test_166
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([If(BooleanLiteral(true), Block([VarDecl("a", None,IntLiteral(1))]), Block([VarDecl("a", None,IntLiteral(2))])),Return(Id("a"))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: a
+Test Case: test_167
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([VarDecl("a", None,IntLiteral(1)),If(BinaryOp("<", Id("a"), IntLiteral(3)), Block([VarDecl("a", None,IntLiteral(1))]), If(BinaryOp(">", Id("a"), IntLiteral(2)), Block([VarDecl("a", None,IntLiteral(2))]), None)),Return(Id("a"))]))])
+Test Case: test_168
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a",IntType(),BinaryOp("*", FloatLiteral(2.0), IntLiteral(1)))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",IntType(),BinaryOp("*", FloatLiteral(2.0), IntLiteral(1)))
+Test Case: test_169
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a",ArrayType([IntLiteral(5),IntLiteral(6)],IntType()), None),VarDecl("b",ArrayType([IntLiteral(2)],FloatType()), None),Assign(ArrayCell(Id("b"),[IntLiteral(2)]),ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)])),Assign(ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)]),BinaryOp("+", ArrayCell(Id("b"),[IntLiteral(2)]), IntLiteral(1)))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Assign(ArrayCell(Id("a"),[IntLiteral(2),IntLiteral(3)]),BinaryOp("+", ArrayCell(Id("b"),[IntLiteral(2)]), IntLiteral(1)))
+Test Case: test_170
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([VarDecl("arr",ArrayType([IntLiteral(3)],IntType()), None),VarDecl("marr",ArrayType([IntLiteral(2),IntLiteral(3)],IntType()), None),Assign(Id("arr"),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(10),IntLiteral(20),IntLiteral(30)])),Assign(Id("marr"),ArrayLiteral([IntLiteral(2),IntLiteral(3)],IntType(),[[IntLiteral(1),IntLiteral(2),IntLiteral(3)],[IntLiteral(4),IntLiteral(5),IntLiteral(6)]])),Return(BinaryOp("+", ArrayCell(Id("arr"),[IntLiteral(2)]), ArrayCell(Id("marr"),[IntLiteral(1),IntLiteral(2)])))]))])
+Test Case: test_171
+# AST Input:
+Program([StructType("Person",[("age",IntType()),("name",StringType())],[MethodDecl("p",Id("Person"),FuncDecl("getAge",[],IntType(),Block([Assign(Id("p"),StructLiteral("Person",[("name",StringLiteral(""Alice"")),("age",IntLiteral(30))])),VarDecl("q", None,StructLiteral("Person",[])),Return(FieldAccess(Id("p"),"age"))])))]),MethodDecl("p",Id("Person"),FuncDecl("getAge",[],IntType(),Block([Assign(Id("p"),StructLiteral("Person",[("name",StringLiteral(""Alice"")),("age",IntLiteral(30))])),VarDecl("q", None,StructLiteral("Person",[])),Return(FieldAccess(Id("p"),"age"))])))])
+Test Case: test_172
+# AST Input:
+Program([StructType("Person",[("age",IntType()),("name",StringType())],[MethodDecl("p",Id("Person"),FuncDecl("getAge",[],IntType(),Block([Assign(Id("p"),StructLiteral("Person",[("name",StringLiteral(""Alice"")),("age",IntLiteral(30))])),Return(FieldAccess(Id("p"),"age"))])))]),MethodDecl("p",Id("Person"),FuncDecl("getAge",[],IntType(),Block([Assign(Id("p"),StructLiteral("Person",[("name",StringLiteral(""Alice"")),("age",IntLiteral(30))])),Return(FieldAccess(Id("p"),"age"))])))])
+Test Case: test_173
+# AST Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2)],IntType()),ArrayLiteral([IntLiteral(2),IntLiteral(2)],IntType(),[[IntLiteral(1),IntLiteral(2)],[IntLiteral(2),IntLiteral(2)]]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",ArrayType([IntLiteral(2)],IntType()),ArrayLiteral([IntLiteral(2),IntLiteral(2)],IntType(),[[IntLiteral(1),IntLiteral(2)],[IntLiteral(2),IntLiteral(2)]]))
+Test Case: test_174
+# AST Input:
+Program([VarDecl("A", None,IntLiteral(1)),StructType("A",[("a",IntType())],[])])
+
+# Expected Output:
+
+Actual Error: Redeclared Type: A
+Test Case: test_175
+# AST Input:
+Program([ConstDecl("A",None,IntLiteral(2)),InterfaceType("A",[Prototype("foo",[],VoidType())])])
+
+# Expected Output:
+
+Actual Error: Redeclared Type: A
+Test Case: test_176
+# AST Input:
+Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),ConstDecl("A",None,IntLiteral(2))])
+
+# Expected Output:
+
+Actual Error: Redeclared Constant: A
+Test Case: test_177
+# AST Input:
+Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),VarDecl("A", None,IntLiteral(1))])
+
+# Expected Output:
+
+Actual Error: Redeclared Variable: A
+Test Case: test_178
+# AST Input:
+Program([FuncDecl("A",[],IntType(),Block([Return(Id("A"))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: A
+Test Case: test_179
+# AST Input:
+Program([InterfaceType("A",[Prototype("foo",[],VoidType())]),FuncDecl("foo",[],IntType(),Block([Return(Id("A"))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: A
+Test Case: test_180
+# AST Input:
+Program([StructType("putLn",[("a",IntType())],[])])
+
+# Expected Output:
+
+Actual Error: Redeclared Type: putLn
+Test Case: test_181
+# AST Input:
+Program([FuncDecl("foo",[ParamDecl("a",ArrayType([IntLiteral(2)],FloatType()))],VoidType(),Block([FuncCall("foo",[ArrayLiteral([IntLiteral(2)],FloatType(),[FloatLiteral(1.0),FloatLiteral(2.0)])]),FuncCall("foo",[ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("foo",[ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])])
+Test Case: test_182
+# AST Input:
+Program([StructType("S1",[("votien",IntType())],[MethodDecl("s",Id("S1"),FuncDecl("votien1",[],VoidType(),Block([Return(None)])))]),InterfaceType("I1",[Prototype("votien1",[],VoidType())]),MethodDecl("s",Id("S1"),FuncDecl("votien1",[],VoidType(),Block([Return(None)]))),VarDecl("b",ArrayType([IntLiteral(2)],Id("S1")), None),VarDecl("a",ArrayType([IntLiteral(2)],Id("I1")),Id("b"))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: VarDecl("a",ArrayType([IntLiteral(2)],Id("I1")),Id("b"))
+Test Case: test_183
+# AST Input:
+Program([FuncDecl("votien",[ParamDecl("a",ArrayType([IntLiteral(2)],IntType()))],VoidType(),Block([FuncCall("votien",[ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: FuncCall("votien",[ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])
+Test Case: test_184
+# AST Input:
+Program([VarDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(9))],IntType()), None),VarDecl("b",ArrayType([IntLiteral(10)],IntType()),Id("a"))])
+Test Case: test_185
+# AST Input:
+Program([VarDecl("a",ArrayType([BinaryOp("*", IntLiteral(2), IntLiteral(5))],IntType()), None),VarDecl("b",ArrayType([IntLiteral(10)],IntType()),Id("a"))])
+Test Case: test_186
+# AST Input:
+Program([VarDecl("a",ArrayType([BinaryOp("/", IntLiteral(5), IntLiteral(2))],IntType()), None),VarDecl("b",ArrayType([IntLiteral(2)],IntType()),Id("a"))])
+Test Case: test_187
+# AST Input:
+Program([VarDecl("a",ArrayType([BinaryOp("%", IntLiteral(5), IntLiteral(2))],IntType()), None),VarDecl("b",ArrayType([IntLiteral(1)],IntType()),Id("a"))])
+
+
+Test Case: test_188
+# AST Input:
+Program([VarDecl("a",ArrayType([BinaryOp("-", IntLiteral(5), IntLiteral(2))],IntType()), None),VarDecl("b",ArrayType([IntLiteral(3)],IntType()),Id("a"))])
+Test Case: test_189
+# AST Input:
+Program([ConstDecl("a",None,BinaryOp("+", IntLiteral(2), IntLiteral(3))),VarDecl("b",ArrayType([BinaryOp("+", BinaryOp("*", Id("a"), IntLiteral(2)), Id("a"))],IntType()), None),VarDecl("c",ArrayType([IntLiteral(15)],IntType()),Id("b"))])
+Test Case: test_190
+# AST Input:
+Program([ConstDecl("v",None,IntLiteral(3)),ConstDecl("a",None,BinaryOp("+", Id("v"), Id("v"))),VarDecl("b",ArrayType([BinaryOp("+", BinaryOp("*", Id("a"), IntLiteral(2)), Id("a"))],IntType()), None),VarDecl("c",ArrayType([IntLiteral(18)],IntType()),Id("b"))])
+Test Case: test_191
+# AST Input:
+Program([ConstDecl("v",None,IntLiteral(3)),VarDecl("c",ArrayType([IntLiteral(3)],IntType()),ArrayLiteral([BinaryOp("*", Id("v"), IntLiteral(1))],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]))])
+Test Case: test_192
+# AST Input:
+Program([ConstDecl("v",None,IntLiteral(3)),ConstDecl("k",None,BinaryOp("+", Id("v"), IntLiteral(1))),FuncDecl("foo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],VoidType(),Block([FuncCall("foo",[ArrayLiteral([BinaryOp("-", Id("k"), IntLiteral(1))],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])]))])
+Test Case: test_193
+# AST Input:
+Program([StructType("K",[("a",IntType())],[MethodDecl("k",Id("K"),FuncDecl("koo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],VoidType(),Block([Return(None)])))]),MethodDecl("k",Id("K"),FuncDecl("koo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],VoidType(),Block([Return(None)]))),ConstDecl("c",None,IntLiteral(4)),FuncDecl("foo",[],VoidType(),Block([VarDecl("k",Id("K"), None),MethCall(Id("k"),"koo",[ArrayLiteral([BinaryOp("-", Id("c"), IntLiteral(1))],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])]))])
+Test Case: test_194
+# AST Input:
+Program([StructType("K",[("a",IntType())],[MethodDecl("k",Id("K"),FuncDecl("koo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],VoidType(),Block([Return(None)])))]),MethodDecl("k",Id("K"),FuncDecl("koo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],VoidType(),Block([Return(None)]))),InterfaceType("H",[Prototype("koo",[ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType())],VoidType())]),ConstDecl("c",None,IntLiteral(4)),FuncDecl("foo",[],VoidType(),Block([VarDecl("k",Id("H"), None),MethCall(Id("k"),"koo",[ArrayLiteral([BinaryOp("-", Id("c"), IntLiteral(1))],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)])])]))])
+Test Case: test_195
+# AST Input:
+Program([StructType("K",[("a",IntType())],[MethodDecl("k",Id("K"),FuncDecl("koo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()),Block([Return(ArrayLiteral([BinaryOp("*", IntLiteral(3), IntLiteral(1))],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]))])))]),MethodDecl("k",Id("K"),FuncDecl("koo",[ParamDecl("a",ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))],ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()),Block([Return(ArrayLiteral([BinaryOp("*", IntLiteral(3), IntLiteral(1))],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]))]))),InterfaceType("H",[Prototype("koo",[ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType())],ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()))]),ConstDecl("c",None,IntLiteral(4)),FuncDecl("foo",[],ArrayType([BinaryOp("+", IntLiteral(1), IntLiteral(2))],IntType()),Block([Return(Func...
+Test Case: test_196
+# AST Input:
+Program([ConstDecl("a",None,BinaryOp("+", StringLiteral(""2""), StringLiteral(""#""))),ConstDecl("b",None,BinaryOp("*", Id("a"), IntLiteral(5)))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("*", Id("a"), IntLiteral(5))
+Test Case: test_197
+# AST Input:
+Program([VarDecl("v", None,BinaryOp("*", IntLiteral(2), IntLiteral(3))),ConstDecl("a",None,BinaryOp("+", Id("v"), IntLiteral(1))),ConstDecl("b",None,BinaryOp("*", Id("a"), IntLiteral(5))),ConstDecl("c",None,UnaryOp("!",BinaryOp(">", Id("b"), IntLiteral(3))))])
+Test Case: test_198
+# AST Input:
+Program([VarDecl("a",ArrayType([IntLiteral(2),IntLiteral(3),IntLiteral(4)],IntType()), None),VarDecl("b",ArrayType([IntLiteral(3),IntLiteral(4)],IntType()),ArrayCell(Id("a"),[IntLiteral(1)])),VarDecl("c",ArrayType([IntLiteral(4)],IntType()),ArrayCell(Id("a"),[IntLiteral(1),IntLiteral(1)])),VarDecl("d",IntType(),ArrayCell(Id("a"),[IntLiteral(1),IntLiteral(1),IntLiteral(1)]))])
+Test Case: test_199
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(3)),ConstDecl("b",None,UnaryOp("-",Id("a"))),ConstDecl("c",None,UnaryOp("-",Id("b"))),VarDecl("d",ArrayType([Id("c")],IntType()),ArrayLiteral([IntLiteral(3)],IntType(),[IntLiteral(1),IntLiteral(2),IntLiteral(3)]))])
+Test Case: test_200
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(ArrayCell(Id("a"),[IntLiteral(3)]),IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: a
+Test Case: test_201
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(FieldAccess(Id("a"),"c"),IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: a
+Test Case: test_202
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("a"),IntLiteral(1)),VarDecl("a", None,IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Redeclared Variable: a
+Test Case: test_203
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("a"),IntLiteral(1)),ConstDecl("a",None,IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Redeclared Constant: a
+Test Case: test_204
+# AST Input:
+Program([ConstDecl("a",None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Assign(Id("a"),FloatLiteral(1.0))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Assign(Id("a"),FloatLiteral(1.0))
+Test Case: test_205
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("a"),FloatLiteral(1.0)),VarDecl("b", None,Id("a")),Assign(Id("b"),IntLiteral(1))]))])
+Test Case: test_206
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,Id("foo"))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: foo
+Test Case: test_207
+# AST Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("c"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), IntLiteral(1))),Block([ConstDecl("c",None,IntLiteral(2))]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: c
+Test Case: test_208
+# AST Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp("<", Id("c"), IntLiteral(1)),Assign(Id("a"),BinaryOp("+", Id("a"), Id("c"))),Block([ConstDecl("c",None,IntLiteral(2))]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: c
+Test Case: test_209
+# AST Input:
+Program([FuncDecl("Votien",[ParamDecl("b",IntType())],VoidType(),Block([VarDecl("array", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)])),ForEach(Id("index"),Id("value"),Id("array"),Block([ForEach(Id("index"),Id("value"),Id("brray"),Block([VarDecl("brray", None,ArrayLiteral([IntLiteral(2)],IntType(),[IntLiteral(1),IntLiteral(2)]))]))]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: brray
+Test Case: test_210
+# AST Input:
+Program([VarDecl("v",Id("TIEN"), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[ParamDecl("v",IntType())],IntType(),Block([Return(Id("v"))])))])])
+Test Case: test_211
+# AST Input:
+Program([VarDecl("a",IntType(), None),MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(Id("a")),Return(Id("v"))]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("foo",[],IntType(),Block([Return(Id("a")),Return(Id("v"))])))])])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: Return(Id("v"))
+Test Case: test_212
+# AST Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)])))])])
+
+# Expected Output:
+
+Actual Error: Redeclared Method: Votien
+Test Case: test_213
+# AST Input:
+Program([StructType("TIEN",[("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("Votien",[],VoidType(),Block([Return(None)])))])
+
+# Expected Output:
+
+Actual Error: Redeclared Method: Votien
+Test Case: test_214
+# AST Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Tien",IntType()),("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)])))])])
+
+# Expected Output:
+
+Actual Error: Redeclared Method: Tien
+Test Case: test_215
+# AST Input:
+Program([StructType("TIEN",[("Tien",IntType()),("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)])))]),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)])))])
+
+# Expected Output:
+
+Actual Error: Redeclared Method: Tien
+Test Case: test_216
+# AST Input:
+Program([MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)]))),StructType("TIEN",[("Tien",IntType()),("Votien",IntType())],[MethodDecl("v",Id("TIEN"),FuncDecl("VO",[],VoidType(),Block([Return(None)]))),MethodDecl("v",Id("TIEN"),FuncDecl("Tien",[],VoidType(),Block([Return(None)])))])])
+
+# Expected Output:
+
+Actual Error: Redeclared Method: Tien
+Test Case: test_217
+# AST Input:
+Program([FuncDecl("foo",[ParamDecl("a",IntType())],VoidType(),Block([FuncCall("foo",[IntLiteral(1)]),VarDecl("foo", None,IntLiteral(1))]))])
+Test Case: test_218
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(IntLiteral(1))])),FuncDecl("foo1",[],IntType(),Block([Return(FuncCall("foo",[]))]))])
+Test Case: test_219
+# AST Input:
+Program([VarDecl("foo", None,IntLiteral(1)),FuncDecl("foo1",[],IntType(),Block([Return(FuncCall("foo",[]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Function: foo
+Test Case: test_220
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([VarDecl("a", None,BinaryOp("==", FloatLiteral(1.0), IntLiteral(1)))]))])
+
+# Expected Output:
+
+Actual Error: Type Mismatch: BinaryOp("==", FloatLiteral(1.0), IntLiteral(1))
+Test Case: test_221
+# AST Input:
+Program([VarDecl("a", None,IntLiteral(1)),FuncDecl("foo",[],VoidType(),Block([Assign(Id("a"),IntLiteral(3)),VarDecl("a", None,FloatLiteral(1.0)),ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp(">", Id("a"), IntLiteral(1)),Assign(Id("a"),IntLiteral(1)),Block([Return(None)]))]))])
+Test Case: test_222
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([ForStep(VarDecl("a", None,IntLiteral(1)),BinaryOp(">", Id("a"), IntLiteral(1)),Assign(Id("b"),BinaryOp("+", Id("b"), IntLiteral(1))),Block([Return(None)]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: b
+Test Case: test_223
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(Id("foo"))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Identifier: foo
+Test Case: test_224
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("foo"),IntLiteral(1)),VarDecl("foo", None,IntLiteral(1))]))])
+
+# Expected Output:
+
+Actual Error: Redeclared Variable: foo
+Test Case: test_225
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Assign(Id("foo"),IntLiteral(1)),FuncCall("foo",[])]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Function: foo
+Test Case: test_226
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Assign(Id("foo"),IntLiteral(1)),Return(FuncCall("foo",[]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Function: foo
+Test Case: test_227
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([VarDecl("foo", None,IntLiteral(1)),Return(FuncCall("foo",[]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Function: foo
+Test Case: test_228
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([ConstDecl("foo",None,IntLiteral(1)),Return(FuncCall("foo",[]))]))])
+
+# Expected Output:
+
+Actual Error: Undeclared Function: foo
+Test Case: test_229
+# AST Input:
+Program([FuncDecl("foo",[],IntType(),Block([Return(FuncCall("foo",[])),Assign(Id("foo"),IntLiteral(1))]))])
+Test Case: test_230
+# AST Input:
+Program([FuncDecl("foo",[],VoidType(),Block([Return(None)]))])

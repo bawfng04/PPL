@@ -1,0 +1,10 @@
+ 
+type TIEN struct {
+    Votien int;
+}
+
+func (v TIEN) getInt () {
+    v.getInt ();
+    v.putInt ();
+}
+        

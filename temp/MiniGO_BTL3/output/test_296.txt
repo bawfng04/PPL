@@ -1,0 +1,1 @@
+Type Mismatch: VarDecl(a,IntType,BinaryOp(FloatLiteral(2.0),*,IntLiteral(1)))
