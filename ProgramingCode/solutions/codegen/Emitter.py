@@ -73,7 +73,7 @@ class Emitter():
         else:
             return self.jvm.emitLDC(rst)
 
-    ''' 
+    '''
     *    generate code to push a constant onto the operand stack.
     *    @param in the lexeme of the constant
     *    @param typ the type of the constant
@@ -526,7 +526,7 @@ class Emitter():
     '''
 
     '''   generate code to initialize local array variables.
-    *   @param in the list of symbol entries corresponding to local array variable.    
+    *   @param in the list of symbol entries corresponding to local array variable.
     '''
 
     '''   generate code to jump to label if the value on top of operand stack is true.<p>
@@ -613,7 +613,7 @@ class Emitter():
         elif type(in_) is VoidType:
             return self.jvm.emitRETURN()
 
-    ''' generate code that represents a label	
+    ''' generate code that represents a label
     *   @param label the label
     *   @return code Label<label>:
     '''
@@ -624,7 +624,7 @@ class Emitter():
 
         return self.jvm.emitLABEL(label)
 
-    ''' generate code to jump to a label	
+    ''' generate code to jump to a label
     *   @param label the label
     *   @return code goto Label<label>
     '''
