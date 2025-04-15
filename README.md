@@ -12,7 +12,7 @@ The project is divided into 4 main assignments:
 1. **Lexer & Recognizer:** Implementing lexical analysis and parsing.
 2. **AST Generation:** Constructing an Abstract Syntax Tree from the parse tree.
 3. **Static Checker:** Performing static semantic analysis on the AST.
-4. **Code Generation** Generating target code from the semantically checked AST.
+4. **Code Generation:** Generating target code from the semantically checked AST.
 
 ## Repository Structure
 ```
