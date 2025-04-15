@@ -99,7 +99,7 @@ The project is divided into three main assignments:
   * `src/main/minigo/utils/AST.py`: AST definitions (Input for the code generator).
   * `src/main/minigo/utils/Visitor.py`: Base Visitor class.
   * `src/test/CodeGenSuite.py`: Test cases for code generation.
-  * `src/main/minigo/utils/MachineCode.py`: (Potentially) Helper classes/functions for generating target code instructions.
+  * `src/main/minigo/utils/MachineCode.py`: Helper classes/functions for generating target code instructions.
 
 ## Running the Code
 The template files include a run.py script with various commands:
