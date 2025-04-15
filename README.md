@@ -38,7 +38,7 @@ The project is divided into three main assignments:
 
 ## Assignment Details
 
-### Assignment 1: Lexer & Recognizer
+### Assignment 1: Lexer & Recognizer (30%)
 
 * **Goal:** To define the lexical rules (tokens) and grammar rules for the MiniGo language and implement a lexer and parser using ANTLR.
 * **Tasks:**
@@ -50,7 +50,7 @@ The project is divided into three main assignments:
   * `src/test/LexerSuite.py`: Test cases for the lexer.
   * `src/test/ParserSuite.py`: Test cases for the parser.
 
-### Assignment 2: AST Generation
+### Assignment 2: AST Generation (30%)
 
 * **Goal:** To automatically generate an Abstract Syntax Tree (AST) from the parse tree produced by the ANTLR parser (from Assignment 1).
 * **Tasks:**
@@ -65,7 +65,7 @@ The project is divided into three main assignments:
   * `src/test/ASTGenSuite.py`: Test cases for AST generation.
   * `src/main/minigo/parser/MiniGo.g4`: (Potentially updated from A1).
 
-### Assignment 3: Static Checker
+### Assignment 3: Static Checker (30%)
 
 * **Goal:** To implement a static semantic checker that analyzes the AST (from Assignment 2) for semantic errors according to MiniGo's rules.
 * **Tasks:**
@@ -86,7 +86,7 @@ The project is divided into three main assignments:
   * `src/test/CheckSuite.py`: Test cases for the static checker.
   * `src/main/minigo/utils/AST.py`: AST definitions (Input for the checker).
 
-### Assignment 4: Code Generation
+### Assignment 4: Code Generation (10%)
 
 * **Goal:** To generate target code (e.g., Jasmin bytecode for the Java Virtual Machine) from the semantically checked AST (from Assignment 3).
 * **Tasks:**
