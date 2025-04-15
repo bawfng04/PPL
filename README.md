@@ -61,11 +61,11 @@ The project is divided into three main assignments:
 * **Key Files:**
   * `src/main/minigo/astgen/ASTGenerator.py`: Python code using the Visitor pattern to build the AST.
   * `src/main/minigo/utils/AST.py`: Predefined classes representing the nodes of the AST (Not modified).
-  * `src/main/minigo/utils/Visitor.py`: Base Visitor class (Used in A2 & A3).
+  * `src/main/minigo/utils/Visitor.py`: Base Visitor class (Used in assignment 2 & 3).
   * `src/test/ASTGenSuite.py`: Test cases for AST generation.
-  * `src/main/minigo/parser/MiniGo.g4`: (updated from A1).
+  * `src/main/minigo/parser/MiniGo.g4`: (updated from assignment 1).
 
-### Assignment 3: Static Checker (30%)
+### Assignment 3: Static Checker (30%) ☠️
 
 * **Goal:** To implement a static semantic checker that analyzes the AST (from Assignment 2) for semantic errors according to MiniGo's rules.
 * **Tasks:**
@@ -74,7 +74,6 @@ The project is divided into three main assignments:
     * Redeclarations (variables, constants, functions, types, parameters, fields, methods, prototypes within the same scope).
     * Undeclared identifiers (variables, functions, types, fields, methods).
     * Type mismatches in expressions, assignments, function calls, return statements, loop conditions, etc.
-    * Correct usage of `break` and `continue`.
     * Function/method call argument compatibility.
     * Field access validity.
     * Array indexing validity.
