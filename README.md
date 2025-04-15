@@ -24,7 +24,7 @@ The project is divided into three main assignments:
 │   └── votien/                    # Votien's courses
 ├── Lectures/              # Course lecture materials
 ├── Exams/                 # Midterm and final exam materials
-└── ProgramingCode/        # Additional code examples and resources
+└── ProgramingCode/        # Programing code template and solutions
 ```
 
 ## Development Environment Setup
@@ -63,7 +63,7 @@ The project is divided into three main assignments:
   * `src/main/minigo/utils/AST.py`: Predefined classes representing the nodes of the AST (Not modified).
   * `src/main/minigo/utils/Visitor.py`: Base Visitor class (Used in A2 & A3).
   * `src/test/ASTGenSuite.py`: Test cases for AST generation.
-  * `src/main/minigo/parser/MiniGo.g4`: (Potentially updated from A1).
+  * `src/main/minigo/parser/MiniGo.g4`: (updated from A1).
 
 ### Assignment 3: Static Checker (30%)
 
