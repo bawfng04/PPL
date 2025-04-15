@@ -17,9 +17,11 @@ The project is divided into three main assignments:
 ```
 .
 ├── Assignments/           # Assignment specifications and starter code
-│   ├── BTL1/              # Assignment 1 (Lexer and Parser)
-│   ├── BTL2/              # Assignment 2 (AST Generation)
-│   └── BTL3/              # Assignment 3 (Type Checking and Code Generation)
+│   ├── Assignment 1/              # Assignment 1 (Lexer and Parser)
+│   ├── Assignment 2/              # Assignment 2 (AST Generation)
+│   └── Assignment 3/              # Assignment 3 (Type Checking and Code Generation)
+│   └── Assignment 4/              # Assignment 4 (Code Generation)
+│   └── votien/                    # Votien's courses
 ├── Lectures/              # Course lecture materials
 ├── Exams/                 # Midterm and final exam materials
 └── ProgramingCode/        # Additional code examples and resources
@@ -83,6 +85,21 @@ The project is divided into three main assignments:
   * `src/main/minigo/checker/StaticError.py`: Definitions for semantic error exceptions.
   * `src/test/CheckSuite.py`: Test cases for the static checker.
   * `src/main/minigo/utils/AST.py`: AST definitions (Input for the checker).
+
+### Assignment 4: Code Generation
+
+* **Goal:** To generate target code (e.g., Jasmin bytecode for the Java Virtual Machine) from the semantically checked AST (from Assignment 3).
+* **Tasks:**
+  * Implement the `CodeGenerator` visitor (in `CodeGenerator.py`) to traverse the AST.
+  * Generate appropriate target code instructions for MiniGo constructs (declarations, expressions, statements, function calls, etc.).
+  * Manage memory allocation, stack frames, and control flow in the target code.
+  * Create test cases (`CodeGenSuite.py`) to verify the correctness of the generated code for various MiniGo programs.
+* **Key Files:**
+  * `src/main/minigo/codegen/CodeGenerator.py`: Python code implementing the code generation logic using the Visitor pattern.
+  * `src/main/minigo/utils/AST.py`: AST definitions (Input for the code generator).
+  * `src/main/minigo/utils/Visitor.py`: Base Visitor class.
+  * `src/test/CodeGenSuite.py`: Test cases for code generation.
+  * `src/main/minigo/utils/MachineCode.py`: (Potentially) Helper classes/functions for generating target code instructions.
 
 ## Running the Code
 The template files include a run.py script with various commands:
