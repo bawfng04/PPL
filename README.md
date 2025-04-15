@@ -7,11 +7,12 @@ This repository contains assignments, resources, and code for the Principles of 
 MiniGo is a teaching language designed for students to practice building a compiler within a limited timeframe. It retains core concepts of Go such as basic data types, structs, and interfaces, but removes more complex features like goroutines and channels. The simplified structure allows students to focus on fundamental concepts of programming language implementation.
 
 ## Project Structure
-The project is divided into three main assignments:
+The project is divided into 4 main assignments:
 
 1. **Lexer & Recognizer:** Implementing lexical analysis and parsing.
 2. **AST Generation:** Constructing an Abstract Syntax Tree from the parse tree.
 3. **Static Checker:** Performing static semantic analysis on the AST.
+4. **Code Generation** Generating target code from the semantically checked AST.
 
 ## Repository Structure
 ```
