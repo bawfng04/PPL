@@ -157,16 +157,20 @@
 
         if op in ['+', '-', '*', '/']:
             typ = IntType()
-            if op == '+' or op == '-' or op == '*':
+            if op == '+' or op == '-':
                 op_jcode = self.emit.emitADDOP(op, typ, thisFrame)
+            elif op == '*':
+                op_jcode = self.emit.emitMULOP(op, typ, thisFrame)
             elif op == '/':
                 op_jcode = self.emit.emitDIV(thisFrame)
         elif op in ['+.', '-.']:
             typ = FloatType()
+            # lấy op[0] ('+.' -> '+', '-.' -> '-'...)
+            basic_op = op[0]
             if op == '+.' or op == '-.':
-                op_jcode = self.emit.emitADDOP(op[0], typ, thisFrame)
+                op_jcode = self.emit.emitADDOP(basic_op, typ, thisFrame)
             elif op == '*.' or op == '/.':
-                op_jcode = self.emit.emitMULOP(op[0], typ, thisFrame)
+                op_jcode = self.emit.emitMULOP(basic_op, typ, thisFrame)
         else:
             pass
 
@@ -175,30 +179,89 @@
 
 
 
+# 4
+    def visitId(self, ast, o):
+        # ast: Id      - Đây là nút AST đại diện cho một định danh (tên biến, tên hàm...).
+        #                Nó có thuộc tính 'name' là tên của định danh đó (dạng chuỗi).
+        # o: Context  - Đối tượng ngữ cảnh, chứa 2 thứ quan trọng:
+        #                - o.frame: Đối tượng Frame để quản lý stack, biến cục bộ.
+        #                - o.sym: Một danh sách (List) các đối tượng Symbol.
+        #                         Danh sách này đại diện cho môi trường (environment),
+        #                         lưu trữ thông tin về các định danh có thể truy cập
+        #                         tại thời điểm hiện tại. Phần tử đầu list là scope
+        #                         trong cùng, cuối list là scope ngoài cùng (global).
+        # return: (string, Type) - Phải trả về cặp gồm:
+        #                         1. Mã Jasmin để *đọc giá trị* của định danh này
+        #                            và *đẩy lên* operand stack.
+        #                         2. Kiểu dữ liệu (Type) của định danh đó.
 
+        # 1. Lấy Frame và danh sách Symbol từ context 'o':
+        frame = o.frame
+        symbols = o.sym
 
+        # 2. Tìm kiếm Symbol tương ứng với tên định danh trong môi trường:
+        #    Chúng ta dùng hàm 'lookup' (được cung cấp hoặc tự định nghĩa)
+        #    để tìm trong danh sách 'symbols'.
+        #    - Tham số 1: ast.name - Tên định danh cần tìm (lấy từ nút AST).
+        #    - Tham số 2: symbols - Danh sách các Symbol đại diện cho môi trường.
+        #    - Tham số 3: lambda x: x.name - Hàm lambda này chỉ định rằng việc
+        #                  so sánh để tìm kiếm là dựa trên thuộc tính 'name' của
+        #                  từng đối tượng Symbol trong danh sách.
+        #    Hàm lookup sẽ trả về đối tượng Symbol tìm thấy, hoặc None nếu không tìm thấy.
+        #    (Giả định lỗi không tìm thấy đã được xử lý ở giai đoạn semantic check).
+        sym = self.lookup(ast.name, symbols, lambda x: x.name)
 
+        # 3. Kiểm tra xem định danh này là biến cục bộ/tham số hay biến toàn cục:
+        #    Thông tin này được lưu trong thuộc tính 'value' của đối tượng Symbol.
+        #    Theo mô tả, 'value' sẽ là một đối tượng Index (nếu là local/param)
+        #    hoặc CName (nếu là global/static).
 
+        if isinstance(sym.value, Index):
+            # --- Trường hợp 1: Định danh là Biến Cục bộ hoặc Tham số ---
+            #     'sym.value' là một đối tượng Index.
 
+            # Lấy chỉ số (index) trong Local Variable Array từ đối tượng Index.
+            index = sym.value.value
+            # Lấy kiểu dữ liệu của biến/tham số từ thuộc tính 'mtype' của Symbol.
+            idType = sym.mtype
 
+            # Gọi hàm của Emitter để tạo mã "đọc biến".
+            # self.emit.emitREADVAR sẽ làm những việc sau:
+            #   - Dựa vào 'idType' và 'index', nó tạo ra lệnh JVM phù hợp:
+            #     + iload <index> nếu idType là IntType (hoặc BoolType,...)
+            #     + fload <index> nếu idType là FloatType
+            #     + aload <index> nếu idType là ArrayType, ClassType, StringType (kiểu tham chiếu)
+            #   - Quan trọng: Nó cũng gọi frame.push() để mô phỏng việc giá trị
+            #     vừa đọc được đẩy lên operand stack.
+            jasminCode = self.emit.emitREADVAR(ast.name, idType, index, frame)
 
+            # Trả về mã Jasmin vừa tạo và kiểu dữ liệu của biến/tham số.
+            return jasminCode, idType
 
+        elif isinstance(sym.value, CName):
+            # --- Trường hợp 2: Định danh là Biến Toàn cục (Static Field) ---
+            #     'sym.value' là một đối tượng CName.
 
+            # Lấy tên lớp (class) chứa biến static này từ đối tượng CName.
+            className = sym.value.value
+            # Tên của trường static chính là tên của định danh.
+            fieldName = ast.name
+            # Lấy kiểu dữ liệu của trường static từ thuộc tính 'mtype' của Symbol.
+            fieldType = sym.mtype
 
+            # Tạo tên đầy đủ theo định dạng JVM yêu cầu cho lệnh getstatic: "ClassName/FieldName"
+            fullyQualifiedName = className + "/" + fieldName
 
+            # Gọi hàm của Emitter để tạo mã "lấy trường static".
+            # self.emit.emitGETSTATIC sẽ làm những việc sau:
+            #   - Tạo ra lệnh JVM 'getstatic <fullyQualifiedName> <fieldTypeDescriptor>'.
+            #     (Hàm getJVMType sẽ được gọi bên trong emitGETSTATIC để lấy descriptor).
+            #   - Gọi frame.push() để mô phỏng giá trị static vừa lấy được đẩy lên stack.
+            jasminCode = self.emit.emitGETSTATIC(fullyQualifiedName, fieldType, frame)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            # Trả về mã Jasmin vừa tạo và kiểu dữ liệu của trường static.
+            return jasminCode, fieldType
+        else:
+            # (Phần xử lý lỗi tùy chọn)
+            # Nếu sym.value không phải Index hay CName thì có gì đó không đúng.
+            raise IllegalRuntimeException(f"Symbol '{ast.name}' found but has unexpected value type: {type(sym.value)}")
