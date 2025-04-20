@@ -34,7 +34,7 @@ class ClassType(Type):
         #value: Id
         self.name = name
 
-    
+
 class CodeGenerator(BaseVisitor,Utils):
     def __init__(self):
         self.className = "MiniGoClass"
@@ -53,23 +53,23 @@ class CodeGenerator(BaseVisitor,Utils):
         self.path = dir_
         self.emit = Emitter(dir_ + "/" + self.className + ".j")
         self.visit(ast, gl)
-       
-        
+
+
     def emitObjectInit(self):
-        frame = Frame("<init>", VoidType())  
+        frame = Frame("<init>", VoidType())
         self.emit.printout(self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame))  # Bắt đầu định nghĩa phương thức <init>
-        frame.enterScope(True)  
+        frame.enterScope(True)
         self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(self.className), frame.getStartLabel(), frame.getEndLabel(), frame))  # Tạo biến "this" trong phương thức <init>
-        
+
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
-        self.emit.printout(self.emit.emitREADVAR("this", ClassType(self.className), 0, frame))  
-        self.emit.printout(self.emit.emitINVOKESPECIAL(frame))  
-    
-        
+        self.emit.printout(self.emit.emitREADVAR("this", ClassType(self.className), 0, frame))
+        self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
+
+
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
-        self.emit.printout(self.emit.emitRETURN(VoidType(), frame))  
-        self.emit.printout(self.emit.emitENDMETHOD(frame))  
-        frame.exitScope()  
+        self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
+        self.emit.printout(self.emit.emitENDMETHOD(frame))
+        frame.exitScope()
 
     def visitProgram(self, ast, c):
         env ={}
@@ -102,7 +102,7 @@ class CodeGenerator(BaseVisitor,Utils):
         self.visit(ast.body,env)
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
         if type(ast.retType) is VoidType:
-            self.emit.printout(self.emit.emitRETURN(VoidType(), frame)) 
+            self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
         self.emit.printout(self.emit.emitENDMETHOD(frame))
         frame.exitScope()
         return o
@@ -114,12 +114,12 @@ class CodeGenerator(BaseVisitor,Utils):
             frame = o['frame']
             index = frame.getNewIndex()
             o['env'][0].append(Symbol(ast.varName, ast.varType, Index(index)))
-            self.emit.printout(self.emit.emitVAR(index, ast.varName, ast.varType, frame.getStartLabel(), frame.getEndLabel(), frame))  
+            self.emit.printout(self.emit.emitVAR(index, ast.varName, ast.varType, frame.getStartLabel(), frame.getEndLabel(), frame))
             if ast.varInit:
                 self.emit.printout(self.emit.emitPUSHICONST(ast.varInit.value, frame))
                 self.emit.printout(self.emit.emitWRITEVAR(ast.varName, ast.varType, index,  frame))
         return o
-    
+
     def visitFuncCall(self, ast, o):
         sym = next(filter(lambda x: x.name == ast.funName, o['env'][-1]),None)
         env = o.copy()
@@ -127,7 +127,7 @@ class CodeGenerator(BaseVisitor,Utils):
         [self.emit.printout(self.visit(x, env)[0]) for x in ast.args]
         self.emit.printout(self.emit.emitINVOKESTATIC(f"{sym.value.value}/{ast.funName}",sym.mtype, o['frame']))
         return o
-    
+
     def visitBlock(self, ast, o):
         env = o.copy()
         env['env'] = [[]] + env['env']
@@ -137,15 +137,15 @@ class CodeGenerator(BaseVisitor,Utils):
         self.emit.printout(self.emit.emitLABEL(env['frame'].getEndLabel(), env['frame']))
         env['frame'].exitScope()
         return o
-    
+
     def visitId(self, ast, o):
         sym = next(filter(lambda x: x.name == ast.name, [j for i in o['env'] for j in i]),None)
         if type(sym.value) is Index:
             return self.emit.emitREADVAR(ast.name, sym.mtype, sym.value.value, o['frame']),sym.mtype
-        else:         
+        else:
             return self.emit.emitGETSTATIC(f"{self.className}/{sym.name}",sym.mtype,o['frame']),sym.mtype
-        
+
     def visitIntLiteral(self, ast, o):
         return self.emit.emitPUSHICONST(ast.value, o['frame']), IntType()
 
-    
+

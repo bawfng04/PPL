@@ -1,0 +1,65 @@
+VIETNAM NATIONAL UNIVERSITY - HO CHI MINH CITY
+HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY
+
+FACULTY OF COMPUTER SCIENCE AND ENGINEERING
+
+PRINCIPLES OF PROGRAMMING LANGUAGES - CO3005
+
+ASSIGNMENT 4
+
+Code Generator
+
+HO CHI MINH CITY, 07/2021
+
+
+HCMC UNIVERSITY OF TECHNOLOGY - VNU-HCM
+FACULTY OF COMPUTER SCIENCE AND ENGINEERING
+
+ASSIGNMENT 4
+
+Version 1.0
+
+After completing this assignment, you will be able to
+
+• explain the mechanism of some structures in a programming language.
+
+• use Python to implement a code generation phase for a stack-based machine like JVM.
+
+• create a simple complete compiler for JVM.
+
+1  Specification
+
+In this assignment, you are required to write a code generation checker for a program written
+in MiniGo. The code generation will generate Jasmin code from AST created from assignment
+
+2. The Jasmin code then is transfered to Java bytecode which must be run correctly in a Java
+Virtual Machine (JVM). To complete this assignment, you need to:
+
+• read carefully the specification of MiniGo language
+
+• Download assignment4.zip and unzip it.
+
+• Modify main/main/codegen/CodeGenerator.py and main/main/codegen/Emitter.py to
+implement this assignment.
+
+• Modify test/CodeGenSuite.py to create 100 testcases to test your code. Note that the main
+method (entry of MiniGo program) should be in the class whose name is "MiniGoClass".
+
+There is a limitation on testcases: no for each statement.
+
+2  Submissions
+
+• The deadline will be announced on the class website.
+
+• You must submit three files: CodeGenerator.py, Emitter.py and CodeGenSuite.py.
+
+3  Plagiarism
+
+You must complete the assignment by yourself and do not let your work seen by someone else.
+If you violate any requirement, you will be punished by the university rule for plagiarism.
+
+4  Change log
+
+Principle of Programming Languages’ assignment - Semester 2 (2020 - 2021)                    Page 
+1/1
+

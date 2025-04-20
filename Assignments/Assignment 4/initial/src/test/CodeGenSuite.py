@@ -24,8 +24,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         input = Program([FuncDecl("main",[],VoidType(),Block([VarDecl("a",IntType(),IntLiteral(500)),FuncCall("putInt", [Id("a")])]))])
         expect = "500"
         self.assertTrue(TestCodeGen.test(input,expect,505))
-    def test_global_var_ast(self):  
+    def test_global_var_ast(self):
         input = Program([VarDecl("a",IntType(),IntLiteral(5000)),FuncDecl("main",[],VoidType(),Block([FuncCall("putInt", [Id("a")])]))])
         expect = "5000"
         self.assertTrue(TestCodeGen.test(input,expect,506))
-    
