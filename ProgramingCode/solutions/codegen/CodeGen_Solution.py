@@ -177,6 +177,42 @@
         jasminCode = jcode1 + jcode2 + op_jcode
         return jasminCode, typ
 
+# 4
+    def visitId(self, ctx, o):
+        frame = o.frame
+        symbols = o.sym  # Symbol table (scope chain)
+        name = ctx.name  # Name of the identifier to look up
+
+        # Find the symbol in the symbol table (scopes: innermost to outermost)
+        symbol = self.lookup(name, symbols, lambda x: x.name) # Using the provided lookup helper
+
+        # Check if symbol was found (although prompt implies it will be)
+        if symbol is None:
+            # This case should ideally not happen based on prompt constraints
+            # but adding for robustness or potential future error handling.
+            raise IllegalRuntimeException(f"Undeclared identifier: {name}") # Or handle differently
+
+        symbol_type = symbol.mtype
+        symbol_val = symbol.value # This will be either Index or CName
+
+        jasmin_code = ""
+
+        # Determine how to load the variable based on its storage type (Index or CName)
+        if isinstance(symbol_val, Index):
+            # Local variable or parameter: use emitREADVAR
+            index = symbol_val.value
+            jasmin_code = self.emit.emitREADVAR(name, symbol_type, index, frame)
+        elif isinstance(symbol_val, CName):
+            # Global (static) variable: use emitGETSTATIC
+            class_name = symbol_val.value
+            qualified_name = class_name + "/" + name
+            jasmin_code = self.emit.emitGETSTATIC(qualified_name, symbol_type, frame)
+        else:
+            # Should not happen with Index and CName as the only Val subclasses described
+            raise IllegalRuntimeException(f"Unknown storage type for identifier: {name}")
+
+        # emitREADVAR and emitGETSTATIC already handle frame.push()
+        return jasmin_code, symbol_type
 
 
 
@@ -184,6 +220,61 @@
 
 
 
+# 5
+    def visitBinExpr(self, ctx, o):
+        frame = o.frame
+        op = ctx.op
+
+        jcode1, type1 = self.visit(ctx.e1, o)
+        jcode2, type2 = self.visit(ctx.e2, o)
+
+        jasminCode = jcode1 + jcode2
+        result_type = None
+
+        conversion_code = ""
+        if op in ['+', '-', '*']:
+            if type(type1) is FloatType or type(type2) is FloatType:
+                result_type = FloatType()
+                if type(type1) is IntType:
+                    jasminCode = jcode1 + self.emit.emitI2F(frame) + jcode2
+                elif type(type2) is IntType:
+                    jasminCode = jcode1 + jcode2 + self.emit.emitI2F(frame)
+            else:
+                result_type = IntType()
+
+            op_code = self.emit.emitADDOP(op, result_type, frame) if op in ['+', '-'] else self.emit.emitMULOP(op, result_type, frame)
+            jasminCode += op_code
+
+        elif op == '/':
+            result_type = FloatType()
+            if type(type1) is IntType:
+                jasminCode = jcode1 + self.emit.emitI2F(frame) + jcode2
+                if type(type2) is IntType:
+                    jasminCode += self.emit.emitI2F(frame)
+            elif type(type2) is IntType:
+                 # Chỉ chuyển đổi toán hạng 2
+                 jasminCode = jcode1 + jcode2 + self.emit.emitI2F(frame)
+
+            op_code = self.emit.emitMULOP(op, result_type, frame) # emitMULOP xử lý cả fdiv
+            jasminCode += op_code
+
+        elif op in ['>', '<', '>=', '<=', '!=', '==']:
+            result_type = BoolType()
+            comparison_type = IntType()
+
+            if type(type1) is FloatType or type(type2) is FloatType:
+                comparison_type = FloatType()
+                if type(type1) is IntType:
+                    jasminCode = jcode1 + self.emit.emitI2F(frame) + jcode2
+                elif type(type2) is IntType:
+                     jasminCode = jcode1 + jcode2 + self.emit.emitI2F(frame)
+            op_code = self.emit.emitREOP(op, comparison_type, frame)
+            jasminCode += op_code
+        else:
+            pass
+
+
+        return jasminCode, result_type
 
 
 

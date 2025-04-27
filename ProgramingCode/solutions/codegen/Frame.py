@@ -107,7 +107,7 @@ class Frame():
     def getStartLabel(self):
         if not self.startLabel:
             raise IllegalRuntimeException("None start label")
-        return self.startLabel[-1]
+        return self.startLabel[-1] 
 
     '''
     *   return the ending label of the current scope.

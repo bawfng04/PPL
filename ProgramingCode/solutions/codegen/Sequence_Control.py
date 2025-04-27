@@ -57,7 +57,8 @@
             elif isinstance(symbol_val, CName):
                 # Global variable (static field): generate PUTSTATIC
                 class_name = symbol_val.value
-                jasmin_code = self.emit.emitPUTSTATIC(class_name, name, symbol_type, frame)
+                qualified_name = class_name + "/" + name
+                jasmin_code = self.emit.emitPUTSTATIC(qualified_name, symbol_type, frame)
             else:
                  pass
         # nếu right -> RHS (biến được sử dụng trong biểu thức)
@@ -70,7 +71,8 @@
             elif isinstance(symbol_val, CName):
                 # Global variable (static field): generate GETSTATIC
                 class_name = symbol_val.value
-                jasmin_code = self.emit.emitGETSTATIC(class_name, name, symbol_type, frame)
+                qualified_name = class_name + "/" + name
+                jasmin_code = self.emit.emitGETSTATIC(qualified_name, symbol_type, frame)
             else:
                 pass
 
