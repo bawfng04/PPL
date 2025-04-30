@@ -42,7 +42,7 @@ class Symbol:
 
     def __str__(self):
         return "Symbol(" + str(self.name) + "," + str(self.mtype) + ("" if self.value is None else "," + str(self.value)) + ")"
-    
+
 
 class Emitter():
     def __init__(self, filename):
@@ -58,7 +58,7 @@ class Emitter():
             ## TODO implement
             pass
         if typeIn is BoolType:
-            return "Z"   
+            return "Z"
         elif typeIn is StringType:
             return "Ljava/lang/String;"
         elif typeIn is VoidType:
@@ -104,15 +104,15 @@ class Emitter():
     def emitPUSHFCONST(self, in_, frame):
         #in_: String
         #frame: Frame
-        
+
         f = float(in_)
         frame.push()
         if f == 0.0 or f == 1.0 or f == 2.0:
             return self.jvm.emitFCONST("{0:.1f}".format(f))
         else:
-            return self.jvm.emitLDC(str(f))     
+            return self.jvm.emitLDC(str(f))
 
-    ''' 
+    '''
     *    generate code to push a constant onto the operand stack.
     *    @param in the lexeme of the constant
     *    @param typ the type of the constant
@@ -121,7 +121,7 @@ class Emitter():
         #in_: String
         #typ: Type
         #frame: Frame
-        
+
         if type(typ) is IntType or type(typ) is BoolType:
             return self.emitPUSHICONST(in_, frame)
         elif type(typ) is StringType:
@@ -136,7 +136,7 @@ class Emitter():
         #in_: Type
         #frame: Frame
         #..., arrayref, index, value -> ...
-        
+
         frame.pop()
         if type(in_) is IntType:
             return self.jvm.emitIALOAD()
@@ -149,7 +149,7 @@ class Emitter():
         #in_: Type
         #frame: Frame
         #..., arrayref, index, value -> ...
-        
+
         frame.pop()
         frame.pop()
         frame.pop()
@@ -182,7 +182,7 @@ class Emitter():
         #index: Int
         #frame: Frame
         #... -> ..., value
-        
+
         frame.push()
         if type(inType) is IntType or type(inType) is BoolType:
             return self.jvm.emitILOAD(index)
@@ -216,7 +216,7 @@ class Emitter():
         #index: Int
         #frame: Frame
         #..., value -> ...
-        
+
         frame.pop()
 
         if type(inType) is IntType or type(inType) is BoolType:
@@ -268,7 +268,7 @@ class Emitter():
         #lexeme: String
         #in_: Type
         #frame: Frame
-        
+
         frame.pop()
         return self.jvm.emitPUTSTATIC(lexeme, self.getJVMType(in_))
 
@@ -547,7 +547,7 @@ class Emitter():
     '''
 
     '''   generate code to initialize local array variables.
-    *   @param in the list of symbol entries corresponding to local array variable.    
+    *   @param in the list of symbol entries corresponding to local array variable.
     '''
 
     '''   generate code to jump to label if the value on top of operand stack is true.<p>
@@ -585,7 +585,7 @@ class Emitter():
         #frame: Frame
 
         frame.pop()
-        return self.jvm.emitIFICMPLT(label)    
+        return self.jvm.emitIFICMPLT(label)
 
     '''   generate code to duplicate the value on the top of the operand stack.<p>
     *   Stack:<p>
@@ -629,14 +629,14 @@ class Emitter():
             return self.jvm.emitIRETURN()
         elif type(in_) is FloatType:
             frame.pop()
-            return self.jvm.emitFRETURN()  
+            return self.jvm.emitFRETURN()
         elif type(in_) is StringType:
             frame.pop()
-            return self.jvm.emitARETURN()                 
+            return self.jvm.emitARETURN()
         elif type(in_) is VoidType:
             return self.jvm.emitRETURN()
 
-    ''' generate code that represents a label	
+    ''' generate code that represents a label
     *   @param label the label
     *   @return code Label<label>:
     '''
@@ -646,7 +646,7 @@ class Emitter():
 
         return self.jvm.emitLABEL(label)
 
-    ''' generate code to jump to a label	
+    ''' generate code to jump to a label
     *   @param label the label
     *   @return code goto Label<label>
     '''
@@ -701,4 +701,4 @@ class Emitter():
 
 
 
-        
+

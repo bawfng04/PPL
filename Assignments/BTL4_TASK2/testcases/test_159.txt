@@ -1,0 +1,15 @@
+
+type Calculator interface { calculate(a int, b int) int; }
+
+type BasicCalc struct {number int;}
+
+func (b BasicCalc) calculate(a int, b int) int {
+    return a + b;
+}
+
+func main() {
+    var c Calculator = BasicCalc {};
+    var result int = c.calculate(15, 25);
+    putIntLn(result);
+}
+        

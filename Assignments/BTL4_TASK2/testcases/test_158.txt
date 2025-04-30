@@ -1,0 +1,13 @@
+
+type Multiplier struct { factor int; }
+
+func (m Multiplier) multiply(value int) int {
+    return m.factor * value;
+}
+
+func main() {
+    var mul Multiplier = Multiplier {factor: 5};
+    var result int = mul.multiply(4);
+    putIntLn(result);
+}
+        

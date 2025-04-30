@@ -1,0 +1,15 @@
+
+type Calculator interface { sum() int; }
+
+type BasicCalc struct { x int; y int; }
+
+func (b BasicCalc) sum() int {
+    return b.x + b.y;
+}
+
+func main() {
+    var c Calculator = BasicCalc {x: 5, y: 15};
+    var result int = c.sum();
+    putIntLn(result);
+}
+        

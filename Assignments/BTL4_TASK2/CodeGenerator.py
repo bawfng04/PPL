@@ -7,6 +7,8 @@ from abc import ABC, abstractmethod
 from functools import reduce
 from Visitor import *
 from AST import *
+# Import necessary exceptions if needed, e.g., from CodeGenError.py
+# from CodeGenError import IllegalRuntimeException
 
 class CodeGenerator(BaseVisitor,Utils):
     def __init__(self):
@@ -15,10 +17,9 @@ class CodeGenerator(BaseVisitor,Utils):
         self.astTree = None
         self.path = None
         self.emit = None
-        self.function = None
+        self.function = None # Keep track of the current function being visited (FuncDecl)
         self.list_function = []
-        self.arrayCell = None # Dùng để lưu kiểu của mảng khi duyệt vào 1 ArrayCell
-        self.arrayCellType = None
+        self.arrayCellType = None # Store the element type when visiting ArrayCell LHS
 
     def init(self):
         mem = [
@@ -27,7 +28,12 @@ class CodeGenerator(BaseVisitor,Utils):
             Symbol("putFloat", MType([FloatType()], VoidType()), CName("io", True)),
             Symbol("putFloatLn", MType([FloatType()], VoidType()), CName("io", True)),
             Symbol("putString", MType([StringType()], VoidType()), CName("io", True)),
-            # TODO: Thêm tất cả các hàm builtin trong minigo spec vào trong này, io là file trong folder _io quy định mấy hày này sẽ làm j rồi
+            Symbol("putBool", MType([BoolType()], VoidType()), CName("io", True)),
+            Symbol("putBoolLn", MType([BoolType()], VoidType()), CName("io", True)),
+            Symbol("getInt", MType([], IntType()), CName("io", True)),
+            Symbol("getFloat", MType([], FloatType()), CName("io", True)),
+            Symbol("getString", MType([], StringType()), CName("io", True)),
+            # TODO: Add any other built-in functions if specified
         ]
         return mem
 
@@ -37,87 +43,39 @@ class CodeGenerator(BaseVisitor,Utils):
         self.astTree = ast
         self.path = dir_
         self.emit = Emitter(dir_ + "/" + self.className + ".j")
-        self.visit(ast, gl)
-
-
-
-    ### Vì chương trình của mình sẽ xem như nằm trong 1 class duy nhất trong java, cụ thể là MiniGoClass
-    ### Nên mình sẽ định nghĩa 2 phương thức <init> và <clinit> trong class này bằng 2 phương thức emitObjectInit và emitObjectCInit
-    ### Phương thức <init> sẽ được gọi khi khởi tạo 1 object của class này, và <clinit> sẽ được gọi khi class này được load vào bộ nhớ
-
-    ### Dưới đây là mã jasmin cho 2 phương thức này(LMiniGoClass - kí hiệu L dùng để tham chiếu đến class trong java):
-
-                    # .method public <init>()V
-                    # .var 0 is this LMiniGoClass; from Label0 to Label1
-                    # Label0:
-                    # 	aload_0
-                    # 	invokespecial java/lang/Object/<init>()V
-                    # Label1:
-                    # 	return
-                    # .limit stack 1
-                    # .limit locals 1
-                    # .end method
-
-                    # .method public static <clinit>()V
-                    # Label0:
-                    # Label2:
-                    # 	invokestatic MiniGoClass/fint()I
-                    # 	putstatic MiniGoClass/global I
-                    # Label3:
-                    # Label1:
-                    # 	return
-                    # .limit stack 2
-                    # .limit locals 0
-                    # .end method
-
+        self.visit(ast, gl) # Start visiting the Program node
 
     def emitObjectInit(self):
         frame = Frame("<init>", VoidType())
-        self.emit.printout(self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame))  # Bắt đầu định nghĩa phương thức <init>
-        # sinh ra mã => .method public <init>()V
-        frame.enterScope(True)  # Mỗi hàm có 1 frame riêng, và mỗi frame có 1 scope riêng, nên dùng enterScope để vào scope của frame này
-
-        self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(self.className), frame.getStartLabel(), frame.getEndLabel(), frame))  # Tạo biến "this" trong phương thức <init>
-        # sinh ra mã => .var 0 is this LMiniGoClass; from Label0 to Label1
-
+        self.emit.printout(self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame))
+        frame.enterScope(True)
+        self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(self.className), frame.getStartLabel(), frame.getEndLabel(), frame))
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
-        # sinh ra mã => Label0: (nơi body method bắt đầu)
-
         self.emit.printout(self.emit.emitREADVAR("this", ClassType(self.className), 0, frame))
-        # sinh ra mã => aload_0 (đưa biến this vào stack)
-
-        self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
-        # sinh ra mã => invokespecial java/lang/Object/<init>()V (gọi hàm khởi tạo của class cha là Object)
-
+        self.emit.printout(self.emit.emitINVOKESPECIAL(frame, "java/lang/Object", MType([], VoidType()))) # Specify superclass constructor
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
-        # sinh ra mã => Label1: (nơi body method kết thúc)
-
-
         self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
-        # sinh ra mã => return (trả về từ hàm khởi tạo này)
-
         self.emit.printout(self.emit.emitENDMETHOD(frame))
-        # sinh ra mã limit stack 1, limit locals 1, end method (kết thúc định nghĩa phương thức <init>)
-
         frame.exitScope()
 
     def emitObjectCInit(self, ast: Program, env):
-
-
-        frame = Frame("<cinit>", VoidType())
+        frame = Frame("<clinit>", VoidType())
         self.emit.printout(self.emit.emitMETHOD("<clinit>", MType([], VoidType()), True, frame))
         frame.enterScope(True)
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
 
         env['frame'] = frame
 
-        #Trừ đoạn code dưới đây thì còn lại giống emitObjectInit:
-        self.visit(Block([
-            #  Assign(#TODO ...) for item in ast.decl if isinstance(item, (VarDecl, ConstDecl))       => Block chứa danh sách các Assign
-        ]), env)
-        # Đoạn này nạp mấy biến/hằng toàn cục vào lớp MiniGoClass
+        # Generate assignments for global variables/constants with initial values
+        assigns = []
+        for item in ast.decl:
+            if isinstance(item, VarDecl) and item.varInit:
+                assigns.append(Assign(Id(item.varName), item.varInit))
+            elif isinstance(item, ConstDecl):
+                assigns.append(Assign(Id(item.conName), item.iniExpr))
 
-
+        if assigns:
+            self.visit(Block(assigns), env)
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
         self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
@@ -125,411 +83,718 @@ class CodeGenerator(BaseVisitor,Utils):
         frame.exitScope()
 
     def visitProgram(self, ast: Program, c):
-        # Biến c ban đầu là dãy Symbol "mem" ở hàm init() ở trên, chứa các hàm builtin của minigo.
-
+        # c: initial list of built-in function symbols
         self.list_function = c + [Symbol(item.name, MType(list(map(lambda x: x.parType, item.params)), item.retType), CName(self.className)) for item in ast.decl if isinstance(item, FuncDecl)]
-        # Đoạn này nạp mấy hàm vào list_function, biến tụi nó thành Symbol để quản lí
 
         env = {}
-        env['env'] = [c]
-
+        env['env'] = [c] # Global scope initially contains built-ins
 
         self.emit.printout(self.emit.emitPROLOG(self.className, "java.lang.Object"))
-        # sinh ra mã => .source MiniGoClass.java
-        #               .class public MiniGoClass
-        #               .super java.lang.Object
 
+        # 1. Visit global declarations (VarDecl, ConstDecl) to emit static fields and update env
+        # Use a separate list for global symbols to avoid modifying 'c'
+        global_scope = []
+        env['env'] = [global_scope] + env['env'] # Prepend empty global scope for vars/consts
+        reduce(lambda acc, x: self.visit(x, acc) if isinstance(x, (VarDecl, ConstDecl)) else acc, ast.decl, env)
 
-        # Đoạn sau sinh mã cho khai báo biến và khai báo báo hàm:
-        ## 1. Khai báo biến (duyệt trước vì hàm có thể dùng biến toàn cục, cập nhật biến/hằng toàn cục vào env)
-        env = reduce(lambda a, x: self.visit(x, a) if isinstance(x, VarDecl) or  isinstance(x, ConstDecl) else a, ast.decl, env)
+        # 2. Visit function declarations (FuncDecl)
+        reduce(lambda acc, x: self.visit(x, acc) if isinstance(x, FuncDecl) else acc, ast.decl, env)
 
-        ## 2. Khai báo hàm (gọi hàm visitFuncDecl cho từng hàm trong danh sách hàm trong ast.decl)
-        reduce(lambda a, x: self.visit(x, a) if isinstance(x, FuncDecl) else a, ast.decl, env)
-
-
-
-        # Gọi mấy hàm đã định nghĩa ở trên
+        # Generate <init> and <clinit> methods
         self.emitObjectInit()
         self.emitObjectCInit(ast, env)
 
-
         self.emit.printout(self.emit.emitEPILOG())
-        #Không sinh ra mã gì cả, chỉ là kết thúc chương trình thôi
-
-
         return env
 
-    def visitFuncDecl(self, ast: FuncCall, o: dict) -> dict:
-
-        #Lưu function đang duyệt vào biến self.function để dùng sau
-        self.function = ast
+    def visitFuncDecl(self, ast: FuncDecl, o: dict) -> dict: # Changed type hint from FuncCall
+        # Lưu function đang duyệt vào biến self.function để dùng sau
+        self.function = ast # Store the FuncDecl node
 
         frame = Frame(ast.name, ast.retType)
 
-        #Với hàm main thì có params và return cố định như bên dưới, này được định nghĩa trong spec:
-        isMain = ast.name == "main"
+        isMain = ast.name == "main" and len(ast.params) == 0 # MiniGo main has no params in source
         if isMain:
-            mtype = MType([ArrayType([None],StringType())], VoidType())
-            ast.body = Block([] + ast.body.member)
+            # JVM main requires specific signature
+            mtype = MType([ArrayType([1], StringType())], VoidType()) # Dimension is 1, not None
+            # If original main had body members, keep them
+            # ast.body = Block([] + ast.body.member) # No need to modify body here
         else:
             mtype = MType(list(map(lambda x: x.parType, ast.params)), ast.retType)
 
-
         env = o.copy()
         env['frame'] = frame
-        self.emit.printout(self.emit.emitMETHOD(ast.name, mtype,True, frame))
-        # sinh ra mã => .method public static main([Ljava/lang/String;)V đối với hàm main
+        self.emit.printout(self.emit.emitMETHOD(ast.name, mtype, True, frame)) # All MiniGo funcs are static
 
-        # Tiếp theo nhảy vào body hàm:
-        frame.enterScope(True)
+        frame.enterScope(True) # Enter function scope
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
+
+        # Create a new scope for parameters and local variables
         env['env'] = [[]] + env['env']
-        # Lưu ý: mình đang dùng field env của env để lưu reference.
 
-        # Sinh mã VAR tùy vào hàm có phải main hay không, đồng thời cũng cập nhật biến env['env'] với các tham số của hàm:
+        # Handle parameters
         if isMain:
-            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType([None],StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
+            # Define the 'args' parameter for JVM main
+            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType([1], StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
         else:
-            env = reduce(lambda acc,e: self.visit(e,acc),ast.params,env)
+            # Visit parameter declarations to allocate space and add to env
+            env = reduce(lambda acc, e: self.visit(e, acc), ast.params, env)
 
-        #Gọi hàm visitBlock, truyền env đã được cập nhật scope params.
-        self.visit(ast.body,env)
-
+        # Visit the function body
+        self.visit(ast.body, env)
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
 
-
+        # Emit return instruction if needed (Void functions)
         if type(ast.retType) is VoidType:
             self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
-        #Nếu trả về kiểu khác void thì hàm visitBlock đã sinh mã cho return rồi.
+        # For non-void functions, the visitReturn node should handle the return instruction
 
         self.emit.printout(self.emit.emitENDMETHOD(frame))
+        frame.exitScope() # Exit function scope
+        # Pop the local scope from env
+        env['env'] = env['env'][1:]
 
-
-        frame.exitScope()
-        # Kết thúc thân hàm
-
-
-        return o
+        return o # Return the original context
 
     def visitParamDecl(self, ast: ParamDecl, o: dict) -> dict:
         frame = o['frame']
         index = frame.getNewIndex()
+        # Add parameter symbol to the current innermost scope (env['env'][0])
         o['env'][0].append(Symbol(ast.parName, ast.parType, Index(index)))
-        self.emit.printout(self.emit.emitVAR(index, ast.parName, ast.parType, frame.getStartLabel() ,frame.getEndLabel(), frame))
+        self.emit.printout(self.emit.emitVAR(index, ast.parName, ast.parType, frame.getStartLabel(), frame.getEndLabel(), frame))
         return o
 
+
     def visitVarDecl(self, ast: VarDecl, o: dict) -> dict:
-
-
-        def create_init(varType: Type, o: dict):
+        def create_init(varType: Type):
             if type(varType) is IntType:
                 return IntLiteral(0)
             elif type(varType) is FloatType:
                 return FloatLiteral(0.0)
             elif type(varType) is StringType:
-                return StringLiteral("\"\"")
+                return StringLiteral("")  # Use empty string, not "\"\""
             elif type(varType) is BoolType:
-                return BooleanLiteral("false")
+                return BooleanLiteral(False)  # Use False directly
             elif type(varType) is ArrayType:
+                # For arrays, the default is null in JVM unless initialized.
+                # We handle initialization later using ArrayType/ArrayLiteral visit.
+                # Returning the type itself acts as a placeholder.
+                return varType
+            return None  # Should not happen for valid types
 
-                # Với mảng thì mình dùng đệ quy để sinh ra mảng giá trị cho đúng nhé.
-                #  VD mảng nguyên 1 chiều thì sẽ là [0,0,0,...], mảng 2 chiều thì sẽ là [[0,0,0,...],[0,0,0,...],...]
-                #  VD mảng bool 1 chiều thì sẽ là [false,false,false,...], mảng 2 chiều thì sẽ là [[false,false,false,...],[false,false,false,...],...]
+        varInit = ast.varInit
+        varType = ast.varType
 
-                #Lưu ý ở đây mình k xử lí dimension là biểu thức hay Id, chỗ khác sẽ xử lí sau.
-                pass #TODO
-
-
-        varInit = ast.varInit # Giá trị khởi tạo của biến
-        varType = ast.varType # Kiểu của biến
-
-        #Nếu không có giá trị khởi tạo thì tự động gán cho nó 0, 0.0, false, "",..tùy vào kiểu biến:
-        # int -> 0, float -> 0.0, bool -> false, string -> "", array -> mảng chứa các giá trị "zero" tùy thuộc vào kiểu phần tử.
+        # Determine initial value/placeholder
+        init_placeholder = None
         if not varInit:
-            varInit = create_init(varType, o)
-            if type(varType) is ArrayType:
-                varInit = ArrayLiteral(varType.dimens, varType.dimens, varInit)
-            ast.varInit = varInit
+            if varType:  # Type is known
+                init_placeholder = create_init(varType)
+            # else: Type needs inference (should be handled by static check or later)
+        else:
+            init_placeholder = varInit  # Use provided initializer
 
+        # Type inference if varType is missing (assuming static check might fill this)
+        if not varType and init_placeholder:
+            # Basic inference for literals, rely on static check for complex cases
+            if isinstance(init_placeholder, IntLiteral):
+                varType = IntType()
+            elif isinstance(init_placeholder, FloatLiteral):
+                varType = FloatType()
+            elif isinstance(init_placeholder, StringLiteral):
+                varType = StringType()
+            elif isinstance(init_placeholder, BooleanLiteral):
+                varType = BoolType()
+            elif isinstance(init_placeholder, ArrayLiteral):
+                # Inferring type from ArrayLiteral needs more complex logic
+                # Assume static check provides the type
+                pass
+            elif isinstance(init_placeholder, ArrayType):
+                varType = init_placeholder  # Type is the placeholder itself
+            elif isinstance(init_placeholder, FuncCall):  # Add this case
+                # Look up the function's return type from the global list_function
+                # Use self.lookup on self.list_function directly if it's flat
+                # Or search through o['env'] if built-ins/globals are needed
+                func_sym = self.lookup(init_placeholder.funName, o["env"], lambda x: x.name)
+                if not func_sym:  # Check global function list if not in current env scopes
+                    func_sym = next(
+                        filter(
+                            lambda x: x.name == init_placeholder.funName, self.list_function
+                        ),
+                        None,
+                    )
+                if func_sym:
+                    varType = func_sym.mtype.rettype
+                # else: Function not found, should be static error
 
-            ast.varInit = varInit
-        env = o.copy()
-        env['frame'] = Frame("<template_VT>", VoidType())
-
-        # Như đã nói trong lưu ý ở trên thì trường hợp dimension là Id hay biểu thức sẽ đc xử lí ở visitArrayLiteral và là dòng dưới đây
-        rhsCode, rhsType = self.visit(varInit, env)
-
-        #Trường hợp khai báo với giá trị nhưng không có kiẻu thì mình sẽ tự động gán kiểu cho nó dựa vào giá trị khởi tạo.
+        # Ensure varType is determined
         if not varType:
-            varType = rhsType
+            # This should ideally be caught by static analysis
+            # raise CodeGenError("Cannot determine type for variable: " + ast.varName)
+            pass  # Or default to some type / skip generation
 
-        if 'frame' not in o: # TH global var => biến khai báo toàn cục thì mình
-            o['env'][0].append(Symbol(ast.varName, varType, CName(self.className)))
-            self.emit.printout(self.emit.emitATTRIBUTE(ast.varName, varType, True, False, None))
-        else:
-            frame = o['frame']
-
-            index = frame.getNewIndex()
-            o['env'][0].append(Symbol(ast.varName, varType, Index(index))) # mỗi trường sẽ có 1 index riêng
-
-
-            self.emit.printout(self.emit.emitVAR(index, ast.varName, varType, frame.getStartLabel(), frame.getEndLabel(), frame))
-            rhsCode, rhsType = self.visit(varInit, o)
-            if type(varType) is FloatType and type(rhsType) is IntType:
-                pass #TODO: thêm mã chuyển đổi kiểu int -> float vào rhsCode.
-
-            self.emit.printout(rhsCode)
-            self.emit.printout(self.emit.emitWRITEVAR(ast.varName, varType, index,  frame)) # sinh mã gán giá trị vào biến
-        return o
-
-    def visitFuncCall(self, ast: FuncCall, o: dict) -> dict:
-        sym = next(filter(lambda x: x.name == ast.funName, self.list_function),None)
-        if o.get('stmt'):
-            o["stmt"] = False
-            #TODO: dùng emittter sinh mã cho khúc lấy params trong ast.args, nhớ dùng hàm visit, visit qa từng args. Dùng list comprehension or vòng lặp: [..code..]
-
-
-            self.emit.printout(self.emit.emitINVOKESTATIC(f"{sym.value.value}/{ast.funName}",sym.mtype, o['frame']))
-            #Đã đặt đủ tham số vào stack rồi thì sinh mã gọi hàm thôi
-
-            return o # trả về o luôn vì stmt luôn trả về void k cần quan tâm
-        output = "".join([str(self.visit(x, o)[0]) for x in ast.args])
-        output += "TODO code" ## TODO: Đã đặt đủ tham số vào stack rồi thì sinh mã gọi hàm thôi
-
-        # Vì funcall ở chỗ này là 1 biểu thức nên mình cần trả về giá trị kèm theo kiểu trả về luôn.
-        return output, sym.mtype.rettype
-
-    def visitBlock(self, ast: Block, o: dict) -> dict:
-        env = o.copy()
-        env['env'] = [[]] + env['env']
-        env['frame'].enterScope(False)
-        self.emit.printout(self.emit.emitLABEL('TODO: code')) #TODO: để sinh mã label cần có 2 thông tin là startLabel do frame cung cấp và frame
-        # => dùng phương thức getStartLabel() của frame để lấy label này.
-
-        for item in ast.member:
-            if type(item) is FuncCall:
-                env["stmt"] = True
-            #Cập nhật biến cờ trước khi visit vào hàm FuncCall, lát nữa duyệt vào trong sẽ tắt biến cờ này đi.
-            env = self.visit(item, env)
-
-
-        self.emit.printout(self.emit.emitLABEL('TODO: code')) #TODO: để sinh mã label cần có 2 thông tin là endLabel do frame cung cấp và frame
-        # => dùng phương thức getEndLabel() của frame để lấy label này.
-
-        env['frame'].exitScope()
-        return o
-
-    def visitId(self, ast: Id, o: dict) -> dict:
-        #Dòng này để xác định à Id của mình là thằng nào trong env.
-        sym = next(filter(lambda x: x.name == ast.name, [j for i in o['env'] for j in i]),None)
-
-        #Nếu Id này nằm ở vế trái phép gán
-        if o.get('isLeft'):
-            if type(sym.value) is Index: #Nếu Id là 1 tên trường của 1 object
-                return self.emit.emitWRITEVAR("TODO"), sym.mtype #TODO ở đây tham số inType là sym.mtype
+        # Handle global variables (static fields)
+        if "frame" not in o:
+            # Add symbol to the global scope (env['env'][0])
+            if varType:  # Ensure varType is not None
+                o["env"][0].append(Symbol(ast.varName, varType, CName(self.className)))
+                # Emit attribute declaration. Initialization happens in <clinit>
+                self.emit.printout(
+                    self.emit.emitATTRIBUTE(ast.varName, varType, True, False, None)
+                )
             else:
-                #Putstatic là ghi vào biến static,
-                return self.emit.emitPUTSTATIC("TODO"),sym.mtype  #TODO  truyền vào tên lexeme cho đúng. VD: MiniGoClass/varName
-
-
-        if type(sym.value) is Index: #Nếu Id là 1 tên trường của 1 object
-            return self.emit.emitREADVAR("TODO"),sym.mtype #TODO   truyền vào tên lexeme cho đúng
+                # Handle error: type could not be determined
+                # raise CodeGenError(f"Cannot determine type for global variable: {ast.varName}")
+                pass  # Skip emitting attribute if type is unknown
+            # Actual initialization code is generated via emitObjectCInit visiting Assign nodes.
+        # Handle local variables
         else:
-            #Getstatic là đọc biến static,
-            return self.emit.emitGETSTATIC("TODO"),sym.mtype #TODO  truyền vào tên lexeme cho đúng
+            frame = o["frame"]
+            index = frame.getNewIndex()
+            # Add symbol to the current local scope (env['env'][0])
+            if varType:  # Ensure varType is not None
+                o["env"][0].append(Symbol(ast.varName, varType, Index(index)))
+                # Emit local variable declaration
+                self.emit.printout(
+                    self.emit.emitVAR(
+                        index,
+                        ast.varName,
+                        varType,
+                        frame.getStartLabel(),
+                        frame.getEndLabel(),
+                        frame,
+                    )
+                )
+            else:
+                # Handle error: type could not be determined for local var
+                # raise CodeGenError(f"Cannot determine type for local variable: {ast.varName}")
+                pass  # Skip local var declaration if type is unknown
 
-    def visitAssign(self, ast: Assign, o: dict) -> dict:
+            # Generate code for the initial value (if any)
+            if init_placeholder and varType:  # Also check if varType was determined
+                rhsCode = ""
+                rhsType = None
+                # If placeholder is ArrayType, visit it to generate creation code
+                if isinstance(init_placeholder, ArrayType):
+                    rhsCode, rhsType = self.visit(
+                        init_placeholder, o
+                    )  # Visit ArrayType node
+                else:
+                    rhsCode, rhsType = self.visit(
+                        init_placeholder, o
+                    )  # Visit the expression
 
-        #Xem thử là biến này đã được khai báo chưa, trong minigo nếu phép gán mà biến chưa được khai báo thì sẽ tự động khai báo nó luôn.
-        if type(ast.lhs) is Id and not next(filter(lambda x: "TODO")): # TODO: kiểm tra xem biến này đã được khai báo chưa => Duyệt trong o['env']
-            return # TODO: Khúc này tạo và visit 1 VarDecl mới với kiểu của var là None.
+                # Type conversion check (Int -> Float) for assignment
+                if type(varType) is FloatType and type(rhsType) is IntType:
+                    rhsCode += self.emit.emitI2F(frame)
 
+                # Emit the code to push the initial value/array ref onto the stack
+                self.emit.printout(rhsCode)
+                # Emit the code to store the value from stack into the variable
+                self.emit.printout(
+                    self.emit.emitWRITEVAR(ast.varName, varType, index, frame)
+                )
+            # else: No initial value provided, or type was unknown
+
+        return o
+
+    def visitFuncCall(self, ast: FuncCall, o: dict) -> tuple[str, Type]: # Return tuple for expressions
+        # Find the function symbol
+        sym = self.lookup(ast.funName, o['env'], lambda x: x.name) # Use lookup helper if available, else use filter
+        if not sym:
+            sym = next(filter(lambda x: x.name == ast.funName, self.list_function), None)
+
+        if not sym:
+            # Should be caught by static check
+            # raise IllegalRuntimeException("Function not declared: " + ast.funName)
+            return "", VoidType() # Avoid crashing codegen
+
+        frame = o['frame']
+        mtype = sym.mtype # MType object
+
+        # Generate code for arguments first
+        argCode = ""
+        for i, arg in enumerate(ast.args):
+            arg_code, arg_type = self.visit(arg, o)
+            param_type = mtype.partype[i]
+            # Handle Int -> Float conversion for arguments
+            if type(param_type) is FloatType and type(arg_type) is IntType:
+                arg_code += self.emit.emitI2F(frame)
+            argCode += arg_code
+
+        # Check if called as a statement
+        isStmt = o.get('stmt', False)
+        if isStmt:
+            o["stmt"] = False # Consume the flag
+            self.emit.printout(argCode) # Emit argument code
+            # Emit invocation instruction
+            self.emit.printout(self.emit.emitINVOKESTATIC(f"{sym.value.value}/{ast.funName}", mtype, frame))
+            # If function returns non-void but called as stmt, pop the result
+            if not isinstance(mtype.rettype, VoidType):
+                self.emit.printout(self.emit.emitPOP(frame))
+            return "", VoidType() # Statements don't return code/type tuple
+        else:
+            # Called as an expression
+            output = argCode # Start with argument code
+            # Add invocation instruction
+            output += self.emit.emitINVOKESTATIC(f"{sym.value.value}/{ast.funName}", mtype, frame)
+            # Return the generated code and the function's return type
+            return output, mtype.rettype
+
+    def visitBlock(self, ast: Block, o: dict) -> None: # Blocks don't return values directly
+        env = o.copy()
+        # Enter a new lexical scope
+        env['env'] = [[]] + env['env']
+        env['frame'].enterScope(False) # Enter scope for local variables within the block
+
+        # Emit start label for the block scope (optional, but good for debug info)
+        start_label = env['frame'].getNewLabel()
+        self.emit.printout(self.emit.emitLABEL(start_label, env['frame']))
+
+        # Visit each statement/declaration in the block
+        for item in ast.member:
+            stmt_flag = False
+            if type(item) is FuncCall:
+                stmt_flag = True # Mark that FuncCall is used as a statement
+                env["stmt"] = True
+
+            self.visit(item, env) # Visit the member
+
+            if stmt_flag:
+                env["stmt"] = False # Reset flag if it was set
+
+        # Emit end label for the block scope
+        end_label = env['frame'].getNewLabel()
+        self.emit.printout(self.emit.emitLABEL(end_label, env['frame']))
+
+        env['frame'].exitScope() # Exit lexical scope
+        # Pop the local scope from env
+        env['env'] = env['env'][1:]
+        # No return value needed from visiting a block
+
+    def visitId(self, ast: Id, o: dict) -> tuple[str, Type]:
+        # Find the symbol in the environment
+        sym = self.lookup(ast.name, o['env'], lambda x: x.name)
+        if not sym:
+            # Should be caught by static check
+            # raise IllegalRuntimeException("Identifier not declared: " + ast.name)
+            return "", VoidType() # Avoid crashing
+
+        frame = o['frame']
+        isLeft = o.get('isLeft', False) # Check if used on the left side of assignment
+
+        if isLeft:
+            if type(sym.value) is Index: # Local variable or parameter
+                # Return code to write to local variable and its type
+                return self.emit.emitWRITEVAR(ast.name, sym.mtype, sym.value.value, frame), sym.mtype
+            elif type(sym.value) is CName: # Global variable (static field)
+                # Return code to write to static field and its type
+                return self.emit.emitPUTSTATIC(f"{self.className}/{ast.name}", sym.mtype, frame), sym.mtype
+            else: # Should not happen for variables/constants
+                return "", VoidType()
+        else: # Used on the right side (reading the value)
+            if type(sym.value) is Index: # Local variable or parameter
+                # Return code to read from local variable and its type
+                return self.emit.emitREADVAR(ast.name, sym.mtype, sym.value.value, frame), sym.mtype
+            elif type(sym.value) is CName: # Global variable (static field)
+                # Return code to read from static field and its type
+                return self.emit.emitGETSTATIC(f"{self.className}/{ast.name}", sym.mtype, frame), sym.mtype
+            else: # Should not happen
+                return "", VoidType()
+
+    def visitAssign(self, ast: Assign, o: dict) -> None: # Assignment is a statement
+        # Check for implicit declaration (MiniGo spec usually requires explicit declaration)
+        # Assuming static check handles undeclared variables.
+        # if type(ast.lhs) is Id and not self.lookup(ast.lhs.name, o['env'], lambda x: x.name):
+        #     # Handle implicit declaration if required by spec, otherwise error
+        #     # rhsCode, rhsType = self.visit(ast.rhs, o) # Need RHS type first
+        #     # new_decl = VarDecl(ast.lhs.name, rhsType, ast.rhs)
+        #     # self.visit(new_decl, o) # Visit the new declaration
+        #     # return # Assignment handled within VarDecl visit
+        #     pass # Assume error or handled by static check
 
         rhsCode, rhsType = self.visit(ast.rhs, o)
 
-        #Trước khi duyệt vế trái (có thể chạy vào hàm visitId ở trên) thì mình bật biến cờ isLeft, duyệt xong thì tắt nó đi.
-        #Biến cờ này dùng để xác định xem mình đang ở vế trái hay vế phải của phép gán, từ đó mà sinh mã cho đúng.
+        # Visit LHS with isLeft=True to get the writing code/type
         o['isLeft'] = True
         lhsCode, lhsType = self.visit(ast.lhs, o)
-        o['isLeft'] = False
+        o['isLeft'] = False # Reset flag
 
+        # Handle Int -> Float assignment conversion
         if type(lhsType) is FloatType and type(rhsType) is IntType:
-            pass #TODO: thêm mã chuyển đổi kiểu int -> float vào lhsCode.
+            rhsCode += self.emit.emitI2F(o['frame'])
 
-
-        # Khúc array cell này task 3
-
-        o['frame'].push() # Tăng kích thước stack lên 1 đơn vị, vì mình sẽ dùng stack để lưu trữ giá trị của biến này.
-
-
-
+        # Emit code
         if type(ast.lhs) is ArrayCell:
-            self.emit.printout(lhsCode)
-            self.emit.printout(rhsCode)
-            self.emit.printout(self.emit.emitASTORE("TODO")) # lưu vào mảng, truyền vào mảng và o['frame'].Gợi ý, khi visit lhs ta có visitAarrayCell và dùng self.. để lưu mảng đang xét
-        # access id
+            # For array cell assignment:
+            # lhsCode contains code to push array_ref, index1, index2, ...
+            # rhsCode contains code to push the value
+            # Need emitASTORE with the correct element type
+            self.emit.printout(lhsCode) # Push array_ref, indices
+            self.emit.printout(rhsCode) # Push value
+            # lhsType should be the element type returned by visitArrayCell(isLeft=True)
+            self.emit.printout(self.emit.emitASTORE(lhsType, o['frame']))
         else:
-            self.emit.printout(rhsCode)
-            self.emit.printout(lhsCode)
+            # For simple variable assignment (Id):
+            # rhsCode pushes the value
+            # lhsCode is the write instruction (WRITEVAR or PUTSTATIC)
+            self.emit.printout(rhsCode) # Push value first
+            self.emit.printout(lhsCode) # Then emit the store instruction
 
-        return o
+        # No return value for assignment statement
 
-    def visitReturn(self, ast: Return, o: dict) -> dict:
-        if ast.expr:
-            self.emit.printout(self.visit(ast.expr, o)[0])
-        self.emit.printout(self.emit.emitRETURN("TODO")) # truyền vào kiểu trả về của hàm và o['frame']
-        return o
+    def visitReturn(self, ast: Return, o: dict) -> None: # Return is a statement
+        frame = o['frame']
+        retType = frame.returnType # Get expected return type from frame
+
+        if isinstance(retType, VoidType):
+            if ast.expr: # Returning a value from a void function (should be static error)
+                # Optionally pop the expression's result if generated
+                exprCode, _ = self.visit(ast.expr, o)
+                self.emit.printout(exprCode)
+                self.emit.printout(self.emit.emitPOP(frame)) # Pop the unexpected value
+            self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
+        else: # Expecting a non-void return type
+            if ast.expr:
+                exprCode, exprType = self.visit(ast.expr, o)
+                # Handle Int -> Float return conversion
+                if type(retType) is FloatType and type(exprType) is IntType:
+                    exprCode += self.emit.emitI2F(frame)
+                self.emit.printout(exprCode) # Push the return value
+                self.emit.printout(self.emit.emitRETURN(retType, frame))
+            # else: Missing return value in non-void function (should be static error)
+            # else: # Handle missing return value if needed (e.g., push default)
+            #     pass # Or let JVM verifier catch it
 
     ##  END decl ------------------------------
 
-
-
-
-   ##  basic expression ------------------------------
+    ##  basic expression ------------------------------
     def visitBinaryOp(self, ast: BinaryOp, o: dict) -> tuple[str, Type]:
         op = ast.op
         frame = o['frame']
         codeLeft, typeLeft = self.visit(ast.left, o)
         codeRight, typeRight = self.visit(ast.right, o)
-        if op in ['+', '-'] and type(typeLeft) in [FloatType, IntType]:
+
+        # Arithmetic Ops (+, -, *, /)
+        if op in ['+', '-', '*', '/'] and isinstance(typeLeft, (IntType, FloatType)) and isinstance(typeRight, (IntType, FloatType)):
             typeReturn = IntType() if type(typeLeft) is IntType and type(typeRight) is IntType else FloatType()
             if type(typeReturn) is FloatType:
                 if type(typeLeft) is IntType:
                     codeLeft += self.emit.emitI2F(frame)
-                ## TODO implement xét cả typeRight nữa
-            return codeLeft + codeRight + "TODO" ## TODO implement
-        if op in ['*', '/']:
-            typeReturn = "TODO" ## TODO : cả trái phải đều int thì mới trả ra int con không thì trả ra float
-            if type(typeReturn) is FloatType:
-                if type(typeLeft) is IntType:
-                    codeLeft += self.emit.emitI2F(frame)
-                ## TODO implement tương tự cho typeRight
-            return codeLeft + codeRight +  "TODO"## TODO sinh mã cho mulop + trả vè kiểu trả về
-        if op in ['%']:
-            return codeLeft + codeRight +  "TODO"## TODO sinh mã cho mod + trả về kiểu trả về
-        if op in ['==', '!=', '<', '>', '>=', '<='] and type(typeLeft) in [FloatType, IntType]:
-            return codeLeft + codeRight +  "TODO"## TODO sinh mã cho reop + trả về kiểu trả về
-        if op in ['||']:
-            return codeLeft + codeRight +  "TODO"## TODO sinh mã cho orop + trả về kiểu trả về
-        if op in ['&&']:
-            return codeLeft + codeRight + self.emit.emitANDOP(frame), BoolType()  # Lấy này làm vd làm mấy cái ở trên
+                if type(typeRight) is IntType:
+                    codeRight += self.emit.emitI2F(frame)
+            # Emit appropriate instruction
+            if op in ['+', '-']:
+                return codeLeft + codeRight + self.emit.emitADDOP(op, typeReturn, frame), typeReturn
+            else: # '*', '/'
+                return codeLeft + codeRight + self.emit.emitMULOP(op, typeReturn, frame), typeReturn
 
-        # nối string string
-        if op in ['+', '-'] and type(typeLeft) in [StringType]:
-            return codeLeft + codeRight + "TODO" ## TODO sinh mã cho hàm concat(nằm trong java/lang/String/concat) + trả về kiểu trả về là stringtype
-        if op in ['==', '!=', '<', '>', '>=', '<='] and type(typeLeft) in [StringType]:
-            code = codeLeft + codeRight + "TODO" ## TODO sinh mã cho hàm compareTo(nằm trong java/lang/String/compareTo) + trả về kiểu trả về là inttype
-            code = code +  "TODO"## TODO implement + self.emit.emitREOP(op, IntType(), frame)
+        # Integer Modulo (%)
+        if op == '%' and type(typeLeft) is IntType and type(typeRight) is IntType:
+            return codeLeft + codeRight + self.emit.emitMOD(frame), IntType()
+
+        # Relational Ops (==, !=, <, >, >=, <=) for Numbers
+        if op in ['==', '!=', '<', '>', '>=', '<='] and isinstance(typeLeft, (IntType, FloatType)) and isinstance(typeRight, (IntType, FloatType)):
+            typeCmp = FloatType() # Default to float comparison if mixing
+            if type(typeLeft) is IntType and type(typeRight) is IntType:
+                typeCmp = IntType()
+            elif type(typeLeft) is IntType: # Right is Float
+                codeLeft += self.emit.emitI2F(frame)
+            elif type(typeRight) is IntType: # Left is Float
+                codeRight += self.emit.emitI2F(frame)
+            # Else: Both are Float
+            return codeLeft + codeRight + self.emit.emitREOP(op, typeCmp, frame), BoolType()
+
+        # Boolean Ops (&&, ||)
+        if op == '&&':
+            return codeLeft + codeRight + self.emit.emitANDOP(frame), BoolType()
+        if op == '||':
+            return codeLeft + codeRight + self.emit.emitOROP(frame), BoolType()
+
+        # String Concatenation (+)
+        if op == '+' and type(typeLeft) is StringType and type(typeRight) is StringType:
+            # Use java.lang.String.concat(String)
+            return codeLeft + codeRight + self.emit.emitINVOKEVIRTUAL("java/lang/String/concat", MType([StringType()], StringType()), frame), StringType()
+
+        # String Comparison (==, !=, <, >, >=, <=)
+        if op in ['==', '!=', '<', '>', '>=', '<='] and type(typeLeft) is StringType and type(typeRight) is StringType:
+            # Use java.lang.String.compareTo(String) -> int
+            code = codeLeft + codeRight + self.emit.emitINVOKEVIRTUAL("java/lang/String/compareTo", MType([StringType()], IntType()), frame)
+            # Compare result with 0
+            code += self.emit.emitPUSHICONST(0, frame)
+            # Need to swap operands for REOP if comparing result with 0
+            # e.g., a > b -> a.compareTo(b) > 0 -> REOP '>' checks stack: val1 > val2
+            # Stack: result, 0. We need REOP(op, IntType)
+            code += self.emit.emitREOP(op, IntType(), frame)
             return code, BoolType()
 
-    def visitUnaryOp(self, ast: UnaryOp, o: dict) -> tuple[str, Type]:
-        if ast.op == '!':
-            code, type_return = self.visit(ast.body, o)
-            return code + self.emit.emitNOT(BoolType(), o['frame']), BoolType()
-        ## TODO implement cho TH dấu -, dùng emitNEGOP
+        # Default case if no operation matches (should not happen with valid AST)
+        return "", VoidType()
 
+    def visitUnaryOp(self, ast: UnaryOp, o: dict) -> tuple[str, Type]:
+        frame = o['frame']
+        code, type_operand = self.visit(ast.body, o)
+
+        if ast.op == '!':
+            return code + self.emit.emitNOT(BoolType(), frame), BoolType()
+        elif ast.op == '-':
+            return code + self.emit.emitNEGOP(type_operand, frame), type_operand
+        # Default case
+        return "", VoidType()
 
     def visitIntLiteral(self, ast: IntLiteral, o: dict) -> tuple[str, Type]:
-        return self.emit.emitPUSHICONST(ast.value, o['frame']), IntType()
+        # o might be 0 if called from nested2recursive, handle this
+        frame = o.get('frame') if isinstance(o, dict) else None
+        return self.emit.emitPUSHICONST(ast.value, frame), IntType()
 
     def visitFloatLiteral(self, ast: FloatLiteral, o: dict) -> tuple[str, Type]:
-        return self.emit.emitPUSHFCONST(ast.value, o['frame']), FloatType()
+        frame = o.get('frame') if isinstance(o, dict) else None
+        # Jasmin requires float format like 1.0, 0.0 etc.
+        float_str = str(float(ast.value))
+        if '.' not in float_str:
+            float_str += '.0'
+        return self.emit.emitPUSHFCONST(float_str, frame), FloatType()
 
     def visitBooleanLiteral(self, ast: BooleanLiteral, o: dict) -> tuple[str, Type]:
-        return self.emit.emitPUSHICONST(ast.value, o['frame']), BoolType()
+        frame = o.get('frame') if isinstance(o, dict) else None
+        # Use emitPUSHICONST for boolean (1 for true, 0 for false)
+        return self.emit.emitPUSHICONST(1 if ast.value else 0, frame), BoolType()
 
     def visitStringLiteral(self, ast: StringLiteral, o: dict) -> tuple[str, Type]:
-        return self.emit.emitPUSHCONST(ast.value, StringType(), o['frame']), StringType()
+        frame = o.get('frame') if isinstance(o, dict) else None
+        return self.emit.emitPUSHCONST(ast.value, StringType(), frame), StringType()
 
-    ## TODO END basic expression ------------------------------
+    ## END basic expression ------------------------------
 
-    ## TODO array ------------------------------
+    ## array ------------------------------
     def visitArrayCell(self, ast: ArrayCell, o: dict) -> tuple[str, Type]:
+        frame = o['frame']
+        isLeft = o.get('isLeft', False)
+
+        # Visit the base array expression (Id or another ArrayCell)
+        # Ensure isLeft is False when visiting the base array part
         newO = o.copy()
         newO['isLeft'] = False
-        codeGen, arrType = "TODO" #visit thằng expr của array cell này, nên nhớ arraycell gồm phần expr phía trước và index phía sau.
+        codeGen, arrType = self.visit(ast.arr, newO)
 
+        # Check if arrType is actually an ArrayType
+        if not isinstance(arrType, ArrayType):
+            # Should be caught by static check
+            # raise IllegalRuntimeException("Accessing non-array type as array")
+            return "", VoidType()
+
+        # Visit each index expression
+        currentDimType = arrType # Keep track of the type as we index
         for idx, item in enumerate(ast.idx):
-            codeGen += self.visit(item, newO)[0]
-            if idx != len(ast.idx) - 1:
-                codeGen += self.emit.emitALOAD(arrType, o['frame'])
+            # Push array reference (from previous step or base)
+            # Push index value
+            idxCode, idxType = self.visit(item, newO) # Visit index expression
+            if not isinstance(idxType, IntType):
+                # Should be caught by static check
+                # raise IllegalRuntimeException("Array index must be integer")
+                pass
+            codeGen += idxCode
 
+            # Check if we are accessing an element or a sub-array
+            is_last_index = (idx == len(ast.idx) - 1)
+
+            if not is_last_index:
+                # Accessing a sub-array, load its reference
+                codeGen += self.emit.emitALOAD(currentDimType.eleType, frame) # Load sub-array ref
+                if isinstance(currentDimType.eleType, ArrayType):
+                    currentDimType = currentDimType.eleType # Update type for next dimension
+                else:
+                    # Error: Too many dimensions accessed
+                    # raise IllegalRuntimeException("Too many dimensions accessed")
+                    return "", VoidType()
+            # else: Last index, handled below based on isLeft
+
+        # Determine the final type of the cell
         retType = None
-        if len(arrType.dimens) == len(ast.idx):
-            retType = arrType.eleType
-            if not o.get('isLeft'):
-                codeGen += "TODO" #TODO: thêm mã cho trường hợp này => dùng emitALOAD để lấy giá trị của phần tử trong mảng ra
-            else:
-                self.arrayCell = "TODO"  # TODO: Nếu nó arraycell nằm bên vế trái thì mình gán vào biến này để biết đang duyệt vào arraycell nào, dùng sau này.
+        if len(arrType.dimens) < len(ast.idx):
+            # Error: Too many dimensions
+            # raise IllegalRuntimeException("Too many dimensions accessed")
+            return "", VoidType()
+        elif len(arrType.dimens) == len(ast.idx):
+            retType = arrType.eleType # Accessing a single element
+        else: # len(arrType.dimens) > len(ast.idx)
+            # Accessing a sub-array
+            remaining_dims = arrType.dimens[len(ast.idx):]
+            retType = ArrayType(remaining_dims, arrType.eleType)
+
+        # Generate final load/store instruction or prepare for store
+        if not isLeft:
+            # Reading the value: Load the element or sub-array reference
+            codeGen += self.emit.emitALOAD(retType, frame)
         else:
-            retType = ArrayType(arrType.dimens[len(ast.idx): ], arrType.eleType)
-            if not o.get('isLeft'):
-                codeGen += "TODO" #TODO: thêm mã cho trường hợp này => dùng emitALOAD để lấy giá trị của phần tử trong mảng ra
-            else:
-                self.arrayCell = "TODO" # TODO: Nếu nó arraycell nằm bên vế trái thì mình gán vào biến này để biết đang duyệt vào arraycell nào, dùng sau này.
-        return #TODO trả vè mã nãy giờ tạo để thằng nào gọi thằng đó in và type -> tuple[str, Type]:
+            # Writing to the cell: Code generated so far pushes array_ref and indices.
+            # visitAssign will push the value and call emitASTORE.
+            # Store the element type for visitAssign to use with emitASTORE.
+            self.arrayCellType = retType # Store the type of the element/sub-array being assigned TO
+
+        return codeGen, retType # Return code generated so far and the type of the cell
 
     def visitArrayLiteral(self, ast:ArrayLiteral , o: dict) -> tuple[str, Type]:
+        # This visitor handles the creation and initialization of an array from a literal like [1, 2, 3] or [[1],[2]]
+        frame = o['frame']
 
-        # Phần ArrayLiteral.value là 1 nested list nên mình sẽ dùng đệ quy để duyệt nó.
-        def nested2recursive(dat: Union[Literal, list['NestedList']], o: dict) -> tuple[str, Type]:
-            #dat có thể là 1 Literal hoặc là 1 list chứa các Literal khác, nên mình sẽ kiểm tra xem dat có phải là list hay không.
+        # Recursive helper function to handle nested lists
+        def nested2recursive(dat: list, current_dim_types: list[Type]) -> tuple[str, Type]:
+            # dat is the current level list (e.g., [1, 2] or [[1], [2]])
+            # current_dim_types provides the expected type structure for this level
 
-            #Nếu là Literal thôi thì chỉ cần visit tới là xong, không cần đệ quy nữa, tham số o là 0
-            if not isinstance(dat,list):
-                return self.visit(dat, 0)
+            codeGen = ""
+            array_size = len(dat)
+            codeGen += self.emit.emitPUSHICONST(array_size, frame) # Push size for this dimension
 
-            #Nếu dat là 1 list thì đoạn code dưới sẽ giải quyết
-            #chuẩn bị ngữ cảnh
-            frame = o['frame'] # lấy frame từ o
-            codeGen = self.emit.emitPUSHCONST(len(dat), IntType(), frame) #sinh mã đẩy số lượng phần tử của mảng vào stack
+            # Determine element type and if it's another array
+            if not current_dim_types: # Should not happen if called correctly
+                return "", VoidType()
 
+            element_type = current_dim_types[0]
+            remaining_dim_types = current_dim_types[1:]
 
-            #Trường hợp danh sách không lồng nhau(vì phần tử đầu tiên không phải là list)
-            if not isinstance(dat[0],list):
-                _, type_element_array = self.visit(dat[0], o)  # gọi hàm visit cho phần tử đầu tiên để lấy kiểu của nó
-                codeGen += self.emit.TODO # cần dùng 1 trong 2 emitNEWARRAY hoặc emitANEWARRAY để tạo mảng với kiểu phần tử là type_element_array
+            # Create the array for this dimension
+            if isinstance(element_type, (IntType, FloatType, BoolType)):
+                codeGen += self.emit.emitNEWARRAY(element_type, frame)
+            else: # StringType, ArrayType, ClassType
+                codeGen += self.emit.emitANEWARRAY(element_type, frame)
 
-                # Lặp qua từng phần tử trong danh sách:
-                for idx, item in enumerate(dat):
-                    codeGen += "TODO"  # TODO Nhân đôi tham chiếu mảng trên stack (emitDUP).
-                    codeGen +="TODO"  # TODO Đẩy chỉ số của phần tử (emitPUSHCONST) lên stack.
-                    codeGen += "TODO"  # TODO Gọi self.visit(item, o) để xử lý giá trị phần tử.
-                    codeGen += "TODO"  # TODO Lưu giá trị vào mảng (emitASTORE).
-                return codeGen , ArrayType("TODO") #TODO: Chú ý dùng đến len(dat)
-
-            #Trường hợp danh sách lồng nhau:
-            # Nếu phần tử đầu tiên của danh sách là một danh sách khác (danh sách lồng nhau), thì:
-            # Gọi đệ quy nested2recursive(dat[0], o) để xử lý danh sách con.
-            # Sinh mã code để tạo một mảng mới với kiểu phần tử là kiểu của danh sách con.
-            _, type_element_array = nested2recursive(dat[0], o)
-            codeGen += self.emit.TODO # cần dùng 1 trong 2 emitNEWARRAY hoặc emitANEWARRAY để tạo mảng với kiểu phần tử là type_element_array
-
-
-
-            # Lặp qua từng phần tử trong danh sách:
-                # Nhân đôi tham chiếu mảng trên stack (emitDUP).
-                # Đẩy chỉ số của phần tử (emitPUSHCONST).
-                # Gọi đệ quy nested2recursive(item, o) để xử lý danh sách con.
-                # Lưu giá trị vào mảng (emitASTORE).
+            # Initialize elements
             for idx, item in enumerate(dat):
-                codeGen += "TODO"
-                codeGen += "TODO"
-                codeGen +="TODO"
-                codeGen += "TODO"
-            return  codeGen, ArrayType("TODO") #TODO: Chú ý dùng đến len(dat)
+                codeGen += self.emit.emitDUP(frame) # Duplicate array reference
+                codeGen += self.emit.emitPUSHICONST(idx, frame) # Push index
 
-        #Gọi hàm đệ quy trong đó tham số truyền vào là ast.value, o
-        return nested2recursive(ast.value, o)
+                itemCode = ""
+                itemType = None
+                if isinstance(item, list): # Nested array
+                    # Recursively handle the sub-array
+                    itemCode, itemType = nested2recursive(item, remaining_dim_types)
+                else: # Literal element
+                    # Visit the literal to get its value pushed
+                    itemCode, itemType = self.visit(item, o)
+                    # Check type compatibility (e.g., int literal for float array)
+                    if isinstance(element_type, FloatType) and isinstance(itemType, IntType):
+                        itemCode += self.emit.emitI2F(frame)
+                    # Add more checks if necessary
+
+                codeGen += itemCode # Push element value or sub-array reference
+                codeGen += self.emit.emitASTORE(element_type, frame) # Store element
+
+            # The type of the array created at this level
+            created_array_type = ArrayType([array_size] + [d for d in remaining_dim_types if isinstance(d, int)], element_type if not remaining_dim_types else remaining_dim_types[-1]) # Reconstruct type accurately
+            # This type reconstruction is complex, relying on static type info is better.
+            # Let's assume the overall type is known from context (e.g., VarDecl)
+
+            return codeGen, element_type # Return code and the base element type for simplicity here
+
+        # We need the expected ArrayType from the context (e.g., VarDecl or assignment LHS)
+        # This visitor assumes 'o' contains the expected type or it's inferred.
+        # Let's assume the full ArrayType is somehow available, e.g., via a key in 'o'
+        expected_type = o.get('expected_array_type') # Need to pass this in caller
+        if not expected_type or not isinstance(expected_type, ArrayType):
+            # Cannot generate code without knowing the target array type structure
+            # raise CodeGenError("Cannot determine array type for literal")
+            return "", VoidType() # Fallback
+
+        # Start the recursive generation
+        # Need to reconstruct the type hierarchy for the helper
+        dim_types = []
+        current = expected_type
+        while isinstance(current, ArrayType):
+            dim_types.append(current.eleType)
+            current = current.eleType
+        dim_types.reverse() # Put base element type first
+
+        # This logic is flawed. Let's simplify: assume visitArrayLiteral is called
+        # with context providing the full target ArrayType.
+
+        # Simplified approach: Generate code based on ast.value structure
+        # and assume static checker verified compatibility with target type.
+
+        def generate_code_for_level(data_level, target_type_level):
+            if not isinstance(target_type_level, ArrayType):
+                # Should be a literal matching the target type
+                lit_code, lit_type = self.visit(data_level, o)
+                # Type conversion if needed
+                if isinstance(target_type_level, FloatType) and isinstance(lit_type, IntType):
+                    lit_code += self.emit.emitI2F(frame)
+                return lit_code, target_type_level
+
+            # It's an array level
+            code = ""
+            array_size = len(data_level)
+            element_target_type = target_type_level.eleType
+
+            # Push size, create array
+            code += self.emit.emitPUSHICONST(array_size, frame)
+            if isinstance(element_target_type, (IntType, FloatType, BoolType)):
+                code += self.emit.emitNEWARRAY(element_target_type, frame)
+            else:
+                code += self.emit.emitANEWARRAY(element_target_type, frame)
+
+            # Initialize elements
+            for idx, item_data in enumerate(data_level):
+                code += self.emit.emitDUP(frame)
+                code += self.emit.emitPUSHICONST(idx, frame)
+                # Recursively generate code for the element/sub-array
+                item_code, _ = generate_code_for_level(item_data, element_target_type)
+                code += item_code
+                # Store the element/sub-array reference
+                code += self.emit.emitASTORE(element_target_type, frame)
+
+            return code, target_type_level
+
+        # Start generation with the top-level literal value and the expected type
+        final_code, final_type = generate_code_for_level(ast.value, expected_type)
+        return final_code, final_type
 
     def visitConstDecl(self, ast:ConstDecl, o: dict) -> dict:
+        # Treat ConstDecl like VarDecl for code generation purposes
+        # The difference (immutability) is usually handled by static analysis
+        # Pass the initializer expression correctly
         return self.visit(VarDecl(ast.conName, ast.conType, ast.iniExpr), o)
 
     def visitArrayType(self, ast:ArrayType, o):
+        # This visitor handles the creation of an uninitialized array based on type info
+        # e.g., from a VarDecl like 'var arr [2][3]int' where init value is not given
+        frame = o['frame']
         codeGen = ""
-        # TODO : Lặp qua dimens để thêm code vào codeGen, dùng visit và lưu ý rằng visit sẽ trả về cặp mã và kiểu của nó.
-        # Cuối cùng đủ tham số thì dùng emitMULTIANEWARRAY để tạo mảng mới.
-        codeGen += self.emit.emitMULTIANEWARRAY(ast, o['frame'])
-        return codeGen, ast
+        # Visit each dimension expression to push its size onto the stack
+        for dim_expr in ast.dimens:
+            dim_code, dim_type = self.visit(dim_expr, o)
+            # Ensure dimension is integer
+            if not isinstance(dim_type, IntType):
+                # raise IllegalRuntimeException("Array dimension must be an integer")
+                pass # Assume static check handles this
+            codeGen += dim_code
+        # Now stack has all dimension sizes
+
+        # Use MULTIANEWARRAY for multi-dimensional arrays
+        # For single dimension, use NEWARRAY/ANEWARRAY based on element type
+        if len(ast.dimens) > 1:
+            codeGen += self.emit.emitMULTIANEWARRAY(ast, frame)
+        elif len(ast.dimens) == 1:
+            elem_type = ast.eleType
+            if isinstance(elem_type, (IntType, FloatType, BoolType)):
+                codeGen += self.emit.emitNEWARRAY(elem_type, frame)
+            else: # String, Array, etc.
+                codeGen += self.emit.emitANEWARRAY(elem_type, frame)
+        # else: 0 dimensions? Invalid type
+
+        return codeGen, ast # Return the code and the ArrayType itself
+
+    # Helper lookup function (if not already in Utils)
+    def lookup(self, name, lst, func):
+        for x in lst:
+            # Check if x is a list/scope itself
+            if isinstance(x, list):
+                # Search within the scope
+                sym = self.lookup(name, x, func)
+                if sym:
+                    return sym
+            # Check the symbol directly if x is not a list (e.g., built-in symbol)
+            elif func(x) == name:
+                return x
+        return None

@@ -36,7 +36,7 @@ class TestCodeGen:
     @staticmethod
     def checkStatic(input,expect,num):
         dest = open("./solutions/" + str(num) + ".txt","w")
-        
+
         if type(input) is str:
             inputfile = TestUtil.makeSource(input,num)
             lexer = MiniGoLexer(inputfile)
@@ -49,13 +49,13 @@ class TestCodeGen:
         else:
             inputfile = TestUtil.makeSource(str(input),num)
             asttree = input
-        
-        
+
+
         codeGen = CodeGenerator()
         path = "java_byte_code/" +  num
         if not os.path.isdir(path):
             os.mkdir(path)
-                    
+
         base_path = f"java_byte_code/{num}"
         jasmin_jar = "../jasmin.jar"
         miniGO_class = "MiniGoClass"
@@ -63,7 +63,7 @@ class TestCodeGen:
 
         f = open(output_file, "w")
         codeGen.gen(asttree, path)
-        try: 
+        try:
             subprocess.run(
                 ["java", "-jar", jasmin_jar, f"{miniGO_class}.j"],
                 cwd=base_path,
@@ -72,7 +72,7 @@ class TestCodeGen:
             )
 
             subprocess.run(
-                ["java", "-cp", "../_io:.", miniGO_class],
+                ["java", "-cp", "../_io;.", miniGO_class],
                 cwd=base_path,
                 stdout=f,
                 stderr=subprocess.STDOUT,

@@ -1,0 +1,15 @@
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func (p Person) printInfo() {
+        putStringLn(p.name);
+        putIntLn(p.age);
+    }
+    func main() {
+        var people [2]Person = [2]Person{Person{name: "Anna", age: 19},Person{name: "Bill", age: 21}};
+        people[0].printInfo();
+        people[1].printInfo();
+    }
+        

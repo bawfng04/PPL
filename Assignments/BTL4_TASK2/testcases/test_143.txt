@@ -1,0 +1,8 @@
+
+type PPL3 struct {number int;}
+
+func main(){
+    var a PPL3 = PPL3 {number: 10}
+    putInt(a.number)
+}
+        

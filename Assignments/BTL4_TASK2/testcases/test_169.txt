@@ -1,0 +1,14 @@
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func createPerson(n string, a int) Person {
+        return Person{name: n, age: a};
+    }
+    func main() {
+        var p Person = createPerson("Helen", 24);
+        putStringLn(p.name);
+        putIntLn(p.age);
+    }
+        

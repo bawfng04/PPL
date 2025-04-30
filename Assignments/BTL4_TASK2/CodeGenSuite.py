@@ -12,8 +12,8 @@ import inspect
 from AST import *
 
 """
-    (cd java_byte_code/test_001 && 
-    java  -jar ../jasmin.jar MiniGoClass.j && 
+    (cd java_byte_code/test_001 &&
+    java  -jar ../jasmin.jar MiniGoClass.j &&
     java -cp ../_io:. MiniGoClass)
 """
 class CodeGenSuite(unittest.TestCase):
@@ -36,5 +36,6 @@ func main() {
 
 func fint() int {return 1;}
 """
-        self.assertTrue(TestCodeGen.test(input,"VoTien\n3.0\ntrue\nac\n",inspect.stack()[0].function)) 
+        self.assertTrue(TestCodeGen.test(input,"VoTien\n3.0\ntrue\nac\n",inspect.stack()[0].function))
+
 
