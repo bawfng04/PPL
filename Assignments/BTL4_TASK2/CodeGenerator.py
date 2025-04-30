@@ -164,10 +164,19 @@ class CodeGenerator(BaseVisitor,Utils):
         return o # Return the original context
 
     def visitParamDecl(self, ast: ParamDecl, o: dict) -> dict:
-        frame = o['frame']
+        frame = o["frame"]
         index = frame.getNewIndex()
-        o['env'][0].append(Symbol(ast.parName, ast.parType, Index(index)))
-        self.emit.printout(self.emit.emitVAR(index, ast.parName, ast.parType, frame.getStartLabel() ,frame.getEndLabel(), frame))
+        o["env"][0].append(Symbol(ast.parName, ast.parType, Index(index)))
+        self.emit.printout(
+            self.emit.emitVAR(
+                index,
+                ast.parName,
+                ast.parType,
+                frame.getStartLabel(),
+                frame.getEndLabel(),
+                frame,
+            )
+        )
         return o
 
     def visitVarDecl(self, ast: VarDecl, o: dict) -> dict:
