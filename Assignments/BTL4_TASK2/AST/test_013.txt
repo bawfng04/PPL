@@ -1,0 +1,1 @@
+Program([InterfaceType(Course,[Prototype(study,[],VoidType)]),StructType(PPL3,[(number,IntType)],[]),MethodDecl(p,Id(PPL3),FuncDecl(study,[],VoidType,Block([FuncCall(putInt,[FieldAccess(Id(p),number)])]))),FuncDecl(main,[],VoidType,Block([VarDecl(a,Id(Course),Nil),Assign(Id(a),StructLiteral(PPL3,[(number,IntLiteral(10))])),MethodCall(Id(a),study,[])]))])

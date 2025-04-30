@@ -1,0 +1,14 @@
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func (p Person) agePlus(n int) int {
+        return p.age + n;
+    }
+    func main() {
+        var p Person = Person{name: "Charlie", age: 18};
+        var result int = p.agePlus(5);
+        putIntLn(result);
+    }
+        

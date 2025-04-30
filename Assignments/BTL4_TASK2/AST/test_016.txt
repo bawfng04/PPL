@@ -1,0 +1,1 @@
+Program([StructType(PPL2,[(number,IntType)],[]),StructType(PPL3,[(number,IntType),(ppl,Id(PPL2))],[]),FuncDecl(main,[],VoidType,Block([VarDecl(a,Id(PPL3)),Assign(FieldAccess(Id(a),ppl),StructLiteral(PPL2,[(number,IntLiteral(10))])),FuncCall(putInt,[FieldAccess(FieldAccess(Id(a),ppl),number)])]))])

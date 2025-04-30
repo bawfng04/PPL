@@ -1,0 +1,11 @@
+
+type Course interface {study();}
+type PPL3 struct {number int;}
+func (p PPL3) study() {putInt(p.number);}
+
+func main(){
+    var a Course = nil
+    a := PPL3 {number: 10}
+    a.study()
+}
+        

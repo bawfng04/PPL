@@ -1,3 +1,0 @@
-Error: Could not find or load main class MiniGoClass
-Caused by: java.lang.ClassNotFoundException: MiniGoClass
-Subprocess error: Command '['java', '-cp', '../_io;.', 'MiniGoClass']' returned non-zero exit status 1.

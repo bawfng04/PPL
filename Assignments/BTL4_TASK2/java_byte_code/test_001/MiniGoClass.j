@@ -37,14 +37,10 @@ Label5:
 	iconst_0
 Label6:
 	invokestatic io/putBoolLn(Z)V
-	aload_1
-	ldc "c"
-	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-	astore_1
 Label7:
 Label1:
 	return
-.limit stack 4
+.limit stack 3
 .limit locals 2
 .end method
 
@@ -73,8 +69,6 @@ Label1:
 .method public static <clinit>()V
 Label0:
 Label4:
-	invokestatic MiniGoClass/fint()I
-	putstatic MiniGoClass/global I
 Label5:
 Label1:
 	return
