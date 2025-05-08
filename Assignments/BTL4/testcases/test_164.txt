@@ -1,0 +1,16 @@
+
+    type Greeter interface { greet(); }
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func (p Person) greet() {
+        putStringLn(p.name);
+    }
+
+    func main() {
+        var g Greeter = Person{name: "Bob", age: 30};
+        g.greet();
+    }
+        

@@ -1,0 +1,10 @@
+
+type PPL2 struct {number int;}
+type PPL3 struct {number int; ppl PPL2;}
+
+func main(){
+    var a PPL3
+    a.ppl := PPL2 {number: 10}
+   putInt(a.ppl.number)
+}
+        

@@ -1,0 +1,13 @@
+
+type Calculator struct { x int; y int; }
+
+func (c Calculator) sum() int {
+    return c.x + c.y;
+}
+
+func main() {
+    var cal Calculator = Calculator {x: 7, y: 8};
+    var result int = cal.sum();
+    putIntLn(result);
+}
+        

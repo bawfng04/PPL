@@ -1,0 +1,17 @@
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func (p Person) isAdult() boolean {
+        return p.age >= 18;
+    }
+    func main() {
+        var p Person = Person{name: "Ivy", age: 17};
+        if (p.isAdult()) {
+            putStringLn("Adult");
+        } else {
+            putStringLn("Minor");
+        }
+    }
+        
