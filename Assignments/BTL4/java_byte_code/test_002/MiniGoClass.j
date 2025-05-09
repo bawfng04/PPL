@@ -11,7 +11,7 @@ Label2:
 	newarray int
 	dup
 	iconst_0
-	iconst_0
+	iconst_1
 	iastore
 	astore_1
 	aload_1
@@ -25,7 +25,7 @@ Label2:
 Label3:
 Label1:
 	return
-.limit stack 4
+.limit stack 5
 .limit locals 2
 .end method
 

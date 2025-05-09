@@ -7,14 +7,11 @@ Label0:
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label2:
 .var 1 is i I from Label2 to Label3
-	bipush 10
-	istore_1
-.var 2 is i I from Label2 to Label3
 	iconst_0
-	istore_2
+	istore_1
 Label6:
 	iload_1
-	iconst_2
+	iconst_5
 	if_icmpge Label7
 	iconst_1
 	goto Label8
@@ -24,14 +21,28 @@ Label8:
 	ifle Label5
 Label9:
 	iload_1
-	invokestatic io/putIntLn(I)V
+	iconst_3
+	if_icmpne Label13
+	iconst_1
+	goto Label14
+Label13:
+	iconst_0
+Label14:
+	ifle Label12
+Label15:
 	goto Label5
-Label10:
-Label4:
+Label16:
+	goto Label11
+Label12:
+Label11:
+	iload_1
+	invokestatic io/putInt(I)V
 	iload_1
 	iconst_1
 	iadd
 	istore_1
+Label10:
+Label4:
 	goto Label6
 Label5:
 	iload_1
@@ -39,8 +50,8 @@ Label5:
 Label3:
 Label1:
 	return
-.limit stack 4
-.limit locals 3
+.limit stack 6
+.limit locals 2
 .end method
 
 .method public <init>()V

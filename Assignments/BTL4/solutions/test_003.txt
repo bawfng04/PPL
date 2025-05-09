@@ -1,3 +1,0 @@
-Error: Unable to initialize main class MiniGoClass
-Caused by: java.lang.VerifyError: (class: MiniGoClass, method: main signature: ([Ljava/lang/String;)V) Expecting to find array of objects or arrays on stack
-Subprocess error: Command '['java', '-cp', '../_io;.', 'MiniGoClass']' returned non-zero exit status 1.

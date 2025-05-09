@@ -8,11 +8,14 @@ Label0:
 Label2:
 .var 1 is a [I from Label2 to Label3
 	iconst_1
-	anewarray [I
+	iconst_1
+	iconst_1
+	multianewarray [I 3
 	dup
 	iconst_0
 	iconst_1
-	anewarray [I
+	iconst_1
+	multianewarray [I 2
 	dup
 	iconst_0
 	iconst_1
@@ -21,8 +24,8 @@ Label2:
 	iconst_0
 	iconst_0
 	iastore
-	aastore
-	aastore
+	iastore
+	iastore
 	astore_1
 	aload_1
 	iconst_0
@@ -43,7 +46,7 @@ Label2:
 Label3:
 Label1:
 	return
-.limit stack 10
+.limit stack 13
 .limit locals 2
 .end method
 

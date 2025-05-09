@@ -7,17 +7,18 @@ Label0:
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label2:
 	iconst_1
-	ifeq Label4
-Label5:
+	ifle Label5
+Label6:
 	iconst_1
 	invokestatic io/putBool(Z)V
-Label6:
-Label4:
+Label7:
+	goto Label4
+Label5:
 Label4:
 Label3:
 Label1:
 	return
-.limit stack 1
+.limit stack 3
 .limit locals 1
 .end method
 
