@@ -13,7 +13,7 @@ Label2:
 	iconst_0
 	istore_2
 Label6:
-	iload_1
+	iload_2
 	iconst_2
 	if_icmpge Label7
 	iconst_1
@@ -23,15 +23,15 @@ Label7:
 Label8:
 	ifle Label5
 Label9:
-	iload_1
+	iload_2
 	invokestatic io/putIntLn(I)V
 	goto Label5
 Label10:
 Label4:
-	iload_1
+	iload_2
 	iconst_1
 	iadd
-	istore_1
+	istore_2
 	goto Label6
 Label5:
 	iload_1
