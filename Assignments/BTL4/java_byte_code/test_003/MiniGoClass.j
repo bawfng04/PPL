@@ -8,14 +8,11 @@ Label0:
 Label2:
 .var 1 is a [I from Label2 to Label3
 	iconst_1
-	iconst_1
-	iconst_1
-	multianewarray [I 3
+	newarray int
 	dup
 	iconst_0
 	iconst_1
-	iconst_1
-	multianewarray [I 2
+	newarray int
 	dup
 	iconst_0
 	iconst_1
@@ -24,8 +21,8 @@ Label2:
 	iconst_0
 	iconst_0
 	iastore
-	iastore
-	iastore
+	aastore
+	aastore
 	astore_1
 	aload_1
 	iconst_0

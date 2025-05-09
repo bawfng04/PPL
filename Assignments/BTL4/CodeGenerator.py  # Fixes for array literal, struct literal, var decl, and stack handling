@@ -1,0 +1,21 @@
+def visitArrayLiteral(self, ast, env):
+    element_type = self.visit(ast.value, env)
+    codeGen = self.emit.emitANEWARRAY(element_type, frame)
+    return codeGen
+
+def visitStructLiteral(self, ast, env):
+    struct_code = self.emit.emitSTRUCT(ast.structName, frame)
+    return struct_code
+
+def visitVarDecl(self, ast, env):
+    if isinstance(ast.varType.dimens[0], Id):
+        dimensions = [dim.value for dim in ast.varType.dimens]
+    else:
+        dimensions = ast.varType.dimens
+    default_values = create_default_array(dimensions, ast.varType.eleType)
+    return default_values
+
+def emitWRITEVAR(self, varName, varType, index, frame):
+    if frame.is_empty():
+        raise IllegalRuntimeException("Pop empty stack")
+    self.emit.printout(self.emit.emitWRITEVAR(varName, varType, index, frame))

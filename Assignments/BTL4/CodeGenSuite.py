@@ -177,30 +177,30 @@ func main(){
         """
         self.assertTrue(TestCodeGen.test(input, "10\n10", inspect.stack()[0].function))
 
-#     def test_013(self):
-#         input = """
-# type Course interface {study();}
-# type PPL3 struct {number int;}
-# func (p PPL3) study() {putInt(p.number);}
+    def test_013(self):
+        input = """
+type Course interface {study();}
+type PPL3 struct {number int;}
+func (p PPL3) study() {putInt(p.number);}
 
-# func main(){
-#     var a Course = nil
-#     a := PPL3 {number: 10}
-#     a.study()
-# }
-#         """
-#         self.assertTrue(TestCodeGen.test(input, "10", inspect.stack()[0].function))
+func main(){
+    var a Course = nil
+    a := PPL3 {number: 10}
+    a.study()
+}
+        """
+        self.assertTrue(TestCodeGen.test(input, "10", inspect.stack()[0].function))
 
-#     def test_014(self):
-#         input = """
-# type PPL3 struct {number int;}
+    def test_014(self):
+        input = """
+type PPL3 struct {number int;}
 
-# func main(){
-#     var a PPL3 = PPL3 {number: 10}
-#     putInt(a.number)
-# }
-#         """
-#         self.assertTrue(TestCodeGen.test(input, "10", inspect.stack()[0].function))
+func main(){
+    var a PPL3 = PPL3 {number: 10}
+    putInt(a.number)
+}
+        """
+        self.assertTrue(TestCodeGen.test(input, "10", inspect.stack()[0].function))
 
 #     def test_015(self):
 #         input = """
