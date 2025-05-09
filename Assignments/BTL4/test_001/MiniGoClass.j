@@ -76,10 +76,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-Label2:
 	invokestatic MiniGoClass/fint()I
 	putstatic MiniGoClass/global I
-Label3:
 Label1:
 	return
 .limit stack 1

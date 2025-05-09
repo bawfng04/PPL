@@ -50,6 +50,7 @@ class TestCodeGen:
             inputfile = TestUtil.makeSource(str(input),num)
             asttree = input
 
+
         codeGen = CodeGenerator()
         path = "java_byte_code/" +  num
         if not os.path.isdir(path):
@@ -64,10 +65,10 @@ class TestCodeGen:
         codeGen.gen(asttree, path)
         try:
             subprocess.run(
-                ["java", "-jar", jasmin_jar, f"/*.j"],
+                ["java", "-jar", jasmin_jar, f"{miniGO_class}.j"],
                 cwd=base_path,
                 stderr=subprocess.STDOUT,
-                check=True,
+                check=True
             )
 
             subprocess.run(
@@ -92,3 +93,17 @@ class TestCodeGen:
         dest = open("./solutions/" + str(num) + ".txt","r")
         line = dest.read()
         return line == expect
+
+
+
+
+
+
+
+
+
+
+
+
+
+

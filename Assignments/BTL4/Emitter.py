@@ -186,12 +186,8 @@ class Emitter():
         if type(inType) is IntType or type(inType) is BoolType:
             return self.jvm.emitILOAD(index)
         elif type(inType) is FloatType:
-            return self.jvm.emitFLOAD(index)  # Add float load implementation
-        elif (
-            type(inType) is cgen.ArrayType
-            or type(inType) is cgen.ClassType
-            or type(inType) is StringType
-        ):
+            return self.jvm.emitFLOAD(index)
+        elif type(inType) is cgen.ArrayType or type(inType) is cgen.ClassType or type(inType) is StringType:
             return self.jvm.emitALOAD(index)
         else:
             raise IllegalOperandException(name)
@@ -212,7 +208,6 @@ class Emitter():
     *   generate code to pop a value on top of the operand stack and store it to a block-scoped variable.
     *   @param name the symbol entry of the variable.
     '''
-
     def emitWRITEVAR(self, name, inType, index, frame):
         # name: String
         # inType: Type
@@ -225,12 +220,8 @@ class Emitter():
         if type(inType) is IntType or type(inType) is BoolType:
             return self.jvm.emitISTORE(index)
         elif type(inType) is FloatType:
-            return self.jvm.emitFSTORE(index)  # Add float store implementation
-        elif (
-            type(inType) is cgen.ArrayType
-            or type(inType) is cgen.ClassType
-            or type(inType) is StringType
-        ):
+            return self.jvm.emitFSTORE(index)
+        elif type(inType) is cgen.ArrayType or type(inType) is cgen.ClassType or type(inType) is StringType:
             return self.jvm.emitASTORE(index)
         else:
             raise IllegalOperandException(name)
@@ -298,7 +289,6 @@ class Emitter():
     *   @param lexeme the qualified name of the method(i.e., class-name/method-name)
     *   @param in the type descriptor of the method.
     '''
-
     def emitINVOKESTATIC(self, lexeme, in_, frame):
         # lexeme: String
         # in_: Type
@@ -334,7 +324,6 @@ class Emitter():
     * @param lexeme the qualified name of the method(i.e., class-name/method-name)
     * @param in the type descriptor of the method.
     '''
-
     def emitINVOKEVIRTUAL(self, lexeme, in_, frame):
         # lexeme: String
         # in_: Type
@@ -343,9 +332,10 @@ class Emitter():
         typ = in_
         list(map(lambda x: frame.pop(), typ.partype))
         frame.pop()
-        if not type(typ.rettype) is VoidType:  # Check rettype, not typ
+        if not type(typ) is VoidType:
             frame.push()
         return self.jvm.emitINVOKEVIRTUAL(lexeme, self.getJVMType(in_))
+
     '''
     *   generate ineg, fneg.
     *   @param in the type of the operands.
@@ -480,8 +470,21 @@ class Emitter():
             elif op == "==":
                 result.append(self.jvm.emitIFICMPNE(labelF))
         elif type(in_) is FloatType:
-            # Float comparison implementation should be added here
-            pass
+            if op in [">", ">=", "<", "<=", "==", "!="]:
+                result.append(self.jvm.emitFCMPG())  # Emit FCMPG for FloatType comparison
+            if op == ">":
+                result.append(self.jvm.emitIFLE(labelF))
+            elif op == ">=":
+                result.append(self.jvm.emitIFLT(labelF))
+            elif op == "<":
+                result.append(self.jvm.emitIFGE(labelF))
+            elif op == "<=":
+                result.append(self.jvm.emitIFGT(labelF))
+            elif op == "!=":
+                result.append(self.jvm.emitIFEQ(labelF))
+            elif op == "==":
+                result.append(self.jvm.emitIFNE(labelF))
+
 
         # Push 1 (true) for the true case
         result.append(self.emitPUSHCONST("1", IntType(), frame))
@@ -674,7 +677,6 @@ class Emitter():
     *   .class public MPC.CLASSNAME<p>
     *   .super java/lang/Object<p>
     '''
-
     def emitPROLOG(self, name, parent):
         # name: String
         # parent: String
@@ -682,8 +684,8 @@ class Emitter():
         result = list()
         result.append(self.jvm.emitSOURCE(name + ".java"))
         result.append(self.jvm.emitCLASS("public " + name))
-        result.append(self.jvm.emitSUPER("java/lang/Object" if parent == "" else parent))
-        return "".join(result)
+        result.append(self.jvm.emitSUPER("java/land/Object" if parent == "" else parent))
+        return ''.join(result)
 
     def emitLIMITSTACK(self, num):
         # num: Int
@@ -714,10 +716,18 @@ class Emitter():
     def emitNEWARRAY(self, in_, frame):
         if type(in_) is IntType:
             return self.jvm.emitNEWARRAY("int")
-        ## TODO
+        elif type(in_) is FloatType:
+            return self.jvm.emitNEWARRAY("float")  # Emit NEWARRAY for FloatType
+        elif type(in_) is BoolType:
+            return self.jvm.emitNEWARRAY("boolean")  # Emit NEWARRAY for BoolType
+        else:
+            raise IllegalOperandException(str(in_))
+
     def emitANEWARRAY(self, in_, frame):
-        ## TODO
-        return self.jvm.emitANEWARRAY("int")
+        if type(in_) is cgen.ClassType or type(in_) is StringType:
+            return self.jvm.emitANEWARRAY(self.getJVMType(in_))  # Emit ANEWARRAY for reference types
+        else:
+            raise IllegalOperandException(str(in_))
 
     def emitNEW(self, lexeme, frame):
         frame.push()
@@ -727,79 +737,64 @@ class Emitter():
         frame.push()
         return self.jvm.emitPUSHNULL()
 
-    def emitObjectInit(self):
-        frame = cgen.Frame("<init>", VoidType())
-        self.emit.printout(
-            self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame)
-        )  # Bắt đầu định nghĩa phương thức <init>
-        # sinh ra mã => .method public <init>()V
-        frame.enterScope(
-            True
-        )  # Mỗi hàm có 1 frame riêng, và mỗi frame có 1 scope riêng, nên dùng enterScope để vào scope của frame này
+    # def emitObjectInit(self):
+    #     frame = Frame("<init>", VoidType())
+    #     self.emit.printout(
+    #         self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame)
+    #     )  # Bắt đầu định nghĩa phương thức <init>
+    #     # sinh ra mã => .method public <init>()V
+    #     frame.enterScope(True)  # Mỗi hàm có 1 frame riêng, và mỗi frame có 1 scope riêng, nên dùng enterScope để vào scope của frame này
 
-        self.emit.printout(
-            self.emit.emitVAR(
-                frame.getNewIndex(),
-                "this",
-                ClassType(self.className),
-                frame.getStartLabel(),
-                frame.getEndLabel(),
-                frame,
-            )
-        )  # Tạo biến "this" trong phương thức <init>
-        # sinh ra mã => .var 0 is this LMiniGoClass; from Label0 to Label1
+    #     self.emit.printout(
+    #         self.emit.emitVAR(
+    #             frame.getNewIndex(),
+    #             "this",
+    #             ClassType(self.className),
+    #             frame.getStartLabel(),
+    #             frame.getEndLabel(),
+    #             frame,
+    #         )
+    #     )  # Tạo biến "this" trong phương thức <init>
+    #     # sinh ra mã => .var 0 is this LMiniGoClass; from Label0 to Label1
 
-        self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
-        # sinh ra mã => Label0: (nơi body method bắt đầu)
+    #     self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
+    #     # sinh ra mã => Label0: (nơi body method bắt đầu)
 
-        self.emit.printout(
-            self.emit.emitREADVAR("this", ClassType(self.className), 0, frame)
-        )
-        # sinh ra mã => aload_0 (đưa biến this vào stack)
+    #     self.emit.printout(
+    #         self.emit.emitREADVAR("this", ClassType(self.className), 0, frame)
+    #     )
+    #     # sinh ra mã => aload_0 (đưa biến this vào stack)
 
-        self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
-        # sinh ra mã => invokespecial java/lang/Object/<init>()V (gọi hàm khởi tạo của class cha là Object)
+    #     self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
+    #     # sinh ra mã => invokespecial java/lang/Object/<init>()V (gọi hàm khởi tạo của class cha là Object)
 
-        self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
-        # sinh ra mã => Label1: (nơi body method kết thúc)
+    #     self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
+    #     # sinh ra mã => Label1: (nơi body method kết thúc)
 
-        self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
-        # sinh ra mã => return (trả về từ hàm khởi tạo này)
+    #     self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
+    #     # sinh ra mã => return (trả về từ hàm khởi tạo này)
 
-        self.emit.printout(self.emit.emitENDMETHOD(frame))
-        # sinh ra mã limit stack 1, limit locals 1, end method (kết thúc định nghĩa phương thức <init>)
+    #     self.emit.printout(self.emit.emitENDMETHOD(frame))
+    #     # sinh ra mã limit stack 1, limit locals 1, end method (kết thúc định nghĩa phương thức <init>)
 
-        frame.exitScope()
+    #     frame.exitScope()
 
-    def emitObjectCInit(self, ast: Program, env):
+    # def emitObjectCInit(self, ast: Program, env):
+    #     frame = Frame("<clinit>", VoidType())
+    #     self.emit.printout(self.emitMETHOD("<clinit>", MType([], VoidType()), True, frame))
+    #     frame.enterScope(True)
+    #     self.emit.printout(self.emitLABEL(frame.getStartLabel(), frame))
 
-        frame = cgen.Frame("<cinit>", VoidType())
-        self.emit.printout(
-            self.emit.emitMETHOD("<clinit>", MType([], VoidType()), True, frame)
-        )
-        frame.enterScope(True)
-        self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
+    #     env["frame"] = frame
 
-        env["frame"] = frame
+    #     # Initialize global variables
+    #     for decl in ast.decl:
+    #         if isinstance(decl, VarDecl) and decl.varInit:
+    #             rhsCode, rhsType = self.visit(decl.varInit, env)
+    #             self.emit.printout(rhsCode)
+    #             self.emit.printout(self.emitPUTSTATIC(f"{self.className}/{decl.varName}", decl.varType, frame))
 
-        # Trừ đoạn code dưới đây thì còn lại giống emitObjectInit:
-        self.visit(
-            Block(
-                [
-                    #  Assign(#TODO ...) for item in ast.decl if isinstance(item, (VarDecl, ConstDecl))       => Block chứa danh sách các Assign
-                ]
-            ),
-            env,
-        )
-        # Đoạn này nạp mấy biến/hằng toàn cục vào lớp MiniGoClass
-
-    def emitMULTIANEWARRAY(self, arrType, frame):
-        frame.push()
-        dimensions = len(arrType.dimens) if hasattr(arrType, "dimens") else 1
-        return self.jvm.emitMULTIANEWARRAY(self.getJVMType(arrType), dimensions)
-
-
-    def emitMULTIANEWARRAY(self, arrType, frame):
-        frame.push()
-        dimensions = str(len(arrType.dimens)) if hasattr(arrType, "dimens") else "1"
-        return self.jvm.emitMULTIANEWARRAY(self.getJVMType(arrType), dimensions)
+    #     self.emit.printout(self.emitLABEL(frame.getEndLabel(), frame))
+    #     self.emit.printout(self.emitRETURN(VoidType(), frame))
+    #     self.emit.printout(self.emitENDMETHOD(frame))
+    #     frame.exitScope()

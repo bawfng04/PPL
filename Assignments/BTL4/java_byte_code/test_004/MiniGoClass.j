@@ -5,20 +5,19 @@
 .method public static main([Ljava/lang/String;)V
 Label0:
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
-Label4:
+Label2:
 	iconst_1
-	ifle Label6
-Label9:
+	ifle Label4
+Label5:
 	iconst_1
 	invokestatic io/putBool(Z)V
-Label10:
-	goto Label5
 Label6:
-Label5:
-Label11:
+Label4:
+Label4:
+Label3:
 Label1:
 	return
-.limit stack 1
+.limit stack 3
 .limit locals 1
 .end method
 
@@ -35,6 +34,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
+Label2:
+Label3:
 Label1:
 	return
 .limit stack 0

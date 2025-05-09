@@ -22,7 +22,7 @@ Label1:
 .var 0 is this LMiniGoClass; from Label0 to Label1
 Label0:
 	aload_0
-	invokespecial java/lang/Object/<init>()V
+	invokespecial java/lang/Object()V
 Label1:
 	return
 .limit stack 1

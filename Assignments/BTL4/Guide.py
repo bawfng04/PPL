@@ -1,6 +1,6 @@
 
 from Utils import *
-from Emitter import Emitter, MType, Id
+from Emitter import Emitter, MType, ClassType
 from Frame import Frame
 from abc import ABC, abstractmethod
 from functools import reduce
@@ -69,7 +69,7 @@ class CodeGenerator(BaseVisitor,Utils):
         if isinstance(field_type, FloatType): return FloatLiteral(0.0)
         if isinstance(field_type, BoolType): return BooleanLiteral(False)
         if isinstance(field_type, StringType): return StringLiteral("") # Or NilLiteral() if null is preferred
-        if isinstance(field_type, (ArrayType, Id, InterfaceType)): return NilLiteral() # Represent null
+        if isinstance(field_type, (ArrayType, ClassType, InterfaceType)): return NilLiteral() # Represent null
         return NilLiteral() # Default for unknown types
 
     # --- visitProgram ---
@@ -153,10 +153,10 @@ class CodeGenerator(BaseVisitor,Utils):
         self.emit.printout(self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame))
         frame.enterScope(True)
         # Var 0: this
-        self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", Id(self.current_class_name), frame.getStartLabel(), frame.getEndLabel(), frame))
+        self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(self.current_class_name), frame.getStartLabel(), frame.getEndLabel(), frame))
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
         # super() call
-        self.emit.printout(self.emit.emitREADVAR("this", Id(self.current_class_name), 0, frame))
+        self.emit.printout(self.emit.emitREADVAR("this", ClassType(self.current_class_name), 0, frame))
         self.emit.printout(self.emit.emitINVOKESPECIAL(frame)) # Calls Object.<init>
         # Initialize instance fields if MiniGoClass had any (it doesn't based on spec)
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
@@ -232,10 +232,10 @@ class CodeGenerator(BaseVisitor,Utils):
         self.emit.printout(self.emit.emitMETHOD("<init>", MType([], VoidType()), False, frame)) # Instance method
         frame.enterScope(True)
         this_index = frame.getNewIndex()
-        self.emit.printout(self.emit.emitVAR(this_index, "this", Id(classname), frame.getStartLabel(), frame.getEndLabel(), frame))
+        self.emit.printout(self.emit.emitVAR(this_index, "this", ClassType(classname), frame.getStartLabel(), frame.getEndLabel(), frame))
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
         # Call super()
-        self.emit.printout(self.emit.emitREADVAR("this", Id(classname), this_index, frame))
+        self.emit.printout(self.emit.emitREADVAR("this", ClassType(classname), this_index, frame))
         self.emit.printout(self.emit.emitINVOKESPECIAL(frame)) # Calls Object.<init> by default
 
         # Initialize fields to default values explicitly (optional, Java does it, but good for clarity)
@@ -244,7 +244,7 @@ class CodeGenerator(BaseVisitor,Utils):
             default_literal = self.create_default_literal(field_type)
             if not isinstance(default_literal, NilLiteral): # Only emit code for non-null defaults
                 default_val_code, default_type = self.visit(default_literal, constructor_env)
-                self.emit.printout(self.emit.emitREADVAR("this", Id(classname), this_index, frame)) # Load this
+                self.emit.printout(self.emit.emitREADVAR("this", ClassType(classname), this_index, frame)) # Load this
                 self.emit.printout(default_val_code) # Push default value
                 # Convert int to float if needed
                 if isinstance(field_type, FloatType) and isinstance(default_type, IntType):
@@ -341,7 +341,7 @@ class CodeGenerator(BaseVisitor,Utils):
 
         # Define 'this' (index 0)
         this_index = frame.getNewIndex() # Should be 0
-        struct_class_type = Id(self.current_class_name)
+        struct_class_type = ClassType(self.current_class_name)
         self.emit.printout(self.emit.emitVAR(this_index, "this", struct_class_type, frame.getStartLabel(), frame.getEndLabel(), frame))
         # Add receiver symbol to the inner scope (params+this)
         method_env['env'][1].append(Symbol(ast.receiver, struct_class_type, Index(this_index)))
@@ -395,9 +395,9 @@ class CodeGenerator(BaseVisitor,Utils):
             elif isinstance(init_expr, FloatLiteral): resolved_type = FloatType()
             elif isinstance(init_expr, StringLiteral): resolved_type = StringType()
             elif isinstance(init_expr, BooleanLiteral): resolved_type = BoolType()
-            elif isinstance(init_expr, NilLiteral): resolved_type = Id("java/lang/Object") # Or a more specific default?
+            elif isinstance(init_expr, NilLiteral): resolved_type = ClassType("java/lang/Object") # Or a more specific default?
             elif isinstance(init_expr, ArrayLiteral): resolved_type = init_expr.eleType # Use type from literal if available
-            elif isinstance(init_expr, StructLiteral): resolved_type = Id(f"{self.className}${init_expr.name}") # Assuming nested class
+            elif isinstance(init_expr, StructLiteral): resolved_type = ClassType(f"{self.className}${init_expr.name}") # Assuming nested class
             elif isinstance(init_expr, FuncCall):
                 # Lookup function return type
                 func_sym = self.lookup(init_expr.funName, self.list_function, lambda x: x.name)
@@ -575,9 +575,9 @@ class CodeGenerator(BaseVisitor,Utils):
             if type_def:
                 # It's a type name, return appropriate representation
                 # This path shouldn't be taken for variable access (LHS/RHS)
-                # Maybe return the type itself or a Id?
+                # Maybe return the type itself or a ClassType?
                 if isinstance(type_def, StructType):
-                    return "", Id(f"{self.className}${ast.name}") # Return type info, no code
+                    return "", ClassType(f"{self.className}${ast.name}") # Return type info, no code
                 elif isinstance(type_def, InterfaceType):
                     return "", InterfaceType(ast.name) # Need InterfaceType AST node?
                 else:
@@ -764,9 +764,9 @@ class CodeGenerator(BaseVisitor,Utils):
     def visitNilLiteral(self, ast:NilLiteral, o: dict) -> tuple[str, Type]:
         frame = o.get('frame')
         # Return code to push null and a generic object type or a specific null type
-        # Id("") is ambiguous. Let's use a known base class or a dedicated NullType if needed.
+        # ClassType("") is ambiguous. Let's use a known base class or a dedicated NullType if needed.
         # Using Object is generally safe for reference types.
-        return self.emit.emitPUSHNULL(frame), Id("java/lang/Object") # Or a more specific base/interface type if context allows
+        return self.emit.emitPUSHNULL(frame), ClassType("java/lang/Object") # Or a more specific base/interface type if context allows
 
 
     # --- visitFuncCall (Global Functions) ---
@@ -992,34 +992,32 @@ class CodeGenerator(BaseVisitor,Utils):
 
 
     # --- Control Flow Statements ---
-    def visitIf(self, ast: If, o: dict) -> dict:
+    def visitIf(self, ast: If, o: dict):
         frame = o['frame']
-        label_exit = frame.getNewLabel()
         label_else = frame.getNewLabel()
+        label_end = frame.getNewLabel() if ast.elseStmt else label_else # End label is Else label if no Else block
 
-        # Generate condition code
-        condCode, _ = self.visit(ast.expr, o)
+        # 1. Evaluate condition
+        condCode, condType = self.visit(ast.expr, o)
         self.emit.printout(condCode)
-
-        # If condition is false, jump to else part
+        # If condition is false (0), jump to Else block (or End if no Else)
         self.emit.printout(self.emit.emitIFFALSE(label_else, frame))
 
-        # Process then statement
+        # 2. Then Block
         self.visit(ast.thenStmt, o)
+        # After Then block, jump to End (only if Else exists)
+        if ast.elseStmt:
+            self.emit.printout(self.emit.emitGOTO(label_end, frame))
 
-        # Jump to exit (skip else part)
-        self.emit.printout(self.emit.emitGOTO(label_exit, frame))
-
-        # Else part
+        # 3. Else Block (or End Label)
         self.emit.printout(self.emit.emitLABEL(label_else, frame))
-
-        if ast.elseStmt is not None:
+        if ast.elseStmt:
             self.visit(ast.elseStmt, o)
-
-        # Exit label
-        self.emit.printout(self.emit.emitLABEL(label_exit, frame))
+            # Fall through to End label after Else block
+            self.emit.printout(self.emit.emitLABEL(label_end, frame))
 
         return o
+
 
     def visitForBasic(self, ast: ForBasic, o: dict):
         frame = o['frame']
