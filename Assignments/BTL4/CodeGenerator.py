@@ -189,54 +189,55 @@ class CodeGenerator(BaseVisitor,Utils):
             elif type(varType) is StringType:
                 return StringLiteral("\"\"")
             elif type(varType) is BoolType:
-                return BooleanLiteral("false")
+                return BooleanLiteral(False)
             elif type(varType) is ArrayType:
+                # Recursively build default nested structure
+                def build_array(dim_list, eleType):
+                    # Each dimension can be IntLiteral, IntType, or int
+                    n = dim_list[0]
+                    if isinstance(n, IntLiteral):
+                        n = n.value
+                    elif isinstance(n, int):
+                        pass
+                    else:
+                        # If dimension is an Id or expression, treat as 0 for default init
+                        n = 0
+                    if len(dim_list) == 1:
+                        return [create_init(eleType, o) for _ in range(n)]
+                    else:
+                        return [build_array(dim_list[1:], eleType) for _ in range(n)]
+                value = build_array(varType.dimens, varType.eleType)
+                return ArrayLiteral(varType.dimens, varType.eleType, value)
 
-                # Với mảng thì mình dùng đệ quy để sinh ra mảng giá trị cho đúng nhé.
-                #  VD mảng nguyên 1 chiều thì sẽ là [0,0,0,...], mảng 2 chiều thì sẽ là [[0,0,0,...],[0,0,0,...],...]
-                #  VD mảng bool 1 chiều thì sẽ là [false,false,false,...], mảng 2 chiều thì sẽ là [[false,false,false,...],[false,false,false,...],...]
+        varInit = ast.varInit
+        varType = ast.varType
 
-                # Lưu ý ở đây mình k xử lí dimension là biểu thức hay Id, chỗ khác sẽ xử lí sau.
-                pass #TODO
-
-        varInit = ast.varInit # Giá trị khởi tạo của biến
-        varType = ast.varType # Kiểu của biến
-
-        # Nếu không có giá trị khởi tạo thì tự động gán cho nó 0, 0.0, false, "",..tùy vào kiểu biến:
-        # int -> 0, float -> 0.0, bool -> false, string -> "", array -> mảng chứa các giá trị "zero" tùy thuộc vào kiểu phần tử.
+        # If no initializer, create default value
         if not varInit:
             varInit = create_init(varType, o)
-            if type(varType) is ArrayType:
-                varInit = ArrayLiteral(varType.dimens, varType.dimens, varInit)
             ast.varInit = varInit
 
-            ast.varInit = varInit
         env = o.copy()
         env['frame'] = Frame("<template_VT>", VoidType())
 
-        # Như đã nói trong lưu ý ở trên thì trường hợp dimension là Id hay biểu thức sẽ đc xử lí ở visitArrayLiteral và là dòng dưới đây
         rhsCode, rhsType = self.visit(varInit, env)
 
-        # Trường hợp khai báo với giá trị nhưng không có kiẻu thì mình sẽ tự động gán kiểu cho nó dựa vào giá trị khởi tạo.
         if not varType:
             varType = rhsType
 
-        if 'frame' not in o: # TH global var => biến khai báo toàn cục thì mình
+        if 'frame' not in o:
             o['env'][0].append(Symbol(ast.varName, varType, CName(self.className)))
             self.emit.printout(self.emit.emitATTRIBUTE(ast.varName, varType, True, False, None))
         else:
             frame = o['frame']
-
             index = frame.getNewIndex()
-            o['env'][0].append(Symbol(ast.varName, varType, Index(index))) # mỗi trường sẽ có 1 index riêng
-
+            o['env'][0].append(Symbol(ast.varName, varType, Index(index)))
             self.emit.printout(self.emit.emitVAR(index, ast.varName, varType, frame.getStartLabel(), frame.getEndLabel(), frame))
             rhsCode, rhsType = self.visit(varInit, o)
             if type(varType) is FloatType and type(rhsType) is IntType:
-                rhsCode += self.emit.emitI2F(o["frame"])  # Convert int to float
-
+                rhsCode += self.emit.emitI2F(o["frame"])
             self.emit.printout(rhsCode)
-            self.emit.printout(self.emit.emitWRITEVAR(ast.varName, varType, index,  frame)) # sinh mã gán giá trị vào biến
+            self.emit.printout(self.emit.emitWRITEVAR(ast.varName, varType, index,  frame))
         return o
 
     def visitFuncCall(self, ast: FuncCall, o: dict) -> dict:
@@ -446,7 +447,6 @@ class CodeGenerator(BaseVisitor,Utils):
 
     ## array ------------------------------
 
-
     def visitArrayCell(self, ast: ArrayCell, o: dict) -> tuple[str, Type]:
         frame = o["frame"]
         isLeft = o.get("isLeft", False)
@@ -483,58 +483,43 @@ class CodeGenerator(BaseVisitor,Utils):
         # Return the generated code and the element type
         return result, arrType.eleType
 
+
     def visitArrayLiteral(self, ast: ArrayLiteral, o: dict) -> tuple[str, Type]:
+        frame = o["frame"]
 
-        # Phần ArrayLiteral.value là 1 nested list nên mình sẽ dùng đệ quy để duyệt nó.
-        def nested2recursive(
-            dat: Union[Literal, list["NestedList"]], o: dict
-        ) -> tuple[str, Type]:
-            # dat có thể là 1 Literal hoặc là 1 list chứa các Literal khác
-            # Nếu là Literal thôi thì chỉ cần visit tới là xong
-            if not isinstance(dat, list):
-                return self.visit(dat, o)
-
-            frame = o["frame"]
-            codeGen = self.emit.emitPUSHICONST(len(dat), frame)  # Push array length
-
-            # Trường hợp danh sách không lồng nhau
-            if not isinstance(dat[0], list):
-                itemCode, itemType = self.visit(dat[0], o)
-
-                if isinstance(itemType, (IntType, BoolType)):
-                    codeGen += self.emit.emitNEWARRAY(itemType, frame)
+        def build_array_literal(values, eleType, dims):
+            # values: nested list or literals
+            # eleType: type of array element
+            # dims: list of dimensions (ints)
+            code = ""
+            if len(dims) == 1:
+                # 1D array
+                code += self.emit.emitPUSHICONST(len(values), frame)
+                if isinstance(eleType, (IntType, BoolType)):
+                    code += self.emit.emitNEWARRAY(eleType, frame)
                 else:
-                    # For objects, strings, etc.
-                    codeGen += self.emit.emitANEWARRAY(itemType, frame)
+                    code += self.emit.emitANEWARRAY(eleType, frame)
+                for idx, v in enumerate(values):
+                    code += self.emit.emitDUP(frame)
+                    code += self.emit.emitPUSHICONST(idx, frame)
+                    val_code, _ = self.visit(v, o)
+                    code += val_code
+                    code += self.emit.emitASTORE(eleType, frame)
+                return code, ArrayType([len(values)], eleType)
+            else:
+                # Multi-dimensional
+                code += self.emit.emitPUSHICONST(len(values), frame)
+                code += self.emit.emitANEWARRAY(ArrayType(dims[1:], eleType), frame)
+                for idx, sub in enumerate(values):
+                    code += self.emit.emitDUP(frame)
+                    code += self.emit.emitPUSHICONST(idx, frame)
+                    sub_code, _ = build_array_literal(sub, eleType, dims[1:])
+                    code += sub_code
+                    code += self.emit.emitASTORE(ArrayType(dims[1:], eleType), frame)
+                return code, ArrayType([len(values)] + dims[1:], eleType)
 
-                # Initialize array elements
-                for idx, item in enumerate(dat):
-                    codeGen += self.emit.emitDUP(frame)
-                    codeGen += self.emit.emitPUSHICONST(idx, frame)
-                    code, _ = self.visit(item, o)
-                    codeGen += code
-                    codeGen += self.emit.emitASTORE(itemType, frame)
-
-                return codeGen, ArrayType([len(dat)], itemType)
-
-            # Trường hợp danh sách lồng nhau
-            subCode, subType = nested2recursive(dat[0], o)
-            if isinstance(subType, ArrayType):
-                # For arrays of arrays
-                codeGen += self.emit.emitANEWARRAY(subType, frame)
-
-                for idx, item in enumerate(dat):
-                    codeGen += self.emit.emitDUP(frame)
-                    codeGen += self.emit.emitPUSHICONST(idx, frame)
-                    code, _ = nested2recursive(item, o)
-                    codeGen += code
-                    codeGen += self.emit.emitASTORE(subType, frame)
-
-                # Calculate the dimensions for this array level
-                dimensions = [len(dat)] + subType.dimens
-                return codeGen, ArrayType(dimensions, subType.eleType)
-
-        return nested2recursive(ast.value, o)
+        code, arrType = build_array_literal(ast.value, ast.eleType, ast.dimens)
+        return code, arrType
 
     def visitConstDecl(self, ast: ConstDecl, o: dict) -> dict:
         return self.visit(VarDecl(ast.conName, ast.conType, ast.iniExpr), o)
@@ -706,15 +691,17 @@ class CodeGenerator(BaseVisitor,Utils):
             self.emit.printout(code)
         return o
 
-    def visitStructLiteral(self, ast:StructLiteral, o: dict) -> tuple[str, Type]:
-        code = self.emit.emitNEW(ast.name, o['frame'])
-        code += self.emit.emitDUP(o['frame'])
+    def visitStructLiteral(self, ast: StructLiteral, o: dict) -> tuple[str, Type]:
+        code = self.emit.emitNEW(ast.name, o["frame"])
+        code += self.emit.emitDUP(o["frame"])
         list_type = []
         for item in ast.elements:
             c, t = self.visit(item, o)
             code += c
             list_type.append(t)
-        code += self.emit.emitINVOKESPECIAL(o['frame'], ast.name + "/<init>", MType(list_type, VoidType()))
+        code += self.emit.emitINVOKESPECIAL(
+            o["frame"], ast.name + "/<init>", MType(list_type, VoidType())
+        )
         return code, ClassType(ast.name)
 
     def visitNilLiteral(self, ast: NilLiteral, o: dict) -> tuple[str, Type]:
