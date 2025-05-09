@@ -86,8 +86,10 @@ class CodeGenerator(BaseVisitor,Utils):
         env['frame'] = frame
 
         self.visit(Block([
-            Assign(Id(item.varName), item.varInit)  # Create Assign nodes for initialization
-            for item in ast.decl if isinstance(item, (VarDecl, ConstDecl)) and item.varInit is not None
+            Assign(Id(item.varName), item.varInit) if isinstance(item, VarDecl) and item.varInit is not None
+            else Assign(Id(item.conName), item.iniExpr)
+            for item in ast.decl
+            if (isinstance(item, VarDecl) and item.varInit is not None) or (isinstance(item, ConstDecl) and item.iniExpr is not None)
         ]), env)
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
