@@ -8,18 +8,7 @@
 Label0:
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label2:
-.var 1 is b [I from Label2 to Label3
-	iconst_2
-	newarray int
-	dup
-	iconst_0
-	getstatic MiniGoClass/a I
-	iastore
-	dup
-	iconst_1
-	getstatic MiniGoClass/c I
-	iastore
-	astore_1
+.var 1 is b [[I from Label2 to Label3
 	aload_1
 	iconst_0
 	aaload
@@ -41,7 +30,7 @@ Label2:
 Label3:
 Label1:
 	return
-.limit stack 5
+.limit stack 4
 .limit locals 2
 .end method
 
