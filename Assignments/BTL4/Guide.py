@@ -987,7 +987,7 @@ class CodeGenerator(BaseVisitor,Utils):
     # --- visitStructLiteral ---
     # Implementation moved up and refined
 
-    # --- visitStructType (Handles declaration) ---
+    # --- VaType (Handles declaration) ---
     # Implementation moved up
 
 

@@ -63,7 +63,7 @@ class Emitter():
         elif typeIn is VoidType:
             return "V"
         elif typeIn is ArrayType:
-            return "[" + self.getJVMType(inType.eleType)
+            return "[" * len(inType.dimens) + self.getJVMType(inType.eleType)
         elif typeIn is MType:
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
         elif typeIn is cgen.ClassType:
@@ -134,15 +134,19 @@ class Emitter():
     def emitALOAD(self, in_, frame):
         # in_: Type
         # frame: Frame
-        # ..., arrayref, index, value -> ...
+        # ..., arrayref, index -> ..., value
 
         frame.pop()
         if type(in_) is IntType:
             return self.jvm.emitIALOAD()
-        elif type(in_) is cgen.ArrayType or type(in_) is cgen.ClassType or type(in_) is StringType:
+        elif type(in_) is FloatType:
+            return self.jvm.emitFALOAD()
+        elif type(in_) is BoolType:
+            return self.jvm.emitBALOAD()
+        elif type(in_) is StringType or type(in_) is cgen.ClassType or type(in_) is cgen.ArrayType:
             return self.jvm.emitAALOAD()
         else:
-            raise IllegalOperandException(str(in_))
+            raise IllegalOperandException(f"Unsupported type for ALOAD: {type(in_)}")
 
     def emitASTORE(self, in_, frame):
         # in_: Type
@@ -154,10 +158,14 @@ class Emitter():
         frame.pop()
         if type(in_) is IntType:
             return self.jvm.emitIASTORE()
-        elif type(in_) is cgen.ArrayType or type(in_) is cgen.ClassType or type(in_) is StringType:
+        elif type(in_) is FloatType:
+            return self.jvm.emitFASTORE()
+        elif type(in_) is BoolType:
+            return self.jvm.emitBASTORE()
+        elif type(in_) is StringType or type(in_) is cgen.ClassType or type(in_) is cgen.ArrayType:
             return self.jvm.emitAASTORE()
         else:
-            raise IllegalOperandException(str(in_))
+            raise IllegalOperandException(f"Unsupported type for ASTORE: {type(in_)}")
 
     '''    generate the var directive for a local variable.
     *   @param in the index of the local variable.
@@ -646,11 +654,13 @@ class Emitter():
         elif type(in_) is FloatType:
             frame.pop()
             return self.jvm.emitFRETURN()
-        elif type(in_) is StringType:
+        elif type(in_) is StringType or type(in_) is cgen.ClassType or type(in_) is cgen.ArrayType:
             frame.pop()
             return self.jvm.emitARETURN()
         elif type(in_) is VoidType:
             return self.jvm.emitRETURN()
+        else:
+            raise IllegalOperandException(f"Unsupported type for RETURN: {type(in_)}")
 
     ''' generate code that represents a label
     *   @param label the label
@@ -714,20 +724,25 @@ class Emitter():
         self.buff.clear()
 
     def emitNEWARRAY(self, in_, frame):
+        # in_: Type
+        # frame: Frame
+
         if type(in_) is IntType:
             return self.jvm.emitNEWARRAY("int")
         elif type(in_) is FloatType:
-            return self.jvm.emitNEWARRAY("float")  # Emit NEWARRAY for FloatType
+            return self.jvm.emitNEWARRAY("float")
         elif type(in_) is BoolType:
-            return self.jvm.emitNEWARRAY("boolean")  # Emit NEWARRAY for BoolType
+            return self.jvm.emitNEWARRAY("boolean")
         else:
-            raise IllegalOperandException(str(in_))
+            raise IllegalOperandException(f"Unsupported type for NEWARRAY: {type(in_)}")
 
     def emitANEWARRAY(self, in_, frame):
-        if type(in_) is cgen.ClassType or type(in_) is StringType:
-            return self.jvm.emitANEWARRAY(self.getJVMType(in_))  # Emit ANEWARRAY for reference types
+        # in_: Type
+        # frame: Frame
+        if type(in_) is StringType or type(in_) is cgen.ClassType or type(in_) is cgen.ArrayType:
+            return self.jvm.emitANEWARRAY(self.getJVMType(in_))
         else:
-            raise IllegalOperandException(str(in_))
+            raise IllegalOperandException(f"Unsupported type for ANEWARRAY: {type(in_)}")
 
     def emitNEW(self, lexeme, frame):
         frame.push()

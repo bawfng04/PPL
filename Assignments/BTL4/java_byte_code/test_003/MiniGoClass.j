@@ -6,13 +6,13 @@
 Label0:
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label2:
-.var 1 is a [I from Label2 to Label3
+.var 1 is a [[[I from Label2 to Label3
 	iconst_1
-	newarray int
+	anewarray [[I
 	dup
 	iconst_0
 	iconst_1
-	newarray int
+	anewarray [I
 	dup
 	iconst_0
 	iconst_1
@@ -43,7 +43,7 @@ Label2:
 Label3:
 Label1:
 	return
-.limit stack 13
+.limit stack 17
 .limit locals 2
 .end method
 

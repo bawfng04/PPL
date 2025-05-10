@@ -12,7 +12,7 @@
             "args": [
                 "test",
                 "CodeGenSuite",
-                "test_010"
+                "test_003"
             ],
             "console": "integratedTerminal"
         }
