@@ -1,0 +1,9 @@
+
+func main() {
+    if (true) {
+        putBool(true)
+    } else {
+        putBool(false)
+    }
+}
+    

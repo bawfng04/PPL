@@ -1,0 +1,1 @@
+Program([StructType(Person,[(name,StringType),(age,IntType)],[]),FuncDecl(main,[],VoidType,Block([VarDecl(p,Id(Person),StructLiteral(Person,[(name,StringLiteral("Alice")),(age,IntLiteral(22))])),FuncCall(putStringLn,[FieldAccess(Id(p),name)]),FuncCall(putIntLn,[FieldAccess(Id(p),age)])]))])

@@ -1,0 +1,23 @@
+
+type Speaker interface { speak(); }
+
+type Human struct { name int; }
+
+func (h Human) speak() {
+    putIntLn(h.name);
+}
+
+type Classroom struct {
+    student Human;
+    guest Speaker;
+}
+
+func main() {
+    var h Human = Human {name: 777};
+    var k Speaker = Human {name: 999};
+    var room Classroom = Classroom {student: h, guest: k};
+
+    putIntLn(room.student.name);
+    room.guest.speak();
+}
+        

@@ -1,0 +1,17 @@
+
+    type Speaker interface { speak(); }
+    type Person struct {
+        name string;
+        age int;
+    }
+    func (p Person) speak() {
+        putStringLn(p.name);
+    }
+    func announce(s Speaker) {
+        s.speak();
+    }
+    func main() {
+        var p Person = Person{name: "Grace", age: 27};
+        announce(p);
+    }
+        

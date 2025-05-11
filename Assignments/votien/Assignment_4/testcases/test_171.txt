@@ -1,0 +1,15 @@
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func (p Person) duplicate() Person {
+        return Person{name: p.name, age: p.age};
+    }
+    func main() {
+        var p1 Person = Person{name: "Jack", age: 31};
+        var p2 Person = p1.duplicate();
+        putStringLn(p2.name);
+        putIntLn(p2.age);
+    }
+        

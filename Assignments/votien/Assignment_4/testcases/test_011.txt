@@ -1,0 +1,10 @@
+
+const a = 1 + 1
+const c = 5 - a
+func main() {
+  var b [a][c] int;
+  putInt(b[0][0]);
+  b[0][0] := 20;
+  putInt(b[0][0]);
+}
+      

@@ -1,0 +1,10 @@
+
+func main() {
+    var i int = 10;
+    for var i int = 0; i < 2; i += 1 {
+        putIntLn(i)
+        break;
+    }
+    putInt(i)
+}
+        

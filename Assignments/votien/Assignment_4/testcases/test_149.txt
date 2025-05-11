@@ -1,0 +1,28 @@
+
+type Worker interface {
+    study();
+    play();
+}
+
+type PPL4 struct {number int;}
+type PPL5 struct {number int;}
+
+// Implement Worker cho PPL4
+func (p PPL4) study() { putInt(p.number); }
+func (p PPL4) play()  { putInt(p.number + 5); }
+
+// Implement Worker cho PPL5
+func (p PPL5) study() { putInt(p.number * 2); }
+func (p PPL5) play()  { putInt(p.number * 3); }
+
+func main() {
+    var w1 Worker = PPL4 {number: 3}
+    var w2 Worker = PPL5 {number: 4}
+
+    w1.study(); // in: 3
+    w1.play();  // in: 8
+
+    w2.study(); // in: 8
+    w2.play();  // in: 12
+}
+        

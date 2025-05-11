@@ -1,0 +1,19 @@
+
+type Speaker interface { speak(); }
+
+type Human struct { name int; }
+
+func (h Human) speak() { putIntLn(h.name); }
+
+func main() {
+    var people [3]Human;
+
+    people[0] := Human {name: 1};
+    people[1] := Human {name: 2};
+    people[2] := Human {name: 3};
+
+    people[0].speak(); // Output: 1
+    people[1].speak(); // Output: 2
+    people[2].speak(); // Output: 3
+}
+        

@@ -1,0 +1,17 @@
+
+type Study interface { study(); }
+type Play interface { play(); }
+
+type PPL3 struct {number int;}
+
+func (p PPL3) study() { putInt(p.number); }
+func (p PPL3) play()  { putInt(p.number + 5); }
+
+func main() {
+    var a PPL3 = PPL3 {number: 1}
+    var b Study = a
+    var c Play = a
+    b.study()
+    c.play()
+}
+        

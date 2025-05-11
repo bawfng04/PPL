@@ -1,0 +1,15 @@
+
+    type Person struct {
+        name string;
+        age int;
+    }
+    func sumAges(p1 Person, p2 Person) int {
+        return p1.age + p2.age;
+    }
+    func main() {
+        var p1 Person = Person{name: "Dan", age: 20};
+        var p2 Person = Person{name: "Eve", age: 25};
+        var total int = sumAges(p1, p2);
+        putIntLn(total);
+    }
+        
