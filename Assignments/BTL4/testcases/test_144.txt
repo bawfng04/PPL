@@ -1,9 +1,0 @@
-
-type PPL3 struct {number int;}
-
-func main(){
-    var a PPL3
-    a.number := 10
-    putInt(a.number)
-}
-        

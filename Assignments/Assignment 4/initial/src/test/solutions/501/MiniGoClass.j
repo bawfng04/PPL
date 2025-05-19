@@ -25,3 +25,13 @@ Label1:
 .limit stack 1
 .limit locals 1
 .end method
+
+.method public static <clinit>()V
+Label0:
+Label2:
+Label3:
+Label1:
+	return
+.limit stack 0
+.limit locals 0
+.end method

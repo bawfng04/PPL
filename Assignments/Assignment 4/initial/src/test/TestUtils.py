@@ -38,7 +38,7 @@ class TestLexer:
         dest = open(SOL_DIR + str(num) + ".txt","r")
         line = dest.read()
         return line == expect
-    
+
     @staticmethod
     def check(soldir,inputfile,num):
         dest = open(os.path.join(soldir,str(num) + ".txt"),"w")
@@ -48,9 +48,9 @@ class TestLexer:
         except (ErrorToken,UncloseString,IllegalEscape) as err:
             dest.write(err.message)
         finally:
-            dest.close() 
+            dest.close()
 
-    @staticmethod    
+    @staticmethod
     def printLexeme(dest,lexer):
         tok = lexer.nextToken()
         if tok.type != Token.EOF:
@@ -123,7 +123,7 @@ class TestAST:
 
 class TestChecker:
     @staticmethod
-    def test(input,expect,num):       
+    def test(input,expect,num):
         if type(input) is str:
             inputfile = TestUtil.makeSource(input,num)
             lexer = Lexer(inputfile)
@@ -133,15 +133,15 @@ class TestChecker:
             asttree = ASTGeneration().visit(tree)
         else:
             inputfile = TestUtil.makeSource(str(input),num)
-            asttree = input       
+            asttree = input
         TestChecker.check(SOL_DIR,asttree,num)
         dest = open(os.path.join(SOL_DIR, str(num) + ".txt"),"r")
         line = dest.read()
         return line == expect
 
     @staticmethod
-    def check(soldir,asttree,num):  
-        dest = open(os.path.join(soldir, str(num) + ".txt"),"w")     
+    def check(soldir,asttree,num):
+        dest = open(os.path.join(soldir, str(num) + ".txt"),"w")
         checker = StaticChecker(asttree)
         try:
             res = checker.check()
@@ -164,9 +164,9 @@ class TestCodeGen():
         else:
             inputfile = TestUtil.makeSource(str(input),num)
             asttree = input
-        
+
         TestCodeGen.check(SOL_DIR,asttree,num)
-        
+
         dest = open(os.path.join(SOL_DIR, str(num) + ".txt"),"r")
         line = dest.read()
         return line == expect
@@ -180,9 +180,9 @@ class TestCodeGen():
         f = open(os.path.join(soldir, str(num) + ".txt"),"w")
         try:
             codeGen.gen(asttree, path)
-            
+
             subprocess.call("java  -jar "+ JASMIN_JAR + " " + path + "/*.j",shell=True,stderr=subprocess.STDOUT)
-            
+
             subprocess.run("java -cp ./lib:. MiniGoClass",shell=True, stdout = f, timeout=10)
         except StaticError as e:
             f.write(str(e))
@@ -192,5 +192,5 @@ class TestCodeGen():
             raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
         finally:
             f.close()
-            
-            
+
+

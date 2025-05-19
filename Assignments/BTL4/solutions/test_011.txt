@@ -1,3 +1,0 @@
-Error: Unable to initialize main class MiniGoClass
-Caused by: java.lang.VerifyError: (class: MiniGoClass, method: main signature: ([Ljava/lang/String;)V) Accessing value from uninitialized register 1
-Subprocess error: Command '['java', '-cp', '../_io;.', 'MiniGoClass']' returned non-zero exit status 1.

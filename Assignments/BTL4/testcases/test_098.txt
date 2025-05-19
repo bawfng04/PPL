@@ -1,9 +1,0 @@
-
-func main() {
-    if (false) {
-        putBool(true)
-    } else {
-        putBool(false)
-    }
-}
-    

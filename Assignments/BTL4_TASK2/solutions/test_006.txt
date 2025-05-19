@@ -1,3 +1,0 @@
-Error: Unable to initialize main class MiniGoClass
-Caused by: java.lang.VerifyError: (class: MiniGoClass, method: <init> signature: ()V) Illegal use of nonvirtual function call
-Subprocess error: Command '['java', '-cp', '../_io;.', 'MiniGoClass']' returned non-zero exit status 1.

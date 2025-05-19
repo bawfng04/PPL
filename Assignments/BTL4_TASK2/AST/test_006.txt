@@ -1,1 +1,0 @@
-Program([FuncDecl(main,[],VoidType,Block([If(BooleanLiteral(false),Block([FuncCall(putBool,[BooleanLiteral(true)])]),Block([FuncCall(putBool,[BooleanLiteral(false)])]))]))])

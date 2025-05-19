@@ -1,7 +1,7 @@
 .source MiniGoClass.java
 .class public MiniGoClass
 .super java.lang.Object
-.field static a I = 5000
+.field static a I
 
 .method public static main([Ljava/lang/String;)V
 Label0:
@@ -25,4 +25,16 @@ Label1:
 	return
 .limit stack 1
 .limit locals 1
+.end method
+
+.method public static <clinit>()V
+Label0:
+Label2:
+	sipush 5000
+	putstatic MiniGoClass/a I
+Label3:
+Label1:
+	return
+.limit stack 1
+.limit locals 0
 .end method
