@@ -4,7 +4,7 @@ using namespace std;
 
 bool f1(int &x){ x+=1; return false; }
 bool f2(int &x){ x+=10; return true; }
-bool f3(int &x){ x+=2; return false; }
+bool f3(int &x){ x*=2; return false; }
 
 int main(){
     int x = 1;
@@ -12,6 +12,6 @@ int main(){
     cout << x;
 }
 
-
-
+// g++ test.cpp -o test.exe
+// ./test.exe
 
